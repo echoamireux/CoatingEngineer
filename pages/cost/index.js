@@ -18,6 +18,10 @@ Page({
     showSaveModal: false,  
     showLoadModal: false,  
     showDeleteModal: false,
+    // ★★★ 新增：覆盖确认弹窗状态 ★★★
+    showOverwriteModal: false, 
+    pendingSaveName: '', // 暂存待保存的名称
+
     tempRecipeName: '',
     deleteTargetIndex: -1,
     taxMode: 'ex', 
@@ -355,9 +359,7 @@ Page({
     wx.showToast({ title: '数据已回填', icon: 'none' });
   },
   
-  // ★★★ 优化后的保存逻辑 ★★★
   openSaveModal() { 
-    // 1. 空输入拦截
     if(this.data.mixResultPrice==0 && this.data.mixList.every(i=>!i.name && !i.ratio)) {
        return wx.showToast({ title:'请先输入配方数据', icon:'none' });
     }
@@ -372,42 +374,54 @@ Page({
     let list = wx.getStorageSync('my_recipes') || [];
     const existIdx = list.findIndex(r => r.name === name);
 
-    const saveData = (finalName) => {
-        const s = { name: finalName, price: this.data.mixResultPrice, solid: this.data.mixResultSolid, details: this.data.mixList };
-        // 重新获取一次，防止并发
-        let currentList = wx.getStorageSync('my_recipes') || [];
-        const idx = currentList.findIndex(r => r.name === finalName);
-        if(idx > -1) { currentList[idx] = s; } else { currentList.push(s); }
-        
-        wx.setStorageSync('my_recipes', currentList); 
-        this.loadRecipesFromStorage();
-        this.applyRecipe(s.name, s.price, s.solid); 
-        
-        // ★★★ 保存后不关闭主弹窗，只关闭保存框，并更新当前名称 ★★★
-        this.setData({ showSaveModal: false, currentRecipeName: finalName });
-        wx.showToast({ title: '保存成功', icon: 'success' });
-    };
-
-    // ★★★ 检测同名：支持覆盖或存为副本 ★★★
+    // ★★★ 核心修改：不再使用 wx.showModal，而是唤起自定义弹窗 ★★★
     if(existIdx > -1) {
-        wx.showModal({
-            title: '配方已存在',
-            content: `是否覆盖原配方 "${name}"？\n还是存为新副本？`,
-            cancelText: '存为副本',
-            confirmText: '覆盖',
-            success: (res) => {
-                if (res.confirm) {
-                    saveData(name); // 覆盖
-                } else if (res.cancel) {
-                    // 存为副本，自动重命名
-                    const copyName = `${name}_副本${Math.floor(Math.random()*100)}`;
-                    saveData(copyName);
-                }
-            }
+        // 唤起自定义“覆盖确认”弹窗
+        this.setData({ 
+          showOverwriteModal: true,
+          pendingSaveName: name 
         });
     } else {
-        saveData(name); // 直接保存
+        // 直接保存
+        this._executeSave(name);
     }
+  },
+
+  // 执行最终保存的内部方法
+  _executeSave(finalName) {
+    const s = { name: finalName, price: this.data.mixResultPrice, solid: this.data.mixResultSolid, details: this.data.mixList };
+    let currentList = wx.getStorageSync('my_recipes') || [];
+    const idx = currentList.findIndex(r => r.name === finalName);
+    if(idx > -1) { currentList[idx] = s; } else { currentList.push(s); }
+    
+    wx.setStorageSync('my_recipes', currentList); 
+    this.loadRecipesFromStorage();
+    this.applyRecipe(s.name, s.price, s.solid); 
+    
+    // 关闭所有相关弹窗
+    this.setData({ 
+        showSaveModal: false, 
+        showOverwriteModal: false,
+        currentRecipeName: finalName 
+    });
+    wx.showToast({ title: '保存成功', icon: 'success' });
+  },
+
+  // 自定义覆盖弹窗：取消
+  closeOverwriteModal() {
+    this.setData({ showOverwriteModal: false });
+  },
+
+  // 自定义覆盖弹窗：确认覆盖
+  confirmOverwrite() {
+    this._executeSave(this.data.pendingSaveName);
+  },
+
+  // 自定义覆盖弹窗：存为副本
+  confirmSaveAsNew() {
+    const originalName = this.data.pendingSaveName;
+    const copyName = `${originalName}_副本${Math.floor(Math.random()*100)}`;
+    this._executeSave(copyName);
   },
 
   applyMixResult() { this.applyRecipe('临时配方', this.data.mixResultPrice, this.data.mixResultSolid); },
@@ -415,16 +429,11 @@ Page({
     const { mixTargetStageIdx:si, mixTargetMatIdx:mi } = this.data; const list = this.data.stages;
     list[si].materials[mi].price = p; list[si].materials[mi].solid = s;
     if(!list[si].materials[mi].name.includes('胶')) list[si].materials[mi].name = name;
-    // 注意：这里不再强制关闭 showMixModal，只有点击“仅应用”时才会关闭，保存时由 save 逻辑控制
-    // 如果是点击"仅应用"按钮调用的 applyMixResult，则需要关闭
-    // 为了区分，我们在 applyMixResult 里手动关闭
-    // 这里的 applyRecipe 只是数据回填工具函数
     this.setData({ stages:list }); 
     this.clearError(`s${si}_m${mi}_price`); 
     this.clearError(`s${si}_m${mi}_solid`);
   },
   
-  // 单独处理“仅应用”按钮
   handleApplyOnly() {
       this.applyMixResult();
       this.setData({ showMixModal: false });

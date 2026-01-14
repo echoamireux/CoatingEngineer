@@ -94,12 +94,14 @@
                             <input class="inp {{errors['s'+sIdx+'_m'+index+'_eff']?'error':''}}" type="digit" value="{{item.eff}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="eff" placeholder="必填"/>
                           </view>
                         </view>
+                        
                         <view class="row-Grid">
-                          <view class="field">
+                          <view class="field compact-row"> 
                             <text class="label">干涂量 GSM (g/m²)</text>
                             <input class="inp {{errors['s'+sIdx+'_m'+index+'_gsm']?'error':''}}" type="digit" value="{{item.gsm}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="gsm" placeholder="必填"/>
                           </view>
                         </view>
+
                         <view class="res-card-block mat" bindtap="calcMaterialItem" data-stage="{{sIdx}}" data-index="{{index}}">
                            <view class="rc-left">
                               <text class="rc-title">胶层单位成本 C<text class="sub">glue</text></text>
@@ -226,27 +228,28 @@
 
   <view class="bottom-bar">
     <view class="bb-section left">
-       <view class="bb-row-1">
+       <view class="bb-row-upper">
           <text class="bb-label">总单位成本</text>
        </view>
-       <view class="bb-row-2">
+       <view class="bb-row-main">
           <view class="price-wrap">
              <text class="currency">¥</text>
              <text class="bb-price">{{res_final_cost}}</text>
              <text class="unit">/m²</text>
           </view>
        </view>
-       <view class="bb-row-3">
+       <view class="bb-row-lower">
           <text class="bb-sub-info">直通率 {{final_yield}}%</text>
        </view>
     </view>
+    
     <view class="bb-divider-vert"></view>
+    
     <view class="bb-section right">
-       <view class="bb-row-1 placeholder"></view>
-       <view class="bb-row-2">
+       <view class="bb-row-main">
           <button class="bb-btn" bindtap="calculateAll">计算全部</button>
        </view>
-       <view class="bb-row-3">
+       <view class="bb-row-lower">
           <view class="bottom-clear" bindtap="openClearModal">清空重置</view>
        </view>
     </view>
@@ -327,6 +330,17 @@
         <view class="cc-btns">
            <button class="btn-ghost" bindtap="closeSaveModal">取消</button>
            <button class="btn-primary" bindtap="doSaveRecipe">确认</button>
+        </view>
+     </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showOverwriteModal}}" bindtap="closeOverwriteModal">
+     <view class="modal-card clear-card" catchtap="preventBubble">
+        <view class="cc-title">配方已存在</view>
+        <view class="cc-desc">是否覆盖原配方 "{{pendingSaveName}}"？\n还是存为新副本？</view>
+        <view class="cc-btns">
+           <button class="btn-ghost" bindtap="confirmSaveAsNew">存为副本</button>
+           <button class="btn-primary" bindtap="confirmOverwrite">覆盖</button>
         </view>
      </view>
   </view>

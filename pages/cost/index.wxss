@@ -51,8 +51,11 @@
 .input-with-calc { position: relative; display: flex; align-items: center; }
 .calc-btn { position: absolute; right: 10rpx; top: 50%; transform: translateY(-50%); font-size: 28rpx; padding: 10rpx; z-index: 10; opacity: 0.8; }
 
+/* ★★★ 输入框统一左对齐，去除居中，显得更专业 ★★★ */
 .inp { 
-  background: var(--bg); color: var(--text); height: 64rpx; border-radius: 12rpx; padding: 0 15rpx; font-size: 26rpx; border: 1px solid var(--border); width: 100%; box-sizing: border-box; 
+  background: var(--bg); color: var(--text); height: 64rpx; border-radius: 12rpx; 
+  padding: 0 15rpx; font-size: 26rpx; border: 1px solid var(--border); 
+  width: 100%; box-sizing: border-box; text-align: left;
 }
 .inp.tiny { width: 80rpx; text-align: center; }
 .inp.warning-border { border-color: rgba(245, 158, 11, 0.4); }
@@ -123,23 +126,31 @@
 .ar-left { display: flex; align-items: center; font-size: 24rpx; color: var(--text-sub); gap: 10rpx; }
 .ar-val { font-size: 36rpx; font-weight: bold; color: var(--text); }
 
-/* --- 底部栏布局 --- */
-.bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); z-index: 100; box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.1); box-sizing: border-box; display: flex; justify-content: center; align-items: center; gap: 80rpx; padding: 24rpx 30rpx calc(env(safe-area-inset-bottom) + 24rpx) 30rpx; }
+/* --- ★★★ 底部栏布局重构：高度降低，结构优化 ★★★ --- */
+.bottom-bar { 
+  position: fixed; bottom: 0; left: 0; width: 100%; 
+  background: var(--card); border-top: 1px solid var(--border); 
+  z-index: 100; box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.1); box-sizing: border-box; 
+  display: flex; justify-content: center; align-items: center; gap: 40rpx; 
+  padding: 15rpx 30rpx calc(env(safe-area-inset-bottom) + 15rpx) 30rpx; 
+}
 .bb-section { display: flex; flex-direction: column; flex: 1; }
 .bb-section.left { align-items: flex-end; }
 .bb-section.right { align-items: flex-start; }
-.bb-row-1 { height: 36rpx; margin-bottom: 10rpx; display: flex; align-items: flex-end; }
-.bb-row-2 { height: 84rpx; display: flex; align-items: center; }
-.bb-row-3 { height: 36rpx; margin-top: 10rpx; display: flex; align-items: flex-start; }
-.bb-divider-vert { width: 1px; height: 100rpx; background: rgba(255, 255, 255, 0.1); }
-.bb-label { font-size: 24rpx; color: #9ca3af; line-height: 1; }
+
+.bb-row-upper { height: 32rpx; display: flex; align-items: center; opacity: 0.8; }
+.bb-row-main { height: 70rpx; display: flex; align-items: center; margin: 4rpx 0; }
+.bb-row-lower { height: 32rpx; display: flex; align-items: center; }
+
+.bb-divider-vert { width: 1px; height: 80rpx; background: rgba(255, 255, 255, 0.1); }
+.bb-label { font-size: 22rpx; color: #9ca3af; line-height: 1; }
 .price-wrap { display: flex; align-items: baseline; margin-left: -2rpx; }
-.currency { font-size: 32rpx; color: #34d399; font-weight: bold; margin-right: 4rpx; }
-.bb-price { font-size: 56rpx; font-weight: 800; color: #34d399; font-family: "DIN Alternate", sans-serif; line-height: 1; }
-.unit { font-size: 24rpx; color: #9ca3af; margin-left: 6rpx; font-weight: normal; }
-.bb-sub-info { font-size: 22rpx; color: #6b7280; font-family: Arial, sans-serif; letter-spacing: 0.5rpx; line-height: 1; }
-.bb-btn { width: 220rpx; height: 84rpx; line-height: 84rpx; margin: 0; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 28rpx; border-radius: 12rpx; box-shadow: none; }
-.bottom-clear { font-size: 22rpx; color: #9ca3af; text-decoration: underline; opacity: 0.8; width: 220rpx; text-align: center; line-height: 1; }
+.currency { font-size: 28rpx; color: #34d399; font-weight: bold; margin-right: 4rpx; }
+.bb-price { font-size: 48rpx; font-weight: 800; color: #34d399; font-family: "DIN Alternate", sans-serif; line-height: 1; }
+.unit { font-size: 22rpx; color: #9ca3af; margin-left: 6rpx; font-weight: normal; }
+.bb-sub-info { font-size: 22rpx; color: #6b7280; font-family: Arial, sans-serif; letter-spacing: 0.5rpx; line-height: 1; margin-top: 5rpx; }
+.bb-btn { width: 200rpx; height: 70rpx; line-height: 70rpx; margin: 0; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 26rpx; border-radius: 12rpx; box-shadow: none; }
+.bottom-clear { font-size: 22rpx; color: #9ca3af; text-decoration: underline; opacity: 0.8; width: 200rpx; text-align: center; line-height: 1; margin-top: 5rpx; }
 
 /* 弹窗样式 */
 .modal-mask { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; display: flex; align-items: center; justify-content: center; }
@@ -155,61 +166,25 @@
 .mix-head-row { display: flex; font-size: 24rpx; color: var(--text-sub); margin-bottom: 15rpx; }
 .mix-row { display: flex; gap: 15rpx; margin-bottom: 20rpx; align-items: center; }
 
-/* ★★★ 输入框美化：使用变量变亮，去除深黑感 ★★★ */
-.mix-inp { background: var(--input-bg); border: 1px solid var(--border); height: 64rpx; font-size: 26rpx; padding: 0 15rpx; border-radius: 8rpx; color: var(--text); }
+/* ★★★ 输入框美化：使用变量变亮，左对齐 ★★★ */
+.mix-inp { background: var(--input-bg); border: 1px solid var(--border); height: 64rpx; font-size: 26rpx; padding: 0 15rpx; border-radius: 8rpx; color: var(--text); text-align: left;}
 
-/* ★★★ 添加按钮美化：虚线、低调 ★★★ */
-.btn-add-mix { 
-  font-size: 24rpx; 
-  background: transparent; 
-  border: 1px dashed var(--text-sub); 
-  color: var(--text-sub); 
-  margin: 20rpx 0; 
-  width: 100%; 
-  opacity: 0.6;
-}
+.btn-add-mix { font-size: 24rpx; background: transparent; border: 1px dashed var(--text-sub); color: var(--text-sub); margin: 20rpx 0; width: 100%; opacity: 0.6;}
 .mix-result-box { display: flex; justify-content: space-between; font-weight: bold; font-size: 28rpx; margin: 20rpx 0; background: rgba(16, 185, 129, 0.05); padding: 20rpx; border-radius: 12rpx; border: 1px solid rgba(16, 185, 129, 0.2); }
 .val { color: var(--primary); margin-left: 10rpx; }
 
 .mc-foot.two-btn { display: flex; gap: 20rpx; margin-top: 20rpx; }
 
-/* ★★★ 弹窗按钮全新样式：幽灵按钮 & 实心主色 ★★★ */
-.btn-ghost {
-  flex: 1;
-  font-size: 28rpx;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 12rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-}
-.btn-primary {
-  flex: 1;
-  font-size: 28rpx;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: 12rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-}
-.btn-primary-red {
-  flex: 1;
-  font-size: 28rpx;
-  background: #ef4444;
-  color: #fff;
-  border: none;
-  border-radius: 12rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-}
+.btn-ghost { flex: 1; font-size: 28rpx; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 12rpx; height: 80rpx; line-height: 80rpx; }
+.btn-primary { flex: 1; font-size: 28rpx; background: var(--primary); color: #fff; border: none; border-radius: 12rpx; height: 80rpx; line-height: 80rpx; }
+.btn-primary-red { flex: 1; font-size: 28rpx; background: #ef4444; color: #fff; border: none; border-radius: 12rpx; height: 80rpx; line-height: 80rpx; }
 
 .mix-del { font-size: 40rpx; color: #ef4444; padding: 0 10rpx; opacity: 0.8; }
 
-.formula-card { background: var(--card); border: 1px solid var(--border); padding: 0; overflow: hidden; max-height: 85vh; width: 90%; }
+/* ★★★ 优化计算原理弹窗高度，防止双滚动条 ★★★ */
+.formula-card { background: var(--card); border: 1px solid var(--border); padding: 0; overflow: hidden; max-height: 90vh; width: 90%; }
 .fc-head { background: var(--card); padding: 25rpx; text-align: center; font-weight: bold; color: #60a5fa; font-size: 30rpx; border-bottom: 1px solid var(--border); }
-.fc-body { padding: 30rpx 40rpx; max-height: 70vh; overflow-y: auto; box-sizing: border-box; flex: 1; color: var(--text); }
+.fc-body { padding: 30rpx 40rpx; max-height: 80vh; overflow-y: auto; box-sizing: border-box; flex: 1; color: var(--text); }
 .fc-foot { text-align: center; padding: 25rpx; color: var(--text-sub); font-size: 28rpx; border-top: 1px solid var(--border); background: var(--card); }
 .fc-block { margin-bottom: 20rpx; }
 .fc-title { color: #60a5fa; font-size: 28rpx; font-weight: bold; margin-bottom: 20rpx; }
@@ -240,12 +215,10 @@
 .cc-desc { font-size: 26rpx; color: var(--text-sub); margin-bottom: 40rpx; }
 .cc-btns { display: flex; gap: 30rpx; }
 
-/* ★★★ 保存输入框：使用浅色背景变量 ★★★ */
 .save-inp { border: 1px solid var(--border); background: var(--input-bg); height: 80rpx; border-radius: 12rpx; padding: 0 20rpx; margin-bottom: 40rpx; color: var(--text); text-align: left; }
 
 .load-list { max-height: 50vh; margin-bottom: 30rpx; text-align: left; }
 
-/* ★★★ 列表项优化：垂直居中对齐 ★★★ */
 .load-item { padding: 20rpx; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .load-item:active { background: rgba(255,255,255,0.05); }
 .li-name { font-size: 28rpx; color: var(--text); }
@@ -253,7 +226,8 @@
 .li-main { flex: 1; display: flex; justify-content: space-between; align-items: center; padding-right: 20rpx; }
 .li-del { padding: 10rpx; font-size: 32rpx; color: #ef4444; opacity: 0.8; display: flex; align-items: center; }
 
-.modal-field-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30rpx; }
+/* ★★★ 机台/人工弹窗：压缩行间距，更紧凑专业 ★★★ */
+.modal-field-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx; }
 .field-col { display: flex; flex-direction: column; }
 .field-col.right { align-items: flex-end; min-width: 40%; }
 .f-label { font-size: 28rpx; font-weight: bold; color: var(--text); margin-bottom: 4rpx; }
@@ -267,3 +241,6 @@
 .fb-math { font-family: "Times New Roman", serif; font-style: italic; color: #34d399; font-size: 26rpx; margin-bottom: 15rpx; }
 .fb-res { font-weight: bold; font-size: 28rpx; }
 .fb-res .val { color: #34d399; font-size: 34rpx; margin: 0 10rpx; }
+
+/* ★★★ 优化 GSM 输入框：减少 padding，防止太突兀 ★★★ */
+.compact-row { padding-right: 0; }
