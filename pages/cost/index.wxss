@@ -69,7 +69,7 @@
   padding: 0 15rpx; font-size: 26rpx; border: 1px solid var(--border); 
   width: 100%; box-sizing: border-box; text-align: left;
 }
-.inp.tiny { width: 70rpx; text-align: center; } /* 缩小增值税输入框 */
+.inp.tiny { width: 70rpx; text-align: center; } 
 .inp.warning-border { border-color: rgba(245, 158, 11, 0.4); }
 .inp.error { border-color: #ef4444 !important; background: rgba(239,68,68,0.05); }
 .yield-inp.error { border-color: #ef4444 !important; background: rgba(239,68,68,0.05); }
@@ -86,14 +86,13 @@
 .sh-name { font-size: 30rpx; font-weight: bold; color: var(--text); border-bottom: 1px dashed var(--text-sub); width: 60%; }
 .sh-right { display: flex; align-items: center; gap: 15rpx; }
 
-/* 折叠态 Header：价格在左，良率在右 */
 .fold-summary { display: flex; align-items: baseline; gap: 12rpx; }
 .fs-cost { font-size: 30rpx; font-weight: bold; color: var(--primary); font-family: "DIN Alternate", sans-serif; letter-spacing: 1rpx; }
 .fs-yield { font-size: 20rpx; color: var(--text-sub); opacity: 0.8; }
 
-/* 展开态：良率输入居中 */
 .yield-label { font-size: 24rpx; color: var(--text-sub); }
-.yield-inp { width: 80rpx; text-align: center; border: 1px solid var(--border); background: var(--bg); border-radius: 8rpx; height: 50rpx; color: var(--primary); font-weight: bold; font-size: 26rpx; }
+/* ★★★ 良率输入框：加大宽度，设为90rpx ★★★ */
+.yield-inp { width: 90rpx; text-align: center; border: 1px solid var(--border); background: var(--bg); border-radius: 8rpx; height: 50rpx; color: var(--primary); font-weight: bold; font-size: 26rpx; }
 .yield-unit { font-size: 22rpx; color: var(--text-sub); }
 
 .stage-del-btn { font-size: 32rpx; color: #ef4444; opacity: 0.6; padding: 10rpx; margin-left: 5rpx; border-left: 1px solid var(--border); }
@@ -106,7 +105,6 @@
 .ss-head-left { display: flex; align-items: center; }
 .ss-head-right { display: flex; align-items: center; gap: 10rpx; }
 .ss-title { font-size: 24rpx; color: var(--text-sub); display: block; font-weight: bold; }
-/* 小计显示优化 */
 .ss-mini-cost { font-size: 24rpx; color: var(--primary); font-weight: bold; opacity: 0.9; font-family: "DIN Alternate", sans-serif; letter-spacing: 1rpx;}
 .fold-icon.small { display: block; font-size: 18rpx; color: var(--text-sub); padding: 10rpx; }
 
@@ -145,10 +143,9 @@
 .ar-left { display: flex; align-items: center; font-size: 24rpx; color: var(--text-sub); gap: 10rpx; }
 .ar-val { font-size: 36rpx; font-weight: bold; color: var(--text); font-family: "DIN Alternate", sans-serif; letter-spacing: 1rpx; }
 
-/* --- ★★★ 悬浮胶囊：修复换行，下移优化 ★★★ --- */
 .floating-capsule-bar {
   position: fixed; 
-  bottom: calc(env(safe-area-inset-bottom) + 20rpx); /* 下移，更贴底 */
+  bottom: calc(env(safe-area-inset-bottom) + 20rpx); 
   left: 0; right: 0;
   display: flex; justify-content: center;
   z-index: 100;
@@ -174,9 +171,8 @@
 .fcb-left {
   display: flex; align-items: baseline;
   flex: 1;
-  overflow: hidden; /* 防止溢出 */
+  overflow: hidden; 
 }
-/* 强制不换行 */
 .fcb-label { font-size: 22rpx; color: var(--text-sub); margin-right: 15rpx; white-space: nowrap; }
 .fcb-currency { font-size: 28rpx; color: var(--primary); font-weight: bold; margin-right: 4rpx; font-family: "DIN Alternate", sans-serif; }
 .fcb-val { font-size: 44rpx; font-weight: 800; color: var(--primary); font-family: "DIN Alternate", sans-serif; letter-spacing: 1rpx; }
@@ -184,7 +180,6 @@
 
 .fcb-separator { width: 1px; height: 24rpx; background: var(--border); margin-right: 20rpx; }
 
-/* 良率：灰色小字 */
 .fcb-tag { 
   font-size: 20rpx; color: var(--text-sub); opacity: 0.8; white-space: nowrap; font-family: "DIN Alternate", sans-serif; letter-spacing: 1rpx;
 }

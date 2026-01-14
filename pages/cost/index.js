@@ -27,7 +27,7 @@ Page({
     vatRate: '13',
     stages: [],
     final_yield: '-',
-    res_final_cost: '-', // 初始状态显示 -
+    res_final_cost: '-', 
 
     showMachModal: false,
     machCalcTargetIdx: -1,
@@ -72,7 +72,9 @@ Page({
     }
   },
 
-  preventBubble() {},
+  preventBubble() {
+    // 阻止冒泡专用
+  },
 
   toggleStageFold(e) {
     const idx = e.currentTarget.dataset.index;
@@ -87,6 +89,21 @@ Page({
     if(section === 'mat') list[stage].matFolded = !list[stage].matFolded;
     else if(section === 'proc') list[stage].procFolded = !list[stage].procFolded;
     this.setData({ stages: list });
+  },
+
+  // ★★★ 辅助函数：实时更新材料小计 ★★★
+  _updateStageMatSum(stageIdx) {
+    const list = this.data.stages;
+    const stage = list[stageIdx];
+    let sum = 0;
+    stage.materials.forEach(m => {
+        if (m.cost && !isNaN(parseFloat(m.cost))) {
+            sum += parseFloat(m.cost);
+        }
+    });
+    // 更新数据，保留2位小数
+    const key = `stages[${stageIdx}].stageMatCost`;
+    this.setData({ [key]: sum.toFixed(2) });
   },
 
   calcMaterialItem(e) {
@@ -127,7 +144,12 @@ Page({
 
     const costStr = cost.toFixed(2);
     const key = `stages[${stage}].materials[${index}].cost`;
-    this.setData({ [key]: costStr });
+    
+    // 先更新单个项
+    this.setData({ [key]: costStr }, () => {
+        // ★★★ 回调中立即更新该工序的材料总小计 ★★★
+        this._updateStageMatSum(stage);
+    });
     
     wx.showToast({ title: '已更新', icon: 'success', duration: 800 });
   },
@@ -269,10 +291,13 @@ Page({
     let final = runningTotal; 
     if(d.taxMode === 'inc') final *= (1+vat);
     
+    // ★★★ 最终良率保留2位小数，防止显示过长 ★★★
+    const finalYieldStr = (totalYield * 100).toFixed(2);
+
     this.setData({ 
         stages: newStages, 
         res_final_cost: final.toFixed(2), 
-        final_yield: (totalYield*100).toFixed(2) 
+        final_yield: finalYieldStr 
     });
     
     wx.showToast({ title: '计算完成', icon: 'success' });
@@ -303,7 +328,17 @@ Page({
     list[sIdx].materials.push(item);
     this.setData({ stages: list });
   },
-  removeMaterial(e) { const { stage, index } = e.currentTarget.dataset; const list = this.data.stages; list[stage].materials.splice(index, 1); this.setData({ stages: list }); },
+  
+  removeMaterial(e) { 
+      const { stage, index } = e.currentTarget.dataset; 
+      const list = this.data.stages; 
+      list[stage].materials.splice(index, 1); 
+      this.setData({ stages: list }, () => {
+          // 删除材料后，也立即更新小计
+          this._updateStageMatSum(stage);
+      });
+  },
+  
   moveMaterial(e) { const { stage, index, dir } = e.currentTarget.dataset; const list = this.data.stages; const mats = list[stage].materials; const t = index + dir; if(t >= 0 && t < mats.length) { [mats[index], mats[t]] = [mats[t], mats[index]]; this.setData({ stages: list }); } },
   
   onInput(e) {
@@ -318,248 +353,53 @@ Page({
     else if (type==='save_name') this.setData({ tempRecipeName: val }); 
     if(type!=='global' && type!=='save_name') this.setData({ stages: list });
   },
+  
+  // ... (其余代码：mixCal, formula, machCalc, laborCalc 等保持不变) ...
   setTaxMode(e) { this.setData({ taxMode: e.currentTarget.dataset.mode }); },
   loadRecipesFromStorage() { this.setData({ savedRecipeList: wx.getStorageSync('my_recipes') || [] }); },
-  
   openMixCal(e) { this.setData({ showMixModal:true, mixTargetStageIdx:e.currentTarget.dataset.stage, mixTargetMatIdx:e.currentTarget.dataset.index, mixList:[{name:'', ratio:'', price:'', solid:''}], mixResultPrice:0, mixResultSolid:0, currentRecipeName: '' }); },
   closeMixModal() { this.setData({ showMixModal: false }); },
   addMixItem() { this.setData({ mixList: [...this.data.mixList, {name:'', ratio:'', price:'', solid:''}] }); },
-  removeMixItem(e) {
-    const idx = e.currentTarget.dataset.index; const list = this.data.mixList;
-    if(list.length > 1) { list.splice(idx, 1); this.setData({ mixList: list }); this.reCalcMix(list); } 
-    else { wx.showToast({ title: '至少保留一项', icon: 'none' }); }
-  },
-  onMixInput(e) {
-    const { index, field } = e.currentTarget.dataset; const list = this.data.mixList; list[index][field] = e.detail.value;
-    this.reCalcMix(list);
-  },
-  reCalcMix(list) {
-    let tr=0, wp=0, ws=0;
-    list.forEach(i=>{ const r=parseFloat(i.ratio)||0; tr+=r; wp+=r*(parseFloat(i.price)||0); ws+=r*(parseFloat(i.solid)||0); });
-    this.setData({ mixList:list, mixResultPrice:tr?(wp/tr).toFixed(2):0, mixResultSolid:tr?(ws/tr).toFixed(2):0 });
-  },
+  removeMixItem(e) { const idx = e.currentTarget.dataset.index; const list = this.data.mixList; if(list.length > 1) { list.splice(idx, 1); this.setData({ mixList: list }); this.reCalcMix(list); } else { wx.showToast({ title: '至少保留一项', icon: 'none' }); } },
+  onMixInput(e) { const { index, field } = e.currentTarget.dataset; const list = this.data.mixList; list[index][field] = e.detail.value; this.reCalcMix(list); },
+  reCalcMix(list) { let tr=0, wp=0, ws=0; list.forEach(i=>{ const r=parseFloat(i.ratio)||0; tr+=r; wp+=r*(parseFloat(i.price)||0); ws+=r*(parseFloat(i.solid)||0); }); this.setData({ mixList:list, mixResultPrice:tr?(wp/tr).toFixed(2):0, mixResultSolid:tr?(ws/tr).toFixed(2):0 }); },
   openLoadModal() { if(!this.data.savedRecipeList.length) return wx.showToast({title:'无保存记录',icon:'none'}); this.setData({ showLoadModal: true }); },
   closeLoadModal() { this.setData({ showLoadModal: false }); },
   requestDeleteRecipe(e) { const idx = e.currentTarget.dataset.index; this.setData({ showDeleteModal: true, deleteTargetIndex: idx }); },
   closeDeleteModal() { this.setData({ showDeleteModal: false }); },
-  doDeleteRecipe() {
-    const idx = this.data.deleteTargetIndex; const list = this.data.savedRecipeList;
-    list.splice(idx, 1); wx.setStorageSync('my_recipes', list);
-    this.setData({ savedRecipeList: list, showDeleteModal: false });
-    if(list.length === 0) this.setData({ showLoadModal: false });
-    wx.showToast({ title: '已删除', icon: 'none' });
-  },
-  doLoadRecipe(e) {
-    const idx = e.currentTarget.dataset.index; const s = this.data.savedRecipeList[idx];
-    let newList = [];
-    if(s.details && s.details.length > 0) { newList = JSON.parse(JSON.stringify(s.details)); } else { newList = [{name: s.name, ratio: '100', price: s.price, solid: s.solid}]; }
-    this.setData({ mixList: newList, showLoadModal: false, currentRecipeName: s.name });
-    this.reCalcMix(newList);
-    wx.showToast({ title: '数据已回填', icon: 'none' });
-  },
-  
-  openSaveModal() { 
-    if(this.data.mixResultPrice==0 && this.data.mixList.every(i=>!i.name && !i.ratio)) {
-       return wx.showToast({ title:'请先输入配方数据', icon:'none' });
-    }
-    this.setData({ showSaveModal: true, tempRecipeName: this.data.currentRecipeName || '' }); 
-  },
+  doDeleteRecipe() { const idx = this.data.deleteTargetIndex; const list = this.data.savedRecipeList; list.splice(idx, 1); wx.setStorageSync('my_recipes', list); this.setData({ savedRecipeList: list, showDeleteModal: false }); if(list.length === 0) this.setData({ showLoadModal: false }); wx.showToast({ title: '已删除', icon: 'none' }); },
+  doLoadRecipe(e) { const idx = e.currentTarget.dataset.index; const s = this.data.savedRecipeList[idx]; let newList = []; if(s.details && s.details.length > 0) { newList = JSON.parse(JSON.stringify(s.details)); } else { newList = [{name: s.name, ratio: '100', price: s.price, solid: s.solid}]; } this.setData({ mixList: newList, showLoadModal: false, currentRecipeName: s.name }); this.reCalcMix(newList); wx.showToast({ title: '数据已回填', icon: 'none' }); },
+  openSaveModal() { if(this.data.mixResultPrice==0 && this.data.mixList.every(i=>!i.name && !i.ratio)) { return wx.showToast({ title:'请先输入配方数据', icon:'none' }); } this.setData({ showSaveModal: true, tempRecipeName: this.data.currentRecipeName || '' }); },
   closeSaveModal() { this.setData({ showSaveModal: false }); },
-  
-  doSaveRecipe() {
-    const name = this.data.tempRecipeName; 
-    if(!name) return wx.showToast({title:'请输入名称',icon:'none'});
-
-    let list = wx.getStorageSync('my_recipes') || [];
-    const existIdx = list.findIndex(r => r.name === name);
-
-    if(existIdx > -1) {
-        this.setData({ 
-          showOverwriteModal: true,
-          pendingSaveName: name 
-        });
-    } else {
-        this._executeSave(name);
-    }
-  },
-
-  _executeSave(finalName) {
-    const s = { name: finalName, price: this.data.mixResultPrice, solid: this.data.mixResultSolid, details: this.data.mixList };
-    let currentList = wx.getStorageSync('my_recipes') || [];
-    const idx = currentList.findIndex(r => r.name === finalName);
-    if(idx > -1) { currentList[idx] = s; } else { currentList.push(s); }
-    
-    wx.setStorageSync('my_recipes', currentList); 
-    this.loadRecipesFromStorage();
-    this.applyRecipe(s.name, s.price, s.solid); 
-    
-    this.setData({ 
-        showSaveModal: false, 
-        showOverwriteModal: false,
-        currentRecipeName: finalName 
-    });
-    wx.showToast({ title: '保存成功', icon: 'success' });
-  },
-
+  doSaveRecipe() { const name = this.data.tempRecipeName; if(!name) return wx.showToast({title:'请输入名称',icon:'none'}); let list = wx.getStorageSync('my_recipes') || []; const existIdx = list.findIndex(r => r.name === name); if(existIdx > -1) { this.setData({ showOverwriteModal: true, pendingSaveName: name }); } else { this._executeSave(name); } },
+  _executeSave(finalName) { const s = { name: finalName, price: this.data.mixResultPrice, solid: this.data.mixResultSolid, details: this.data.mixList }; let currentList = wx.getStorageSync('my_recipes') || []; const idx = currentList.findIndex(r => r.name === finalName); if(idx > -1) { currentList[idx] = s; } else { currentList.push(s); } wx.setStorageSync('my_recipes', currentList); this.loadRecipesFromStorage(); this.applyRecipe(s.name, s.price, s.solid); this.setData({ showSaveModal: false, showOverwriteModal: false, currentRecipeName: finalName }); wx.showToast({ title: '保存成功', icon: 'success' }); },
   closeOverwriteModal() { this.setData({ showOverwriteModal: false }); },
   confirmOverwrite() { this._executeSave(this.data.pendingSaveName); },
-  confirmSaveAsNew() {
-    const originalName = this.data.pendingSaveName;
-    const copyName = `${originalName}_副本${Math.floor(Math.random()*100)}`;
-    this._executeSave(copyName);
-  },
-
+  confirmSaveAsNew() { const originalName = this.data.pendingSaveName; const copyName = `${originalName}_副本${Math.floor(Math.random()*100)}`; this._executeSave(copyName); },
   applyMixResult() { this.applyRecipe('临时配方', this.data.mixResultPrice, this.data.mixResultSolid); },
-  applyRecipe(name, p, s) {
-    const { mixTargetStageIdx:si, mixTargetMatIdx:mi } = this.data; const list = this.data.stages;
-    list[si].materials[mi].price = p; list[si].materials[mi].solid = s;
-    if(!list[si].materials[mi].name.includes('胶')) list[si].materials[mi].name = name;
-    this.setData({ stages:list }); 
-    this.clearError(`s${si}_m${mi}_price`); 
-    this.clearError(`s${si}_m${mi}_solid`);
-  },
-  
-  handleApplyOnly() {
-      this.applyMixResult();
-      this.setData({ showMixModal: false });
-  },
-
+  applyRecipe(name, p, s) { const { mixTargetStageIdx:si, mixTargetMatIdx:mi } = this.data; const list = this.data.stages; list[si].materials[mi].price = p; list[si].materials[mi].solid = s; if(!list[si].materials[mi].name.includes('胶')) list[si].materials[mi].name = name; this.setData({ stages:list }); this.clearError(`s${si}_m${mi}_price`); this.clearError(`s${si}_m${mi}_solid`); },
+  handleApplyOnly() { this.applyMixResult(); this.setData({ showMixModal: false }); },
   showFormula(e) {
-    // Formula content kept same as previous version for brevity
     const t = e.currentTarget.dataset.type;
     let list = [];
-    if (t === 'global') {
-      list.push({
-        title: '去税价格折算',
-        lhs: [{v:'P', s:'ex'}], 
-        f: { n: [{v:'P', s:'inc'}], d: [{v:'1 + '}, {v:'Tax'}, {v:'%'}] },
-        vars: [{ k: [{v:'P',s:'ex'}], desc: '未税价格', u:'' }, { k: [{v:'P',s:'inc'}], desc: '含税输入价', u:'' }, { k: [{v:'Tax'}], desc: '增值税率', u:'%' }],
-        logic: ['制造业核算基准：所有物料与加工费必须先剥离增值税，还原为“净价”进行内部流转计算。', '最终报价输出：在计算出总净成本后，再根据客户的开票要求（含税/未税）乘回对应的税率。']
-      });
-    } else if (t === 'glue') {
-      list.push({
-        title: '胶层单位成本',
-        lhs: [{v:'C', s:'glue'}],
-        f: { n: [{v:'GSM'}, {v:' · '}, {v:'P', s:'wet'}], d: [{v:'S'}, {v:' · '}, {v:'η'}] },
-        vars: [{ k: [{v:'C',s:'glue'}], desc: '胶层单位成本', u:'元/m²' }, { k: [{v:'GSM'}], desc: '目标干涂量', u:'g/m²' }, { k: [{v:'P',s:'wet'}], desc: '湿胶单价', u:'元/kg' }, { k: [{v:'S'}], desc: '固含量', u:'%' }, { k: [{v:'η'}], desc: '利用率', u:'%' }],
-        logic: ['固含量折算（干湿转换）：采购的是液体湿胶，但留在产品上的是固体。需通过固含量(S)将目标干重反推回湿胶耗用量。', '制程损耗补偿：配胶残留、管路清洗、滤芯拦截等必然损耗，必须除以利用率(η)进行成本补偿，否则会算亏。']
-      });
-    } else if (t === 'film') {
-      list.push({
-        title: '膜材单位成本',
-        lhs: [{v:'C', s:'film'}],
-        f: { n: [{v:'P', s:'area'}], d: [{v:'W', s:'coat'}, {v:' / '}, {v:'W', s:'film'}] },
-        vars: [{ k: [{v:'C',s:'film'}], desc: '膜材单位成本', u:'元/m²' }, { k: [{v:'P',s:'area'}], desc: '基材单价', u:'元/m²' }, { k: [{v:'W',s:'coat'}], desc: '涂布幅宽', u:'mm' }, { k: [{v:'W',s:'film'}], desc: '膜材幅宽', u:'mm' }],
-        logic: ['宽幅摊销（买宽用窄）：采购原膜通常较宽(W_film)，而实际涂布有效宽度(W_coat)较窄。', '废边成本转嫁：分切过程中切除的废边成本不能消失，必须全部摊销到成品的有效面积成本中。']
-      });
-    } else if (t === 'process') {
-      list.push({
-        title: '加工单位成本',
-        inlineMath: [{v:'C', s:'proc'}, {v:' = '}, {v:'C', s:'base'}, {v:' × '}, {v:'K', s:'scale'}],
-        logic: ['总加工成本 = 基础加工费 × 规模效应系数 (订单越短成本越高)']
-      });
-      list.push({
-        title: '基础加工费',
-        lhs: [{v:'C', s:'base'}],
-        f: { n: [{v:'R', s:'m'}, {v:'+'}, {v:'R', s:'l'}], d: [{v:'V'}, {v:'·'}, {v:'60'}, {v:'·'}, {v:'W', s:'coat'}] },
-        vars: [{ k: [{v:'R',s:'m'}], desc: '机台费率', u:'元/h' }, { k: [{v:'R',s:'l'}], desc: '人工费率', u:'元/h' }, { k: [{v:'V'}], desc: '涂布速度', u:'m/min' }, { k: [{v:'W',s:'coat'}], desc: '涂布幅宽', u:'m' }],
-        logic: ['时空价值转换：将机台与人工的“时间单价(元/h)”，除以“小时产能(㎡/h)”，转化为“面积单价(元/㎡)”。速度越快，单价越低。']
-      });
-      list.push({
-        title: '规模效应系数',
-        lhs: [{v:'K', s:'scale'}],
-        f: { n: [{v:'L', s:'odr'}, {v:'+'}, {v:'L', s:'wst'}], d: [{v:'L', s:'odr'}] },
-        vars: [{ k: [{v:'L',s:'odr'}], desc: '排产长度', u:'m' }, { k: [{v:'L',s:'wst'}], desc: '调机损耗', u:'m' }],
-        logic: ['隐性亏损分摊：调机过程产生的废料($L_{wst}$)虽无产出，但消耗了机时与材料。', '成本转嫁：这部分费用必须均摊到正品订单长度($L_{odr}$)中。订单越短，单位摊销额越高（打样成本贵的本质）。']
-      });
-    } else if (t === 'accum') {
-      list.push({
-        title: '累计单位成本',
-        lhs: [{v:'C', s:'acc'}],
-        f: { n: [{v:'C', s:'prev'}, {v:'+'}, {v:'C', s:'curr'}], d: [{v:'Yield'}] },
-        vars: [{ k: [{v:'C',s:'acc'}], desc: '累计单位成本', u:'元' }, { k: [{v:'C',s:'prev'}], desc: '上道累计', u:'元' }, { k: [{v:'C',s:'curr'}], desc: '本道新增', u:'元' }, { k: [{v:'Yield'}], desc: '直通率', u:'%' }],
-        logic: ['价值链累积：本工序成本 = (上一道工序累计转入成本 + 本道新增材料与加工费)。', '良率放大效应（滚雪球）：当前工序的报废，不仅损失了当下的投入，更连带损失了之前所有工序已投入的真金白银。工序越靠后，报废代价越大。']
-      });
-    }
+    if (t === 'global') { list.push({ title: '去税价格折算', lhs: [{v:'P', s:'ex'}], f: { n: [{v:'P', s:'inc'}], d: [{v:'1 + '}, {v:'Tax'}, {v:'%'}] }, vars: [{ k: [{v:'P',s:'ex'}], desc: '未税价格', u:'' }, { k: [{v:'P',s:'inc'}], desc: '含税输入价', u:'' }, { k: [{v:'Tax'}], desc: '增值税率', u:'%' }], logic: ['制造业核算基准：所有物料与加工费必须先剥离增值税，还原为“净价”进行内部流转计算。', '最终报价输出：在计算出总净成本后，再根据客户的开票要求（含税/未税）乘回对应的税率。'] }); } 
+    else if (t === 'glue') { list.push({ title: '胶层单位成本', lhs: [{v:'C', s:'glue'}], f: { n: [{v:'GSM'}, {v:' · '}, {v:'P', s:'wet'}], d: [{v:'S'}, {v:' · '}, {v:'η'}] }, vars: [{ k: [{v:'C',s:'glue'}], desc: '胶层单位成本', u:'元/m²' }, { k: [{v:'GSM'}], desc: '目标干涂量', u:'g/m²' }, { k: [{v:'P',s:'wet'}], desc: '湿胶单价', u:'元/kg' }, { k: [{v:'S'}], desc: '固含量', u:'%' }, { k: [{v:'η'}], desc: '利用率', u:'%' }], logic: ['固含量折算（干湿转换）：采购的是液体湿胶，但留在产品上的是固体。需通过固含量(S)将目标干重反推回湿胶耗用量。', '制程损耗补偿：配胶残留、管路清洗、滤芯拦截等必然损耗，必须除以利用率(η)进行成本补偿，否则会算亏。'] }); } 
+    else if (t === 'film') { list.push({ title: '膜材单位成本', lhs: [{v:'C', s:'film'}], f: { n: [{v:'P', s:'area'}], d: [{v:'W', s:'coat'}, {v:' / '}, {v:'W', s:'film'}] }, vars: [{ k: [{v:'C',s:'film'}], desc: '膜材单位成本', u:'元/m²' }, { k: [{v:'P',s:'area'}], desc: '基材单价', u:'元/m²' }, { k: [{v:'W',s:'coat'}], desc: '涂布幅宽', u:'mm' }, { k: [{v:'W',s:'film'}], desc: '膜材幅宽', u:'mm' }], logic: ['宽幅摊销（买宽用窄）：采购原膜通常较宽(W_film)，而实际涂布有效宽度(W_coat)较窄。', '废边成本转嫁：分切过程中切除的废边成本不能消失，必须全部摊销到成品的有效面积成本中。'] }); } 
+    else if (t === 'process') { list.push({ title: '加工单位成本', inlineMath: [{v:'C', s:'proc'}, {v:' = '}, {v:'C', s:'base'}, {v:' × '}, {v:'K', s:'scale'}], logic: ['总加工成本 = 基础加工费 × 规模效应系数 (订单越短成本越高)'] }); list.push({ title: '基础加工费', lhs: [{v:'C', s:'base'}], f: { n: [{v:'R', s:'m'}, {v:'+'}, {v:'R', s:'l'}], d: [{v:'V'}, {v:'·'}, {v:'60'}, {v:'·'}, {v:'W', s:'coat'}] }, vars: [{ k: [{v:'R',s:'m'}], desc: '机台费率', u:'元/h' }, { k: [{v:'R',s:'l'}], desc: '人工费率', u:'元/h' }, { k: [{v:'V'}], desc: '涂布速度', u:'m/min' }, { k: [{v:'W',s:'coat'}], desc: '涂布幅宽', u:'m' }], logic: ['时空价值转换：将机台与人工的“时间单价(元/h)”，除以“小时产能(㎡/h)”，转化为“面积单价(元/㎡)”。速度越快，单价越低。'] }); list.push({ title: '规模效应系数', lhs: [{v:'K', s:'scale'}], f: { n: [{v:'L', s:'odr'}, {v:'+'}, {v:'L', s:'wst'}], d: [{v:'L', s:'odr'}] }, vars: [{ k: [{v:'L',s:'odr'}], desc: '排产长度', u:'m' }, { k: [{v:'L',s:'wst'}], desc: '调机损耗', u:'m' }], logic: ['隐性亏损分摊：调机过程产生的废料($L_{wst}$)虽无产出，但消耗了机时与材料。', '成本转嫁：这部分费用必须均摊到正品订单长度($L_{odr}$)中。订单越短，单位摊销额越高（打样成本贵的本质）。'] }); } 
+    else if (t === 'accum') { list.push({ title: '累计单位成本', lhs: [{v:'C', s:'acc'}], f: { n: [{v:'C', s:'prev'}, {v:'+'}, {v:'C', s:'curr'}], d: [{v:'Yield'}] }, vars: [{ k: [{v:'C',s:'acc'}], desc: '累计单位成本', u:'元' }, { k: [{v:'C',s:'prev'}], desc: '上道累计', u:'元' }, { k: [{v:'C',s:'curr'}], desc: '本道新增', u:'元' }, { k: [{v:'Yield'}], desc: '直通率', u:'%' }], logic: ['价值链累积：本工序成本 = (上一道工序累计转入成本 + 本道新增材料与加工费)。', '良率放大效应（滚雪球）：当前工序的报废，不仅损失了当下的投入，更连带损失了之前所有工序已投入的真金白银。工序越靠后，报废代价越大。'] }); }
     this.setData({ formulaTitle: t==='global'?'税率转换': '计算原理', formulaContent: list, showFormulaModal: true }); 
   },
-  
   closeFormula() { this.setData({ showFormulaModal: false }); },
   openClearModal() { this.setData({ showClearModal: true }); },
   closeClearModal() { this.setData({ showClearModal: false }); },
-  doClearAll() {
-    this.setData({ stages: [], res_final_cost: '-', final_yield: '-', errors: {}, showClearModal: false });
-    this.addStage('涂布工序');
-    wx.showToast({ title: '已重置', icon: 'none' });
-  },
-
-  openMachCal(e) {
-    const idx = e.currentTarget.dataset.stage;
-    this.setData({ 
-      showMachModal: true, 
-      machCalcTargetIdx: idx,
-      machCalc: { fixCost:'', lines:'1', days:'26', hours:'24', util:'80', runCost:'', result:'-' } 
-    });
-  },
+  doClearAll() { this.setData({ stages: [], res_final_cost: '-', final_yield: '-', errors: {}, showClearModal: false }); this.addStage('涂布工序'); wx.showToast({ title: '已重置', icon: 'none' }); },
+  openMachCal(e) { const idx = e.currentTarget.dataset.stage; this.setData({ showMachModal: true, machCalcTargetIdx: idx, machCalc: { fixCost:'', lines:'1', days:'26', hours:'24', util:'80', runCost:'', result:'-' } }); },
   closeMachModal() { this.setData({ showMachModal: false }); },
-  onMachInput(e) {
-    const f = e.currentTarget.dataset.field;
-    const val = e.detail.value;
-    const newData = { ...this.data.machCalc, [f]: val };
-    const C_fix = parseFloat(newData.fixCost) || 0;
-    const N = parseFloat(newData.lines) || 1;
-    const D = parseFloat(newData.days) || 0;
-    const H = parseFloat(newData.hours) || 0;
-    const U = parseFloat(newData.util)/100 || 0.8;
-    const C_run = parseFloat(newData.runCost) || 0;
-    let res = '-';
-    if(N>0 && D>0 && H>0 && U>0) {
-       const totalHours = D * H * U;
-       const fixPerHour = C_fix / (totalHours * N);
-       res = (fixPerHour + C_run).toFixed(2);
-    }
-    this.setData({ machCalc: { ...newData, result: res } });
-  },
-  applyMachResult() {
-    if(this.data.machCalc.result === '-') return wx.showToast({ title:'参数不全', icon:'none'});
-    const idx = this.data.machCalcTargetIdx;
-    const list = this.data.stages;
-    list[idx].process.machRate = this.data.machCalc.result;
-    this.setData({ stages: list, showMachModal: false });
-    this.clearError(`s${idx}_proc_machRate`);
-  },
-
-  openLaborCal(e) {
-    const idx = e.currentTarget.dataset.stage;
-    this.setData({ 
-      showLaborModal: true, 
-      laborCalcTargetIdx: idx,
-      laborCalc: { headcount:'5', salary:'10000', days:'26', hours:'12', result:'-' } 
-    });
-    this.reCalcLabor({ headcount:'5', salary:'10000', days:'26', hours:'12', result:'-' });
-  },
+  onMachInput(e) { const f = e.currentTarget.dataset.field; const val = e.detail.value; const newData = { ...this.data.machCalc, [f]: val }; const C_fix = parseFloat(newData.fixCost) || 0; const N = parseFloat(newData.lines) || 1; const D = parseFloat(newData.days) || 0; const H = parseFloat(newData.hours) || 0; const U = parseFloat(newData.util)/100 || 0.8; const C_run = parseFloat(newData.runCost) || 0; let res = '-'; if(N>0 && D>0 && H>0 && U>0) { const totalHours = D * H * U; const fixPerHour = C_fix / (totalHours * N); res = (fixPerHour + C_run).toFixed(2); } this.setData({ machCalc: { ...newData, result: res } }); },
+  applyMachResult() { if(this.data.machCalc.result === '-') return wx.showToast({ title:'参数不全', icon:'none'}); const idx = this.data.machCalcTargetIdx; const list = this.data.stages; list[idx].process.machRate = this.data.machCalc.result; this.setData({ stages: list, showMachModal: false }); this.clearError(`s${idx}_proc_machRate`); },
+  openLaborCal(e) { const idx = e.currentTarget.dataset.stage; this.setData({ showLaborModal: true, laborCalcTargetIdx: idx, laborCalc: { headcount:'5', salary:'10000', days:'26', hours:'12', result:'-' } }); this.reCalcLabor({ headcount:'5', salary:'10000', days:'26', hours:'12', result:'-' }); },
   closeLaborModal() { this.setData({ showLaborModal: false }); },
-  onLaborInput(e) {
-    const f = e.currentTarget.dataset.field;
-    const val = e.detail.value;
-    const newData = { ...this.data.laborCalc, [f]: val };
-    this.reCalcLabor(newData);
-  },
-  reCalcLabor(data) {
-    const P = parseFloat(data.headcount) || 0;
-    const S = parseFloat(data.salary) || 0;
-    const D = parseFloat(data.days) || 0;
-    const H = parseFloat(data.hours) || 0;
-    let res = '-';
-    if(D>0 && H>0) { res = ((P * S) / (D * H)).toFixed(2); }
-    this.setData({ laborCalc: { ...data, result: res } });
-  },
-  applyLaborResult() {
-    if(this.data.laborCalc.result === '-') return wx.showToast({ title:'参数不全', icon:'none'});
-    const idx = this.data.laborCalcTargetIdx;
-    const list = this.data.stages;
-    list[idx].process.laborRate = this.data.laborCalc.result;
-    this.setData({ stages: list, showLaborModal: false });
-    this.clearError(`s${idx}_proc_laborRate`);
-  }
+  onLaborInput(e) { const f = e.currentTarget.dataset.field; const val = e.detail.value; const newData = { ...this.data.laborCalc, [f]: val }; this.reCalcLabor(newData); },
+  reCalcLabor(data) { const P = parseFloat(data.headcount) || 0; const S = parseFloat(data.salary) || 0; const D = parseFloat(data.days) || 0; const H = parseFloat(data.hours) || 0; let res = '-'; if(D>0 && H>0) { res = ((P * S) / (D * H)).toFixed(2); } this.setData({ laborCalc: { ...data, result: res } }); },
+  applyLaborResult() { if(this.data.laborCalc.result === '-') return wx.showToast({ title:'参数不全', icon:'none'}); const idx = this.data.laborCalcTargetIdx; const list = this.data.stages; list[idx].process.laborRate = this.data.laborCalc.result; this.setData({ stages: list, showLaborModal: false }); this.clearError(`s${idx}_proc_laborRate`); }
 })
