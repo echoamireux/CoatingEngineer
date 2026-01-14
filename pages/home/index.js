@@ -1,62 +1,62 @@
 const app = getApp()
 
 // ★★★ 团队访问口令 ★★★
-const ACCESS_CODE = '2300'; 
+const ACCESS_CODE = '2300';
 
 Page({
   data: {
     theme: 'dark',
-    
+
     // --- 弹窗控制状态 ---
-    showModal: false,      
+    showModal: false,
     modalType: '',         // 'login' | 'dev'
-    modalTitle: '',        
-    modalDesc: '',         
-    pendingPath: '',       
-    inputCode: '',         
-    
+    modalTitle: '',
+    modalDesc: '',
+    pendingPath: '',
+    inputCode: '',
+
     menuList: [
       {
         id: 'cost',
         title: '生产成本核算',
-        desc: '精益成本核算 / 辅助费率计算', 
+        desc: '精益成本核算 / 辅助费率计算',
         path: '/pages/cost/index',
         icon: '💰',
         color: '#10b981',
         isDev: true // 标记为开发中
       },
-      { 
+      {
         id: 'coating',
-        title: '涂布与卷材计算', 
-        desc: '卷径计算 / 卷材重量估算 / 泵速计算 / 湿胶重计算', 
-        path: '/pages/coating/index', 
-        icon: '⚙️', 
-        color: '#6366f1' 
+        title: '涂布与卷材计算',
+        desc: '卷径计算 / 卷材重量估算 / 泵速计算 / 湿胶重计算',
+        path: '/pages/coating/index',
+        icon: '⚙️',
+        color: '#6366f1'
       },
-      { 
+      {
         id: 'fluid',
-        title: '流体力学计算', 
-        desc: '供液管路 / 狭缝模头压降', 
-        path: '/pages/fluid/index', 
-        icon: '💧', 
-        color: '#3b82f6' 
+        title: '流体力学计算',
+        desc: '供液管路 / 狭缝模头压降',
+        path: '/pages/fluid/index',
+        icon: '💧',
+        color: '#3b82f6'
       },
-      { 
+      {
         id: 'converter',
-        title: '工程单位换算', 
-        desc: '粘度 / 压力 / 涂布干重', 
-        path: '/pages/tools/converter/index', 
-        icon: '🔄', 
-        color: '#8b5cf6' 
+        title: '工程单位换算',
+        desc: '粘度 / 压力 / 涂布干重',
+        path: '/pages/tools/converter/index',
+        icon: '🔄',
+        color: '#8b5cf6'
       },
-      { 
+      {
         id: 'history',
-        title: '历史记录', 
-        desc: '查看过往计算数据', 
-        path: '/pages/history/index', 
-        icon: '📜', 
-        color: '#10b981' 
-      }
+        title: '历史记录',
+        desc: '查看过往计算数据',
+        path: '/pages/history/index',
+        icon: '📜',
+        color: '#10b981'
+      },
     ]
   },
 
@@ -77,13 +77,13 @@ Page({
     });
   },
 
-  // --- 核心跳转逻辑 (顺序已优化) ---
+  // --- 核心跳转逻辑 ---
   navigateTo(e) {
     const path = e.currentTarget.dataset.path;
     const targetItem = this.data.menuList.find(item => item.path === path);
 
-    // ★★★ 第一关：先检查是否开发中 (优化体验：没做好的功能，不用登录也能看提示) (如需临时放开：把这段注释掉！) ★★★
-    /*if (targetItem && targetItem.isDev) {
+    // ★★★ 第一关：先检查是否开发中 ★★★
+    if (targetItem && targetItem.isDev) {
       this.setData({
         showModal: true,
         modalType: 'dev', // 设置为敬请期待模式
@@ -92,20 +92,19 @@ Page({
       });
       return; // 直接拦截，不查登录
     }
-    */
-    
+
     // ★★★ 第二关：检查登录状态 ★★★
     const isLogin = wx.getStorageSync('isLogin');
 
     if (!isLogin) {
       // 没登录 -> 呼出登录弹窗
-      this.setData({ 
+      this.setData({
         showModal: true,
         modalType: 'login', // 设置为登录模式
         modalTitle: '访问受限',
         modalDesc: '为保护核心工艺数据，请输入团队访问口令。',
         pendingPath: path,
-        inputCode: '' 
+        inputCode: ''
       });
       return;
     }
@@ -149,7 +148,7 @@ Page({
         wx.showToast({ title: '口令错误', icon: 'error' });
         this.setData({ inputCode: '' });
       }
-    } 
+    }
     // 开发提示模式下，确认按钮只是关闭弹窗
     else {
       this.setData({ showModal: false });

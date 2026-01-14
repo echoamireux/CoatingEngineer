@@ -29,6 +29,21 @@
         </view>
       </block>
     </view>
+
+    <view class="support-area">
+      <button class="support-btn btn-reset" open-type="feedback">
+        <text class="sup-icon">🐞</text>
+        <text class="sup-text">问题反馈</text>
+      </button>
+      
+      <view class="sup-divider"></view>
+
+      <button class="support-btn btn-reset" open-type="contact">
+        <text class="sup-icon">💬</text>
+        <text class="sup-text">联系客服</text>
+      </button>
+    </view>
+
   </view>
 
   <view class="footer">
@@ -58,6 +73,9 @@
                  value="{{inputCode}}"
                  maxlength="4"
                  cursor-spacing="100"/>
+        </view>
+        <view class="hint-text" wx:if="{{modalType === 'login'}}">
+          <text>💡 提示：流体力学临界雷诺数 (Re)</text>
         </view>
       </view>
 

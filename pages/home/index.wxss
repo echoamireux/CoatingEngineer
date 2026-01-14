@@ -19,9 +19,9 @@
   --primary: #10b981;
   --border: #374151;
   --title-shadow: 0 4rpx 8rpx rgba(0,0,0,0.5);
-  --modal-shadow: 0 24rpx 48rpx rgba(0,0,0,0.4); /* 更深的弹窗阴影 */
-  --input-bg: rgba(255,255,255,0.05); /* 输入框背景 */
-  --primary-btn-shadow: 0 8rpx 16rpx rgba(16, 185, 129, 0.3); /* 主按钮弥散阴影 */
+  --modal-shadow: 0 24rpx 48rpx rgba(0,0,0,0.4); 
+  --input-bg: rgba(255,255,255,0.05); 
+  --primary-btn-shadow: 0 8rpx 16rpx rgba(16, 185, 129, 0.3); 
 }
 .page-container.light {
   --bg: #f3f4f6;
@@ -31,7 +31,7 @@
   --primary: #059669;
   --border: #e5e7eb;
   --title-shadow: 0 2rpx 4rpx rgba(0,0,0,0.05);
-  --modal-shadow: 0 24rpx 48rpx rgba(0,0,0,0.1); /* 浅色弹窗阴影 */
+  --modal-shadow: 0 24rpx 48rpx rgba(0,0,0,0.1); 
   --input-bg: rgba(0,0,0,0.03);
   --primary-btn-shadow: 0 8rpx 16rpx rgba(5, 150, 105, 0.25);
 }
@@ -41,7 +41,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10rpx;
+  margin-bottom: 0; 
   padding: 10rpx 0;
 }
 
@@ -88,13 +88,14 @@
   font-family: "DIN Alternate", Helvetica, sans-serif;
 }
 
-/* 内容布局 */
+/* 内容布局 - ★★★ 调整点 1 ★★★ */
 .content-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding-top: 100rpx;
+  /* 之前是 40rpx，现在改为 70rpx，让列表稍微下沉一点，不撞头 */
+  padding-top: 70rpx; 
 }
 
 /* 菜单列表 */
@@ -165,6 +166,65 @@
   opacity: 0.3;
 }
 
+/* ★★★ 底部辅助功能区 - ★★★ 调整点 2 ★★★ */
+.support-area {
+  /* 之前是 80rpx，现在改为 40rpx，拉近与上面列表的距离 */
+  margin-top: 40rpx; 
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0; 
+}
+
+.support-btn {
+  flex: 1; 
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 20rpx 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  transition: all 0.2s;
+  opacity: 0.6;
+}
+
+.support-btn:active {
+  opacity: 1;
+  background: var(--input-bg);
+  border-radius: 16rpx;
+}
+
+.sup-icon { 
+  font-size: 32rpx; 
+}
+
+.sup-text {
+  font-size: 26rpx;
+  color: var(--text-sub); 
+  font-weight: 500;
+}
+
+.sup-divider {
+  width: 1px;
+  height: 30rpx;
+  background: var(--text-sub);
+  opacity: 0.2;
+}
+
+/* 按钮重置 */
+.btn-reset {
+  margin: 0;
+  line-height: inherit;
+  box-sizing: border-box;
+  color: inherit;
+  font-weight: normal;
+  overflow: hidden;
+}
+.btn-reset::after { border: none; }
+
 /* 页脚 */
 .footer {
   text-align: center;
@@ -172,7 +232,7 @@
   flex-direction: column;
   gap: 8rpx;
   opacity: 0.25;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 20rpx);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 40rpx);
   margin-top: auto;
 }
 .copyright { 
@@ -183,32 +243,30 @@
 }
 .slogan { font-size: 18rpx; font-style: italic; }
 
-/* ★★★ 专业级弹窗样式 Pro ★★★ */
+/* 弹窗样式 */
 .modal-mask {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6); /*稍微通透一点的遮罩*/
-  backdrop-filter: blur(4px); /* 增加高级的毛玻璃效果 (部分机型支持) */
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
   z-index: 999;
   display: flex; align-items: center; justify-content: center;
   opacity: 0; pointer-events: none; transition: all 0.3s ease;
 }
-/* 弹窗显示动画 */
 .modal-mask.show { opacity: 1; pointer-events: auto; }
 .modal-mask.show .modal-card { transform: translateY(0) scale(1); opacity: 1; }
 
 .modal-card {
-  width: 80%; /* 稍微宽一点 */
+  width: 80%; 
   background: var(--card);
-  border-radius: 32rpx; /* 更大的圆角 */
-  padding: 40rpx; /* 更大的内边距 */
+  border-radius: 32rpx; 
+  padding: 40rpx; 
   text-align: center;
-  box-shadow: var(--modal-shadow); /* 高级阴影 */
+  box-shadow: var(--modal-shadow); 
   border: 1px solid var(--border);
-  transform: translateY(20rpx) scale(0.95); /* 初始状态 */
-  opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* 弹性动画 */
+  transform: translateY(20rpx) scale(0.95);
+  opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* 1. 弹窗头部 */
 .mc-header {
   display: flex; flex-direction: column; align-items: center;
   margin-bottom: 30rpx;
@@ -216,7 +274,7 @@
 .mc-icon-badge {
   font-size: 64rpx; margin-bottom: 20rpx;
   width: 100rpx; height: 100rpx;
-  background: var(--input-bg); /* 微妙的背景底座 */
+  background: var(--input-bg);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
 }
@@ -225,7 +283,6 @@
   letter-spacing: 1rpx;
 }
 
-/* 2. 弹窗主体 */
 .mc-body { margin-bottom: 50rpx; }
 .mc-desc {
   font-size: 28rpx; color: var(--text-sub);
@@ -235,26 +292,23 @@
   opacity: 0.9;
 }
 
-/* 专业输入框包裹层 */
 .login-input-wrapper {
   margin-top: 40rpx;
   padding: 0 10rpx;
 }
-/* 专业输入框样式 */
 .login-inp-pro {
   height: 96rpx;
   background: var(--input-bg);
-  border: 1px solid transparent; /* 默认无边框 */
+  border: 1px solid transparent; 
   border-radius: 16rpx;
   color: var(--text);
-  font-size: 40rpx; /* 更大的字号 */
+  font-size: 40rpx; 
   text-align: center;
-  letter-spacing: 12rpx; /* 极大的字间距，像密码格 */
+  letter-spacing: 12rpx; 
   font-weight: bold;
   font-family: "DIN Alternate", monospace;
   transition: all 0.2s;
 }
-/* 输入框聚焦态（模拟）- 实际上小程序 input focus 样式有限，这里做个基础 */
 .login-inp-pro:focus {
   border-color: var(--primary);
   background: var(--bg);
@@ -267,26 +321,37 @@
   opacity: 0.5;
 }
 
-/* 3. 弹窗底部按钮 */
 .mc-footer { display: flex; gap: 24rpx; }
 .btn-pro {
   flex: 1;
   font-size: 30rpx; font-weight: bold;
-  height: 96rpx; line-height: 96rpx; /* 更高的按钮 */
-  border-radius: 20rpx; /* 更圆润 */
-  border: none; /* 去掉默认边框 */
+  height: 96rpx; line-height: 96rpx;
+  border-radius: 20rpx; 
+  border: none;
   transition: all 0.2s;
 }
 .btn-pro:active { transform: scale(0.98); }
 
 .btn-cancel {
-  background: transparent; /* 透明背景 */
+  background: transparent; 
   color: var(--text-sub);
-  border: 1px solid var(--border); /* 细边框 */
+  border: 1px solid var(--border); 
 }
 .btn-confirm {
   background: var(--primary);
   color: #fff;
-  /* 核心：品牌色弥散阴影，增加立体感 */
   box-shadow: var(--primary-btn-shadow); 
+}
+
+/* ★★★ 新增：口令提示小字 ★★★ */
+.hint-text {
+  margin-top: 24rpx; /* 离输入框有一点距离 */
+  font-size: 22rpx;  /* 字体要很小 */
+  color: var(--text-sub); /* 用次级灰色 */
+  opacity: 0.5; /* 增加透明度，让它看起来更不显眼 */
+  letter-spacing: 1rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, sans-serif;
 }
