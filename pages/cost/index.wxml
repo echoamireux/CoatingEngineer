@@ -8,19 +8,25 @@
 
   <scroll-view scroll-y class="main-scroll">
     <view class="card global-card compact">
-      <view class="gc-row">
-         <view class="gc-item">
-            <text class="label">计价模式</text>
-            <view class="toggle-box small">
-              <view class="{{taxMode==='ex'?'active':''}}" bindtap="setTaxMode" data-mode="ex">未税</view>
-              <view class="{{taxMode==='inc'?'active':''}}" bindtap="setTaxMode" data-mode="inc">含税</view>
+      <view class="gc-header">
+         <view class="gc-row" style="flex:1">
+            <view class="gc-item">
+                <text class="label">计价模式</text>
+                <view class="toggle-box small">
+                  <view class="{{taxMode==='ex'?'active':''}}" bindtap="setTaxMode" data-mode="ex">未税</view>
+                  <view class="{{taxMode==='inc'?'active':''}}" bindtap="setTaxMode" data-mode="inc">含税</view>
+                </view>
+            </view>
+            <view class="gc-item">
+                <text class="label">增值税(%)</text>
+                <input class="inp tiny" type="digit" value="{{vatRate}}" bindinput="onInput" data-field="vatRate" data-type="global"/>
             </view>
          </view>
-         <view class="gc-item">
-            <text class="label">增值税(%)</text>
-            <input class="inp tiny" type="digit" value="{{vatRate}}" bindinput="onInput" data-field="vatRate" data-type="global"/>
+         <view class="top-reset-btn" bindtap="openClearModal">
+            <text>↺ 重置数据</text>
          </view>
       </view>
+
       <view class="formula-hub">
          <text class="fh-title">🧮 计算原理中心：</text>
          <view class="fh-list">
@@ -35,6 +41,7 @@
 
     <block wx:for="{{stages}}" wx:for-item="stage" wx:for-index="sIdx" wx:key="sIdx">
       <view class="stage-container">
+        
         <view class="stage-header">
           <view class="sh-left" catchtap="preventBubble">
             <view class="sh-badge">{{sIdx + 1}}</view>
@@ -42,13 +49,15 @@
           </view>
           
           <view class="sh-right">
-             <view class="fold-summary" wx:if="{{stage.folded}}">
-                <view class="yield-tag-dark">良率 {{stage.yield}}%</view>
+             <view class="fold-summary" wx:if="{{stage.folded}}" bindtap="toggleStageFold" data-index="{{sIdx}}">
+                <view class="fs-yield">Yield {{stage.yield || '-'}}%</view>
                 <text class="fs-cost">¥{{stage.stageTotalCost || 0}}</text>
              </view>
+             
              <view class="sh-inputs" wx:else catchtap="preventBubble">
-                <text class="yield-label">良率%</text>
+                <text class="yield-label">良率</text>
                 <input class="yield-inp {{errors['s'+sIdx+'_yield']?'error':''}}" type="digit" value="{{stage.yield}}" placeholder="必填" bindinput="onInput" data-type="stage_yield" data-stage="{{sIdx}}"/>
+                <text class="yield-unit">%</text>
              </view>
              
              <view class="fold-btn" bindtap="toggleStageFold" data-index="{{sIdx}}">
@@ -62,8 +71,13 @@
         <view wx:if="{{!stage.folded}}">
             <view class="sub-section">
               <view class="ss-head" bindtap="toggleSectionFold" data-stage="{{sIdx}}" data-section="mat">
-                 <text class="ss-title">📦 材料成本计算</text>
-                 <view class="fold-icon small">{{stage.matFolded ? '▼' : '▲'}}</view>
+                 <view class="ss-head-left">
+                    <text class="ss-title">📦 材料成本计算</text>
+                 </view>
+                 <view class="ss-head-right">
+                    <text class="ss-mini-cost" wx:if="{{stage.matFolded}}">¥{{stage.stageMatCost || 0}}</text>
+                    <view class="fold-icon small">{{stage.matFolded ? '▼' : '▲'}}</view>
+                 </view>
               </view>
               
               <block wx:if="{{!stage.matFolded}}">
@@ -148,8 +162,13 @@
 
             <view class="sub-section process">
               <view class="ss-head" bindtap="toggleSectionFold" data-stage="{{sIdx}}" data-section="proc">
-                 <text class="ss-title">⚙️ 工艺成本计算</text>
-                 <view class="fold-icon small">{{stage.procFolded ? '▼' : '▲'}}</view>
+                 <view class="ss-head-left">
+                    <text class="ss-title">⚙️ 工艺成本计算</text>
+                 </view>
+                 <view class="ss-head-right">
+                    <text class="ss-mini-cost" wx:if="{{stage.procFolded}}">¥{{stage.stageProcCost || 0}}</text>
+                    <view class="fold-icon small">{{stage.procFolded ? '▼' : '▲'}}</view>
+                 </view>
               </view>
 
               <block wx:if="{{!stage.procFolded}}">
@@ -221,27 +240,20 @@
     </block>
     
     <button class="btn-add-stage" bindtap="addStage">+ 增加下道工序</button>
-    <view class="footer-spacer"></view>
+    <view class="footer-spacer-pro"></view>
   </scroll-view>
 
-  <view class="bottom-bar-pro">
-    <view class="bb-data-core">
-       <view class="bb-row-top">
-          <text class="bb-label">总单位成本</text>
-          <view class="bb-yield-tag" wx:if="{{final_yield !== '-'}}">直通率 {{final_yield}}%</view>
+  <view class="floating-capsule-bar">
+    <view class="fcb-content">
+       <view class="fcb-left">
+          <text class="fcb-label">预估成本</text>
+          <text class="fcb-val">¥{{res_final_cost}}</text>
+          <text class="fcb-unit">/m²</text>
+          <view class="fcb-tag" wx:if="{{final_yield !== '-'}}">Yield {{final_yield}}%</view>
        </view>
-       <view class="bb-row-main">
-          <text class="bb-currency">¥</text>
-          <text class="bb-price">{{res_final_cost}}</text>
-          <text class="bb-unit">/m²</text>
+       <view class="fcb-right">
+          <button class="btn-float-calc" bindtap="calculateAll">开始计算</button>
        </view>
-    </view>
-
-    <view class="bb-action-core">
-       <view class="btn-reset-icon" bindtap="openClearModal">
-          <text>🗑️</text>
-       </view>
-       <button class="btn-calc-pro" bindtap="calculateAll">开始计算</button>
     </view>
   </view>
 

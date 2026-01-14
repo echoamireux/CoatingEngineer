@@ -4,7 +4,7 @@ Page({
   data: {
     theme: 'dark',
     errors: {}, 
-    // ... (other data)
+    
     showFormulaModal: false,
     formulaTitle: '',
     formulaContent: [], 
@@ -18,9 +18,8 @@ Page({
     showSaveModal: false,  
     showLoadModal: false,  
     showDeleteModal: false,
-    // ★★★ 新增：覆盖确认弹窗状态 ★★★
     showOverwriteModal: false, 
-    pendingSaveName: '', // 暂存待保存的名称
+    pendingSaveName: '', 
 
     tempRecipeName: '',
     deleteTargetIndex: -1,
@@ -28,7 +27,7 @@ Page({
     vatRate: '13',
     stages: [],
     final_yield: '-',
-    res_final_cost: '-',
+    res_final_cost: '-', // 初始状态显示 -
 
     showMachModal: false,
     machCalcTargetIdx: -1,
@@ -374,20 +373,16 @@ Page({
     let list = wx.getStorageSync('my_recipes') || [];
     const existIdx = list.findIndex(r => r.name === name);
 
-    // ★★★ 核心修改：不再使用 wx.showModal，而是唤起自定义弹窗 ★★★
     if(existIdx > -1) {
-        // 唤起自定义“覆盖确认”弹窗
         this.setData({ 
           showOverwriteModal: true,
           pendingSaveName: name 
         });
     } else {
-        // 直接保存
         this._executeSave(name);
     }
   },
 
-  // 执行最终保存的内部方法
   _executeSave(finalName) {
     const s = { name: finalName, price: this.data.mixResultPrice, solid: this.data.mixResultSolid, details: this.data.mixList };
     let currentList = wx.getStorageSync('my_recipes') || [];
@@ -398,7 +393,6 @@ Page({
     this.loadRecipesFromStorage();
     this.applyRecipe(s.name, s.price, s.solid); 
     
-    // 关闭所有相关弹窗
     this.setData({ 
         showSaveModal: false, 
         showOverwriteModal: false,
@@ -407,17 +401,8 @@ Page({
     wx.showToast({ title: '保存成功', icon: 'success' });
   },
 
-  // 自定义覆盖弹窗：取消
-  closeOverwriteModal() {
-    this.setData({ showOverwriteModal: false });
-  },
-
-  // 自定义覆盖弹窗：确认覆盖
-  confirmOverwrite() {
-    this._executeSave(this.data.pendingSaveName);
-  },
-
-  // 自定义覆盖弹窗：存为副本
+  closeOverwriteModal() { this.setData({ showOverwriteModal: false }); },
+  confirmOverwrite() { this._executeSave(this.data.pendingSaveName); },
   confirmSaveAsNew() {
     const originalName = this.data.pendingSaveName;
     const copyName = `${originalName}_副本${Math.floor(Math.random()*100)}`;
@@ -440,6 +425,7 @@ Page({
   },
 
   showFormula(e) {
+    // Formula content kept same as previous version for brevity
     const t = e.currentTarget.dataset.type;
     let list = [];
     if (t === 'global') {
