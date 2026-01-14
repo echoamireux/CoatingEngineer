@@ -2,16 +2,17 @@
   "pages": [
     "pages/home/index",
     "pages/coating/index",
-    "pages/tools/converter/index",
     "pages/fluid/index",
+    "pages/tools/converter/index",
     "pages/history/index",
     "pages/cost/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#1c3d5a",
+    "navigationBarBackgroundColor": "#111827",
     "navigationBarTitleText": "",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "default"
   },
   "sitemapLocation": "sitemap.json"
 }

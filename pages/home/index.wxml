@@ -29,63 +29,84 @@
         </view>
       </block>
     </view>
+  </view>
 
-    <view class="support-area">
-      <button class="support-btn btn-reset" open-type="feedback">
-        <text class="sup-icon">🐞</text>
-        <text class="sup-text">问题反馈</text>
+  <view class="footer-area">
+    <view class="footer-links">
+      <button class="footer-btn btn-reset" open-type="feedback">
+        <text class="ft-icon">🐞</text>
+        <text>问题反馈</text>
       </button>
       
-      <view class="sup-divider"></view>
+      <view class="ft-divider"></view>
+      
+      <view class="footer-btn" bindtap="openAbout">
+        <text class="ft-icon">☕️</text>
+        <text>支持作者</text>
+      </view>
 
-      <button class="support-btn btn-reset" open-type="contact">
-        <text class="sup-icon">💬</text>
-        <text class="sup-text">联系客服</text>
+      <view class="ft-divider"></view>
+
+      <button class="footer-btn btn-reset" open-type="contact">
+        <text class="ft-icon">💬</text>
+        <text>联系客服</text>
       </button>
     </view>
 
-  </view>
-
-  <view class="footer">
-    <text class="copyright">CoatingMaster Pro © 2026</text>
-    <text class="slogan">Powered by echoamireux</text>
+    <view class="copyright-box">
+      <text class="copyright">CoatingMaster Pro © 2026</text>
+      <text class="slogan">Powered by echoamireux</text>
+    </view>
   </view>
 
   <view class="modal-mask {{showModal ? 'show' : ''}}">
     <view class="modal-card">
-      <view class="mc-header">
-        <view class="mc-icon-badge">
-          <text>{{modalType === 'login' ? '🔒' : '🚀'}}</text>
-        </view>
-        <view class="mc-title">{{modalTitle}}</view>
-      </view>
       
-      <view class="mc-body">
-        <text class="mc-desc">{{modalDesc}}</text>
-        
-        <view class="login-input-wrapper" wx:if="{{modalType === 'login'}}">
-          <input class="login-inp-pro" 
-                 type="number" 
-                 password="true" 
-                 placeholder="在此输入4位口令" 
-                 placeholder-class="ph-style-pro"
-                 bindinput="onLoginInput"
-                 value="{{inputCode}}"
-                 maxlength="4"
-                 cursor-spacing="100"/>
+      <block wx:if="{{modalType !== 'about'}}">
+        <view class="mc-header">
+          <view class="mc-icon-badge">
+            <text>{{modalType === 'login' ? '🔒' : '🚀'}}</text>
+          </view>
+          <view class="mc-title">{{modalTitle}}</view>
         </view>
-        <view class="hint-text" wx:if="{{modalType === 'login'}}">
-          <text>💡 提示：流体力学临界雷诺数 (Re)</text>
+        <view class="mc-body">
+          <text class="mc-desc">{{modalDesc}}</text>
+          
+          <view class="login-input-wrapper" wx:if="{{modalType === 'login'}}">
+            <input class="login-inp-pro" type="number" password="true" 
+                   placeholder="输入4位口令" placeholder-class="ph-style-pro"
+                   bindinput="onLoginInput" value="{{inputCode}}" maxlength="4"/>
+          </view>
+          
+          <view class="hint-text" wx:if="{{modalType === 'login'}}">
+            <text>💡 提示：流体力学临界雷诺数 (Re)</text>
+          </view>
         </view>
-      </view>
+      </block>
+
+      <block wx:else>
+        <view class="about-content">
+          <view class="about-avatar">CE</view>
+          <view class="about-name">涂布智算Pro</view>
+          <view class="about-desc">
+            <text>致力于将复杂的涂布工艺数字化，数据算法均经过严谨推导与验证。\n\n如果您觉得好用，可以请我喝杯咖啡，这将成为持续优化算法的动力。</text>
+          </view>
+          
+          <button class="btn-reward-simple" bindtap="previewReward">
+            <text>☕️ 请作者喝杯咖啡</text>
+          </button>
+          
+          <view class="qr-hint">点击预览 -> 保存图片 -> 微信扫一扫</view>
+        </view>
+      </block>
 
       <view class="mc-footer">
         <button class="btn-pro btn-cancel" bindtap="closeModal">
           {{modalType === 'login' ? '取消' : '关闭'}}
         </button>
-        <button class="btn-pro btn-confirm" bindtap="handleModalConfirm">
-          {{modalType === 'login' ? '立即验证' : '我知道了'}}
-        </button>
+        <block wx:if="{{modalType === 'login'}}">
+          <button class="btn-pro btn-confirm" bindtap="handleModalConfirm">验证</button>
+        </block>
       </view>
     </view>
   </view>

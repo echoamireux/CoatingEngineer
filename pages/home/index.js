@@ -3,13 +3,16 @@ const app = getApp()
 // ★★★ 团队访问口令 ★★★
 const ACCESS_CODE = '2300';
 
+// ★★★ 赞赏码路径 ★★★
+const REWARD_IMAGE_PATH = '/images/reward.jpg'; 
+
 Page({
   data: {
-    theme: 'dark',
+    theme: 'dark', 
 
     // --- 弹窗控制状态 ---
     showModal: false,
-    modalType: '',         // 'login' | 'dev'
+    modalType: '', 
     modalTitle: '',
     modalDesc: '',
     pendingPath: '',
@@ -23,12 +26,12 @@ Page({
         path: '/pages/cost/index',
         icon: '💰',
         color: '#10b981',
-        isDev: true // 标记为开发中
+        isDev: false // 标记为开发中
       },
       {
         id: 'coating',
         title: '涂布与卷材计算',
-        desc: '卷径计算 / 卷材重量估算 / 泵速计算 / 湿胶重计算',
+        desc: '卷径 / 重量 / 泵速 / 湿胶重',
         path: '/pages/coating/index',
         icon: '⚙️',
         color: '#6366f1'
@@ -61,46 +64,63 @@ Page({
   },
 
   onLoad() {
-    const savedTheme = wx.getStorageSync('theme');
-    if (savedTheme) {
-      this.setData({ theme: savedTheme });
-    }
+    const savedTheme = wx.getStorageSync('theme') || 'dark';
+    this.setData({ theme: savedTheme });
+    this.updateStatusBar(savedTheme);
   },
 
   toggleTheme() {
     const newTheme = this.data.theme === 'dark' ? 'light' : 'dark';
     this.setData({ theme: newTheme });
     wx.setStorageSync('theme', newTheme);
+    this.updateStatusBar(newTheme);
+  },
+
+  updateStatusBar(theme) {
     wx.setNavigationBarColor({
-      frontColor: newTheme === 'dark' ? '#ffffff' : '#000000',
-      backgroundColor: newTheme === 'dark' ? '#111827' : '#f3f4f6'
+      frontColor: theme === 'dark' ? '#ffffff' : '#000000',
+      backgroundColor: theme === 'dark' ? '#111827' : '#f3f4f6'
     });
   },
 
-  // --- 核心跳转逻辑 ---
+  openAbout() {
+    this.setData({
+      showModal: true,
+      modalType: 'about',
+      modalTitle: '关于作者',
+      modalDesc: ''
+    });
+  },
+
+  previewReward() {
+    wx.previewImage({
+      urls: [REWARD_IMAGE_PATH],
+      current: REWARD_IMAGE_PATH,
+      fail: () => wx.showToast({ title: '暂无赞赏码', icon: 'none' })
+    });
+  },
+
   navigateTo(e) {
     const path = e.currentTarget.dataset.path;
     const targetItem = this.data.menuList.find(item => item.path === path);
 
-    // ★★★ 第一关：先检查是否开发中 ★★★
+    // 1. 开发中拦截
     if (targetItem && targetItem.isDev) {
       this.setData({
         showModal: true,
-        modalType: 'dev', // 设置为敬请期待模式
-        modalTitle: '功能升级中',
-        modalDesc: '该模块正在进行 v2.0 算法重构，\n将包含更精准的费率估算模型。\n敬请期待！'
+        modalType: 'dev',
+        modalTitle: '功能完善中',
+        modalDesc: '该模块正在进行最终算法校准，\n将随正式版一同发布。\n敬请期待！'
       });
-      return; // 直接拦截，不查登录
+      return;
     }
 
-    // ★★★ 第二关：检查登录状态 ★★★
+    // 2. 登录拦截
     const isLogin = wx.getStorageSync('isLogin');
-
     if (!isLogin) {
-      // 没登录 -> 呼出登录弹窗
       this.setData({
         showModal: true,
-        modalType: 'login', // 设置为登录模式
+        modalType: 'login',
         modalTitle: '访问受限',
         modalDesc: '为保护核心工艺数据，请输入团队访问口令。',
         pendingPath: path,
@@ -109,14 +129,10 @@ Page({
       return;
     }
 
-    // ★★★ 第三关：通关跳转 ★★★
     if (path) {
       wx.navigateTo({
         url: path,
-        fail: (err) => {
-          console.error('跳转失败:', err);
-          wx.showToast({ title: '路径配置错误', icon: 'none' });
-        }
+        fail: () => wx.showToast({ title: '路径配置错误', icon: 'none' })
       });
     }
   },
@@ -129,28 +145,21 @@ Page({
     this.setData({ inputCode: e.detail.value });
   },
 
-  // --- 处理弹窗确认按钮 ---
   handleModalConfirm() {
-    // 只有登录模式下，确认按钮才执行验证逻辑
     if (this.data.modalType === 'login') {
       if (this.data.inputCode === ACCESS_CODE) {
         wx.setStorageSync('isLogin', true);
         wx.showToast({ title: '验证通过', icon: 'success' });
         this.setData({ showModal: false });
-
-        // 登录成功后，自动跳转
-        const path = this.data.pendingPath;
-        if (path) {
-          setTimeout(() => { wx.navigateTo({ url: path }); }, 500);
+        if (this.data.pendingPath) {
+          setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }); }, 500);
         }
       } else {
         wx.vibrateShort();
         wx.showToast({ title: '口令错误', icon: 'error' });
         this.setData({ inputCode: '' });
       }
-    }
-    // 开发提示模式下，确认按钮只是关闭弹窗
-    else {
+    } else {
       this.setData({ showModal: false });
     }
   }
