@@ -10,7 +10,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#1c3d5a",
-    "navigationBarTitleText": "涂布智算",
+    "navigationBarTitleText": "",
     "navigationBarTextStyle": "white"
   },
   "sitemapLocation": "sitemap.json"
