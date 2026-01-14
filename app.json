@@ -10,7 +10,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#1c3d5a",
-    "navigationBarTitleText": "Echo的涂布计算笔记",
+    "navigationBarTitleText": "涂布智算",
     "navigationBarTextStyle": "white"
   },
   "sitemapLocation": "sitemap.json"
