@@ -1,0 +1,275 @@
+Page({
+  data: {
+    theme: 'dark', 
+    showFormula: false, showRPMModal: false, showKModal: false, 
+    showResetModal: false, // 核心：使用自定义弹窗控制变量
+    showHistoryModal: false,
+    
+    localHistory: [],
+
+    temp_rpm: '', temp_disp: '',
+    errors: {}, pipeMissingText: '', slotMissingText: '',
+
+    rho_wet: '', isPowerLaw: false, viscosity: '', K_val: '', n_val: '',
+    pipe_Q: '', pipe_D: '', pipe_L: '', pipe_dz: '', pipe_K_loss: '',
+    slot_W: '', slot_H: '', slot_Ls: '',     
+
+    result: {
+      hasResult: false, layoutMode: '', 
+      total_dp: {b:'-', p:0, s:false},
+      p_dp:{b:'-',p:0,s:false}, p_re:'-', p_visc:{b:'-',p:0,s:false}, p_shear:{b:'-',p:0,s:false}, p_turb:false,
+      s_dp:{b:'-',p:0,s:false}, s_re:'-', s_visc:{b:'-',p:0,s:false}, s_shear:{b:'-',p:0,s:false}, s_turb:false
+    }
+  },
+
+  onShow() {
+    this.loadLocalHistory();
+  },
+
+  toggleTheme() { this.setData({ theme: this.data.theme === 'dark' ? 'light' : 'dark' }); },
+  toggleModel(e) { this.setData({ isPowerLaw: e.detail.value, 'result.hasResult': false }); },
+  toggleFormula() { this.setData({ showFormula: !this.data.showFormula }); },
+
+  onInput(e) {
+    const field = e.currentTarget.dataset.field;
+    this.setData({ [field]: e.detail.value, [`errors.${field}`]: false, pipeMissingText: '', slotMissingText: '' });
+  },
+
+  fmt(num) {
+    if (!isFinite(num) || isNaN(num)) return { b: '-', p: 0, s: false };
+    let abs = Math.abs(num);
+    if (abs === 0) return { b: '0.00', p: 0, s: false };
+    if (abs > 10000 || abs < 0.01) {
+      let str = num.toExponential(2); 
+      let parts = str.split('e');
+      return { b: parts[0], p: parseInt(parts[1]), s: true };
+    }
+    return { b: num.toFixed(2), p: 0, s: false };
+  },
+
+  // 🔥 核心：确保使用的是自定义弹窗，避免白色背景 🔥
+  confirmReset() {
+    this.setData({ showResetModal: true }); 
+  },
+  cancelReset() { this.setData({ showResetModal: false }); },
+  execReset() {
+    this.setData({
+      rho_wet: '', viscosity: '', K_val: '', n_val: '',
+      pipe_Q: '', pipe_D: '', pipe_L: '', pipe_dz: '', pipe_K_loss: '',
+      slot_W: '', slot_H: '', slot_Ls: '',
+      errors: {}, pipeMissingText: '', slotMissingText: '',
+      result: { hasResult: false },
+      showResetModal: false
+    });
+  },
+
+  openRPMModal() { this.setData({ showRPMModal: true }); },
+  closeRPMModal() { this.setData({ showRPMModal: false }); },
+  onRPMInput(e) { this.setData({ temp_rpm: e.detail.value }); },
+  onDispInput(e) { this.setData({ temp_disp: e.detail.value }); },
+  calcRPMToQ() {
+    const n = parseFloat(this.data.temp_rpm);
+    const dp = parseFloat(this.data.temp_disp);
+    if(n && dp) {
+      // 1. 计算原始值
+      let val = n * dp / 1000;
+
+      // 🌟 优化显示：保留6位有效数字
+      // parseFloat(...) 会自动去掉 .toPrecision 生成的字符串末尾多余的 "0"
+      // 效果：0.0042 -> 0.0042 (而不是0.00);  150.00 -> 150 (而不是150.00)
+      let showVal = parseFloat(val.toPrecision(6)).toString();
+
+      this.setData({ pipe_Q: showVal, 'errors.pipe_Q': false });
+      this.closeRPMModal();
+    }
+  },
+
+  openKModal() { this.setData({ showKModal: true }); },
+  closeKModal() { this.setData({ showKModal: false }); },
+  addKFactor(e) {
+    const kAdd = parseFloat(e.currentTarget.dataset.k);
+    let cur = parseFloat(this.data.pipe_K_loss) || 0;
+    this.setData({ pipe_K_loss: (cur + kAdd).toFixed(2), 'errors.pipe_K_loss': false, showKModal: false });
+  },
+
+  openHistoryModal() { 
+    this.loadLocalHistory();
+    this.setData({ showHistoryModal: true }); 
+  },
+  closeHistoryModal() { this.setData({ showHistoryModal: false }); },
+
+  loadLocalHistory() {
+    const all = wx.getStorageSync('calc_history') || [];
+    const myHist = all.filter(i => i.module === 'fluid').reverse();
+    this.setData({ localHistory: myHist });
+  },
+
+  restoreHistory(e) {
+    const idx = e.currentTarget.dataset.index;
+    const item = this.data.localHistory[idx];
+    const raw = item.rawData;
+
+    if (raw) {
+      this.setData({
+        rho_wet: raw.rho_wet,
+        isPowerLaw: raw.isPowerLaw,
+        viscosity: raw.viscosity,
+        K_val: raw.K_val,
+        n_val: raw.n_val,
+        pipe_Q: raw.pipe_Q,
+        pipe_D: raw.pipe_D,
+        pipe_L: raw.pipe_L,
+        pipe_dz: raw.pipe_dz,
+        pipe_K_loss: raw.pipe_K_loss,
+        slot_W: raw.slot_W,
+        slot_H: raw.slot_H,
+        slot_Ls: raw.slot_Ls,
+        result: raw.resultCache || { hasResult: false }
+      });
+      this.closeHistoryModal();
+      wx.showToast({ title: '参数已填入', icon: 'success' });
+    }
+  },
+
+  saveHistory() {
+    const d = this.data;
+    const r = d.result;
+    if (!r.hasResult) return;
+
+    const fmtStr = (obj) => obj.s ? (obj.b + 'e' + obj.p) : obj.b;
+    /* 👇👇👇 改动开始：自定义 24小时制 时间格式 👇👇👇 */
+    const now = new Date();
+    const Y = now.getFullYear();
+    const M = (now.getMonth() + 1).toString().padStart(2, '0');
+    const D = now.getDate().toString().padStart(2, '0');
+    const h = now.getHours().toString().padStart(2, '0');
+    const m = now.getMinutes().toString().padStart(2, '0');
+    const time = `${Y}/${M}/${D} ${h}:${m}`; // 结果如: 2026/01/12 00:30
+    /* 👆👆👆 改动结束 👆👆👆 */
+
+    const displayData = [
+      { k: '【结果】总压降', v: fmtStr(r.total_dp) + ' kPa' },
+      { k: '【输入】流量Q', v: d.pipe_Q + ' L/min' },
+      { k: '【输入】密度ρ', v: d.rho_wet + ' g/cm³' }
+    ];
+    if (d.pipe_D) displayData.push({ k: '【输入】管径D', v: d.pipe_D + ' mm' });
+    if (d.slot_H) displayData.push({ k: '【输入】模头H', v: d.slot_H + ' μm' });
+
+    const rawData = {
+      rho_wet: d.rho_wet, isPowerLaw: d.isPowerLaw, viscosity: d.viscosity,
+      K_val: d.K_val, n_val: d.n_val,
+      pipe_Q: d.pipe_Q, pipe_D: d.pipe_D, pipe_L: d.pipe_L, pipe_dz: d.pipe_dz, pipe_K_loss: d.pipe_K_loss,
+      slot_W: d.slot_W, slot_H: d.slot_H, slot_Ls: d.slot_Ls,
+      resultCache: d.result
+    };
+
+    const record = {
+      module: 'fluid',
+      moduleName: '流体力学',
+      time: time,
+      data: displayData,
+      rawData: rawData
+    };
+
+    let history = wx.getStorageSync('calc_history') || [];
+    history.push(record);
+    wx.setStorageSync('calc_history', history);
+    
+    this.loadLocalHistory(); 
+    wx.showToast({ title: '已保存', icon: 'success' });
+  },
+
+  handleCalc(e) {
+    const mode = e.currentTarget.dataset.mode;
+    const d = this.data;
+    let err = {};
+    let missingP = [], missingS = [];
+
+    if (!d.rho_wet) { err.rho_wet = true; missingP.push('ρ'); missingS.push('ρ'); }
+    if (d.isPowerLaw) {
+      if(!d.K_val) { err.K_val = true; missingP.push('K'); missingS.push('K'); }
+      if(!d.n_val) { err.n_val = true; missingP.push('n'); missingS.push('n'); }
+    } else {
+      if(!d.viscosity) { err.viscosity = true; missingP.push('μ'); missingS.push('μ'); }
+    }
+    if (!d.pipe_Q) { err.pipe_Q = true; missingP.push('Q'); missingS.push('Q'); }
+
+    if (mode === 'pipe' || mode === 'total') {
+      if(!d.pipe_D) { err.pipe_D = true; missingP.push('D'); }
+      if(!d.pipe_L) { err.pipe_L = true; missingP.push('L'); }
+      if(d.pipe_dz === '') { err.pipe_dz = true; missingP.push('Δz'); }
+      if(d.pipe_K_loss === '') { err.pipe_K_loss = true; missingP.push('ΣK'); }
+    }
+
+    if (mode === 'slot' || mode === 'total') {
+      if(!d.slot_W) { err.slot_W = true; missingS.push('W'); }
+      if(!d.slot_H) { err.slot_H = true; missingS.push('H'); }
+      if(!d.slot_Ls) { err.slot_Ls = true; missingS.push('Ls'); }
+    }
+
+    this.setData({ errors: err });
+    let pText = missingP.length > 0 ? `* 缺: ${missingP.join(', ')}` : '';
+    let sText = missingS.length > 0 ? `* 缺: ${missingS.join(', ')}` : '';
+    
+    if (mode === 'pipe' && pText) { this.setData({ pipeMissingText: pText }); return; }
+    if (mode === 'slot' && sText) { this.setData({ slotMissingText: sText }); return; }
+    if (mode === 'total' && (pText || sText)) {
+      this.setData({ pipeMissingText: pText, slotMissingText: sText });
+      return;
+    }
+
+    this.runMath(mode);
+  },
+
+  runMath(mode) {
+    const d = this.data;
+    const rho = parseFloat(d.rho_wet) * 1000;
+    let K = 0, n = 1;
+    if(d.isPowerLaw) { K = parseFloat(d.K_val); n = parseFloat(d.n_val); }
+    else { K = parseFloat(d.viscosity) / 1000; n = 1; }
+    const Q = parseFloat(d.pipe_Q) / 60000; 
+
+    let p_dp=0, p_re=0, p_visc=0, p_shear=0, p_turb=false;
+    if (mode === 'pipe' || mode === 'total') {
+      const D = parseFloat(d.pipe_D) / 1000;
+      const L = parseFloat(d.pipe_L);
+      const dz = parseFloat(d.pipe_dz);
+      const Kl = parseFloat(d.pipe_K_loss);
+      const factor = (3*n + 1)/(4*n);
+      const shear = factor * (32 * Q) / (Math.PI * Math.pow(D, 3));
+      const mu_eff = K * Math.pow(shear, n-1);
+      const v = Q / (Math.PI * Math.pow(D/2, 2));
+      const re = (rho * v * D) / mu_eff;
+      const dp = (128 * mu_eff * L * Q) / (Math.PI * Math.pow(D, 4)) + rho * 9.81 * dz + Kl * 0.5 * rho * v * v;
+      p_dp = dp/1000; p_re = re; p_visc = mu_eff*1000; p_shear = shear; p_turb = re > 2300;
+    }
+
+    let s_dp=0, s_re=0, s_visc=0, s_shear=0, s_turb=false;
+    if (mode === 'slot' || mode === 'total') {
+      const W = parseFloat(d.slot_W) / 1000;
+      const H = parseFloat(d.slot_H) / 1e6;
+      const Ls = parseFloat(d.slot_Ls) / 1000;
+      const factor = (2*n + 1)/(3*n);
+      const shear = factor * (6 * Q) / (W * H * H);
+      const mu_eff = K * Math.pow(shear, n-1);
+      const v = Q / (W * H);
+      const re = (rho * v * (2 * H)) / mu_eff;
+      const dp = (12 * mu_eff * Ls * Q) / (W * Math.pow(H, 3));
+      s_dp = dp/1000; s_re = re; s_visc = mu_eff*1000; s_shear = shear; s_turb = re > 2300;
+    }
+
+    let layout = 'dual';
+    if(mode === 'pipe') layout = 'single-pipe';
+    if(mode === 'slot') layout = 'single-slot';
+
+    this.setData({
+      result: {
+        hasResult: true, layoutMode: layout,
+        total_dp: this.fmt(p_dp + s_dp),
+        p_dp: this.fmt(p_dp), p_re: this.fmt(p_re), p_visc: this.fmt(p_visc), p_shear: this.fmt(p_shear), p_turb: p_turb,
+        s_dp: this.fmt(s_dp), s_re: this.fmt(s_re), s_visc: this.fmt(s_visc), s_shear: this.fmt(s_shear), s_turb: s_turb
+      },
+      pipeMissingText: '', slotMissingText: ''
+    });
+  }
+})

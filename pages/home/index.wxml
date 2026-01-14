@@ -1,0 +1,75 @@
+<view class="page-container {{theme}}">
+  
+  <view class="home-header">
+    <view class="header-placeholder"></view>
+    
+    <view class="title-box">
+      <view class="app-name">涂布工程专家</view>
+      <view class="app-sub">COATING ENGINEERING</view>
+    </view>
+
+    <view class="theme-toggle" bindtap="toggleTheme">
+      {{theme === 'dark' ? '☀️' : '🌑'}}
+    </view>
+  </view>
+
+  <view class="content-wrapper">
+    <view class="menu-list">
+      <block wx:for="{{menuList}}" wx:key="id">
+        <view class="menu-card" bindtap="navigateTo" data-path="{{item.path}}">
+          <view class="card-bar" style="background: {{item.color}}"></view>
+          <view class="card-content">
+            <view class="card-main">
+              <view class="card-icon">{{item.icon}}</view>
+              <view class="card-title">{{item.title}}</view>
+            </view>
+            <view class="card-desc">{{item.desc}}</view>
+          </view>
+          <view class="card-arrow">{{item.isDev ? '⏳' : '→'}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="footer">
+    <text class="copyright">CoatingMaster Pro © 2026</text>
+    <text class="slogan">Powered by echoamireux</text>
+  </view>
+
+  <view class="modal-mask {{showModal ? 'show' : ''}}">
+    <view class="modal-card">
+      <view class="mc-header">
+        <view class="mc-icon-badge">
+          <text>{{modalType === 'login' ? '🔒' : '🚀'}}</text>
+        </view>
+        <view class="mc-title">{{modalTitle}}</view>
+      </view>
+      
+      <view class="mc-body">
+        <text class="mc-desc">{{modalDesc}}</text>
+        
+        <view class="login-input-wrapper" wx:if="{{modalType === 'login'}}">
+          <input class="login-inp-pro" 
+                 type="number" 
+                 password="true" 
+                 placeholder="在此输入4位口令" 
+                 placeholder-class="ph-style-pro"
+                 bindinput="onLoginInput"
+                 value="{{inputCode}}"
+                 maxlength="4"
+                 cursor-spacing="100"/>
+        </view>
+      </view>
+
+      <view class="mc-footer">
+        <button class="btn-pro btn-cancel" bindtap="closeModal">
+          {{modalType === 'login' ? '取消' : '关闭'}}
+        </button>
+        <button class="btn-pro btn-confirm" bindtap="handleModalConfirm">
+          {{modalType === 'login' ? '立即验证' : '我知道了'}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+</view>

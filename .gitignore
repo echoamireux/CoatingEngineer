@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+unpackage/
+dist/
+project.private.config.json
+sitemap.json

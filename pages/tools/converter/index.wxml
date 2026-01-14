@@ -1,0 +1,81 @@
+<view class="page-container {{theme}}">
+  
+  <view class="nav-bar">
+    <view class="nav-title">单位换算器</view>
+    <view class="icon-btn" bindtap="toggleTheme">{{theme==='dark'?'☀️':'🌑'}}</view>
+  </view>
+
+  <view class="main-layout">
+    
+    <scroll-view scroll-y class="sidebar">
+      <view wx:for="{{tabs}}" wx:key="id" 
+            class="nav-item {{currentTab === index ? 'active' : ''}}" 
+            bindtap="switchTab" data-index="{{index}}">
+        <view class="nav-icon">{{item.icon}}</view>
+        <text>{{item.name}}</text>
+      </view>
+    </scroll-view>
+
+    <scroll-view scroll-y class="content-panel">
+      
+      <block wx:if="{{currentTab === 0}}">
+        <view class="card">
+          <view class="card-head-row">
+            <view class="head-title">涂布干重/厚度</view>
+            <view class="reset-link" bindtap="clearCoating">清空</view>
+          </view>
+
+          <view class="field">
+            <text class="label">干胶密度 ρ (Dry Density)</text>
+            <view class="input-box large">
+              <input class="inp center" type="digit" value="{{density}}" bindinput="onCoatingInput" data-field="density"/>
+              <text class="unit-tag">g/cm³</text>
+            </view>
+          </view>
+
+          <view class="divider"></view>
+
+          <view class="field space-bottom">
+            <text class="label">干涂量 (GSM)</text>
+            <view class="input-box large">
+              <input class="inp center" type="digit" value="{{gsm}}" bindinput="onCoatingInput" data-field="gsm"/>
+              <text class="unit-tag">g/m²</text>
+            </view>
+          </view>
+
+          <view class="field">
+            <text class="label">干膜厚度 (T)</text>
+            <view class="input-box large">
+              <input class="inp center" type="digit" value="{{thick}}" bindinput="onCoatingInput" data-field="thick"/>
+              <text class="unit-tag">μm</text>
+            </view>
+          </view>
+
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="card">
+          <view class="card-head-row">
+            <view class="head-title">{{tabs[currentTab].name}}换算</view>
+            <view class="reset-link" bindtap="clearCommon">清空</view>
+          </view>
+
+          <view class="unit-list">
+            <view class="unit-row" wx:for="{{unitList}}" wx:key="index">
+              <view class="u-meta">
+                <text class="u-name">{{item.name}}</text>
+                <view wx:if="{{item.isSI}}" class="si-tag">SI</view>
+              </view>
+              <view class="input-box right-align">
+                <input class="inp" type="digit" value="{{item.val}}" bindinput="onUnitInput" data-index="{{index}}"/>
+                <text class="unit-tag fixed-w">{{item.unit}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+
+    </scroll-view>
+  </view>
+</view>

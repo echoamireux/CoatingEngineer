@@ -1,0 +1,47 @@
+<view class="page-container {{theme}}">
+  
+  <view class="nav-bar">
+    <view class="nav-title">历史记录</view>
+    <view class="actions">
+      <view class="icon-btn" bindtap="toggleTheme">{{theme==='dark'?'☀️':'🌑'}}</view>
+      <view class="icon-btn danger" bindtap="clearAll" wx:if="{{historyList.length > 0}}">🗑️</view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="history-list">
+    
+    <block wx:if="{{historyList.length > 0}}">
+      <view class="h-card" wx:for="{{historyList}}" wx:key="time">
+        
+        <view class="hc-head">
+          <view class="hc-tag {{item.module}}">{{item.moduleName}}</view>
+          <view class="hc-time">{{item.time}}</view>
+          <view class="hc-del" catchtap="deleteItem" data-index="{{index}}">×</view>
+        </view>
+
+        <view class="hc-body">
+          <view class="hc-row" wx:for="{{item.data}}" wx:key="k" wx:for-item="sub">
+            <text class="hc-k">{{sub.k}}</text>
+            <text class="hc-v">{{sub.v}}</text>
+          </view>
+        </view>
+
+      </view>
+    </block>
+
+    <view class="empty-state" wx:else>
+      <text>暂无计算记录</text>
+    </view>
+
+  </scroll-view>
+  <view class="modal-mask center-modal" wx:if="{{showResetModal}}">
+    <view class="modal-card small dark-theme-fix">
+      <view class="mc-head">清空确认</view>
+      <view style="text-align:center;color:var(--text-sub);margin:30rpx 0;">确定要删除所有历史记录吗？</view>
+      <view class="mc-foot">
+        <button bindtap="cancelReset">取消</button>
+        <button class="red" bindtap="execReset">确定删除</button>
+      </view>
+    </view>
+  </view>
+</view>

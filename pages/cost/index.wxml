@@ -1,0 +1,545 @@
+<view class="page-container {{theme}}">
+  <view class="nav-bar">
+    <view class="nav-title">成本工序流</view>
+    <view class="actions">
+      <view class="icon-btn" bindtap="toggleTheme">{{theme==='dark'?'☀️':'🌑'}}</view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="main-scroll">
+    <view class="card global-card compact">
+      <view class="gc-row">
+         <view class="gc-item">
+            <text class="label">计价模式</text>
+            <view class="toggle-box small">
+              <view class="{{taxMode==='ex'?'active':''}}" bindtap="setTaxMode" data-mode="ex">未税</view>
+              <view class="{{taxMode==='inc'?'active':''}}" bindtap="setTaxMode" data-mode="inc">含税</view>
+            </view>
+         </view>
+         <view class="gc-item">
+            <text class="label">增值税(%)</text>
+            <input class="inp tiny" type="digit" value="{{vatRate}}" bindinput="onInput" data-field="vatRate" data-type="global"/>
+         </view>
+      </view>
+      <view class="formula-hub">
+         <text class="fh-title">🧮 计算原理中心：</text>
+         <view class="fh-list">
+            <view class="fh-tag" bindtap="showFormula" data-type="global">税率</view>
+            <view class="fh-tag" bindtap="showFormula" data-type="film">膜材</view>
+            <view class="fh-tag" bindtap="showFormula" data-type="glue">胶层</view>
+            <view class="fh-tag" bindtap="showFormula" data-type="process">工艺</view>
+            <view class="fh-tag" bindtap="showFormula" data-type="accum">累计</view>
+         </view>
+      </view>
+    </view>
+
+    <block wx:for="{{stages}}" wx:for-item="stage" wx:for-index="sIdx" wx:key="sIdx">
+      <view class="stage-container">
+        <view class="stage-header">
+          <view class="sh-left" catchtap="preventBubble">
+            <view class="sh-badge">{{sIdx + 1}}</view>
+            <input class="sh-name" value="{{stage.name}}" placeholder="输入工序名称" bindinput="onInput" data-type="stage_name" data-stage="{{sIdx}}"/>
+          </view>
+          
+          <view class="sh-right">
+             <view class="fold-summary" wx:if="{{stage.folded}}">
+                <view class="yield-tag-dark">良率 {{stage.yield}}%</view>
+                <text class="fs-cost">¥{{stage.stageTotalCost || 0}}</text>
+             </view>
+             <view class="sh-inputs" wx:else catchtap="preventBubble">
+                <text class="yield-label">良率%</text>
+                <input class="yield-inp {{errors['s'+sIdx+'_yield']?'error':''}}" type="digit" value="{{stage.yield}}" placeholder="必填" bindinput="onInput" data-type="stage_yield" data-stage="{{sIdx}}"/>
+             </view>
+             
+             <view class="fold-btn" bindtap="toggleStageFold" data-index="{{sIdx}}">
+                {{stage.folded ? '▼' : '▲'}}
+             </view>
+             
+             <view class="stage-del-btn" catchtap="removeStage" data-index="{{sIdx}}" wx:if="{{sIdx>0 && !stage.folded}}">🗑️</view>
+          </view>
+        </view>
+
+        <view wx:if="{{!stage.folded}}">
+            <view class="sub-section">
+              <view class="ss-head" bindtap="toggleSectionFold" data-stage="{{sIdx}}" data-section="mat">
+                 <text class="ss-title">📦 材料成本计算</text>
+                 <view class="fold-icon small">{{stage.matFolded ? '▼' : '▲'}}</view>
+              </view>
+              
+              <block wx:if="{{!stage.matFolded}}">
+                  <block wx:for="{{stage.materials}}" wx:key="index">
+                    <view class="mat-item">
+                      <view class="mat-head">
+                         <input class="mat-name" value="{{item.name}}" placeholder="材料名" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="name"/>
+                         <view class="mat-acts">
+                            <view wx:if="{{item.type==='glue'}}" class="btn-tiny" bindtap="openMixCal" data-stage="{{sIdx}}" data-index="{{index}}">配方</view>
+                            <view class="arrow-btn" catchtap="moveMaterial" data-stage="{{sIdx}}" data-index="{{index}}" data-dir="{{-1}}" wx:if="{{index>0}}">⬆️</view>
+                            <view class="arrow-btn" catchtap="moveMaterial" data-stage="{{sIdx}}" data-index="{{index}}" data-dir="{{1}}" wx:if="{{index<stage.materials.length-1}}">⬇️</view>
+                            <view class="btn-del" bindtap="removeMaterial" data-stage="{{sIdx}}" data-index="{{index}}">×</view>
+                         </view>
+                      </view>
+
+                      <block wx:if="{{item.type==='glue'}}">
+                        <view class="row-Grid three-col">
+                          <view class="field">
+                            <view class="label">单价 P<text class="sub">wet</text> (元/kg)</view>
+                            <input class="inp {{errors['s'+sIdx+'_m'+index+'_price']?'error':''}}" type="digit" value="{{item.price}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="price" placeholder="必填"/>
+                          </view>
+                          <view class="field">
+                            <view class="label">固含 S (%)</view>
+                            <input class="inp {{errors['s'+sIdx+'_m'+index+'_solid']?'error':''}}" type="digit" value="{{item.solid}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="solid" placeholder="必填"/>
+                          </view>
+                          <view class="field">
+                            <view class="label">利用率 η (%)</view>
+                            <input class="inp {{errors['s'+sIdx+'_m'+index+'_eff']?'error':''}}" type="digit" value="{{item.eff}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="eff" placeholder="必填"/>
+                          </view>
+                        </view>
+                        <view class="row-Grid">
+                          <view class="field">
+                            <text class="label">干涂量 GSM (g/m²)</text>
+                            <input class="inp {{errors['s'+sIdx+'_m'+index+'_gsm']?'error':''}}" type="digit" value="{{item.gsm}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="gsm" placeholder="必填"/>
+                          </view>
+                        </view>
+                        <view class="res-card-block mat" bindtap="calcMaterialItem" data-stage="{{sIdx}}" data-index="{{index}}">
+                           <view class="rc-left">
+                              <text class="rc-title">胶层单位成本 C<text class="sub">glue</text></text>
+                           </view>
+                           <view class="rc-right">
+                            <text class="rc-val">¥ {{ (item.cost !== undefined && item.cost !== null) ? item.cost : '-' }}<text class="unit">/m²</text></text>
+                              <view class="rc-refresh">🔄</view>
+                           </view>
+                        </view>
+                      </block>
+
+                      <block wx:else>
+                        <view class="row-Grid three-col">
+                           <view class="field">
+                             <view class="label">单价 P<text class="sub">area</text> (元/m²)</view>
+                             <input class="inp {{errors['s'+sIdx+'_m'+index+'_price']?'error':''}}" type="digit" value="{{item.price}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="price" placeholder="必填"/>
+                           </view>
+                           <view class="field">
+                             <view class="label">膜宽 W<text class="sub">film</text> (mm)</view>
+                             <input class="inp {{errors['s'+sIdx+'_m'+index+'_widthRaw']?'error':''}}" type="digit" value="{{item.widthRaw}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="widthRaw" placeholder="必填"/>
+                           </view>
+                           <view class="field">
+                             <view class="label">涂宽 W<text class="sub">coat</text> (mm)</view>
+                             <input class="inp {{errors['s'+sIdx+'_m'+index+'_widthValid']?'error':''}}" type="digit" value="{{item.widthValid}}" bindinput="onInput" data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="widthValid" placeholder="必填"/>
+                           </view>
+                        </view>
+                        <view class="res-card-block mat" bindtap="calcMaterialItem" data-stage="{{sIdx}}" data-index="{{index}}">
+                           <view class="rc-left">
+                              <text class="rc-title">膜材单位成本 C<text class="sub">film</text></text>
+                           </view>
+                           <view class="rc-right">
+                            <text class="rc-val">¥ {{ (item.cost !== undefined && item.cost !== null) ? item.cost : '-' }}<text class="unit">/m²</text></text>
+                              <view class="rc-refresh">🔄</view>
+                           </view>
+                        </view>
+                      </block>
+                    </view>
+                  </block>
+
+                  <view class="add-bar">
+                     <view class="btn-add-m" bindtap="addMaterial" data-stage="{{sIdx}}" data-type="film">+ 膜材</view>
+                     <view class="btn-add-m glue" bindtap="addMaterial" data-stage="{{sIdx}}" data-type="glue">+ 胶层</view>
+                  </view>
+              </block>
+            </view>
+
+            <view class="sub-section process">
+              <view class="ss-head" bindtap="toggleSectionFold" data-stage="{{sIdx}}" data-section="proc">
+                 <text class="ss-title">⚙️ 工艺成本计算</text>
+                 <view class="fold-icon small">{{stage.procFolded ? '▼' : '▲'}}</view>
+              </view>
+
+              <block wx:if="{{!stage.procFolded}}">
+                  <view class="proc-item">
+                      <view class="row-Grid three-col">
+                         <view class="field">
+                           <view class="label">机台费 R<text class="sub">m</text> (元/h)</view>
+                           <view class="input-with-calc">
+                              <input class="inp {{errors['s'+sIdx+'_proc_machRate']?'error':''}}" type="digit" value="{{stage.process.machRate}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="machRate" placeholder="必填"/>
+                              <view class="calc-btn" bindtap="openMachCal" data-stage="{{sIdx}}">🧮</view>
+                           </view>
+                         </view>
+                         <view class="field">
+                           <view class="label">人工费 R<text class="sub">l</text> (元/h)</view>
+                           <view class="input-with-calc">
+                              <input class="inp {{errors['s'+sIdx+'_proc_laborRate']?'error':''}}" type="digit" value="{{stage.process.laborRate}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="laborRate" placeholder="必填"/>
+                              <view class="calc-btn" bindtap="openLaborCal" data-stage="{{sIdx}}">🧮</view>
+                           </view>
+                         </view>
+                         <view class="field">
+                           <view class="label">速度 V (m/min)</view>
+                           <input class="inp {{errors['s'+sIdx+'_proc_speed']?'error':''}}" type="digit" value="{{stage.process.speed}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="speed" placeholder="必填"/>
+                         </view>
+                      </view>
+                      <view class="row-Grid">
+                         <view class="field">
+                           <view class="label">排产长度 L<text class="sub">odr</text> (m)</view>
+                           <input class="inp {{errors['s'+sIdx+'_proc_orderLen']?'error':''}}" type="digit" value="{{stage.process.orderLen}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="orderLen" placeholder="必填"/>
+                         </view>
+                         <view class="field">
+                           <view class="label">调机损耗 L<text class="sub">wst</text> (m)</view>
+                           <input class="inp {{errors['s'+sIdx+'_proc_wasteLen']?'error':''}}" type="digit" value="{{stage.process.wasteLen}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="wasteLen" placeholder="必填 (无则填0)"/>
+                         </view>
+                      </view>
+                      
+                      <view class="res-card-block proc" bindtap="calcProcessItem" data-stage="{{sIdx}}">
+                         <view class="rc-left">
+                            <text class="rc-title">加工单位成本 C<text class="sub">proc</text></text>
+                         </view>
+                         <view class="rc-right">
+                          <text class="rc-val">¥ {{ (stage.stageProcCost !== undefined && stage.stageProcCost !== null) ? stage.stageProcCost : '-' }}<text class="unit">/m²</text></text>
+                            <view class="rc-refresh">🔄</view>
+                         </view>
+                      </view>
+                  </view>
+              </block>
+            </view>
+
+            <view class="stage-footer">
+               <view class="res-card-block sum" bindtap="calcStageTotal" data-stage="{{sIdx}}">
+                  <view class="rc-left">
+                     <text class="rc-title">本工序总单位成本 C<text class="sub">stage</text></text>
+                  </view>
+                  <view class="rc-right">
+                    <text class="rc-val">¥ {{ (stage.stageTotalCost !== undefined && stage.stageTotalCost !== null) ? stage.stageTotalCost : '-' }}<text class="unit">/m²</text></text>
+                     <view class="rc-refresh">🔄</view>
+                  </view>
+               </view>
+               <view class="accum-row">
+                  <view class="ar-left">
+                     <text>当前累计单位成本</text>
+                  </view>
+                  <text class="ar-val">¥ {{ (stage.accumCost !== undefined && stage.accumCost !== null) ? stage.accumCost : '-' }}<text class="unit">/m²</text></text>
+               </view>
+            </view>
+        </view>
+      </view>
+      <view class="flow-arrow" wx:if="{{sIdx < stages.length-1}}">⬇</view>
+    </block>
+    
+    <button class="btn-add-stage" bindtap="addStage">+ 增加下道工序</button>
+    <view class="footer-spacer"></view>
+  </scroll-view>
+
+  <view class="bottom-bar">
+    <view class="bb-section left">
+       <view class="bb-row-1">
+          <text class="bb-label">总单位成本</text>
+       </view>
+       <view class="bb-row-2">
+          <view class="price-wrap">
+             <text class="currency">¥</text>
+             <text class="bb-price">{{res_final_cost}}</text>
+             <text class="unit">/m²</text>
+          </view>
+       </view>
+       <view class="bb-row-3">
+          <text class="bb-sub-info">直通率 {{final_yield}}%</text>
+       </view>
+    </view>
+    <view class="bb-divider-vert"></view>
+    <view class="bb-section right">
+       <view class="bb-row-1 placeholder"></view>
+       <view class="bb-row-2">
+          <button class="bb-btn" bindtap="calculateAll">计算全部</button>
+       </view>
+       <view class="bb-row-3">
+          <view class="bottom-clear" bindtap="openClearModal">清空重置</view>
+       </view>
+    </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showMixModal}}" bindtap="closeMixModal">
+    <view class="modal-card mix-card" catchtap="preventBubble">
+      <view class="mc-head">
+         <view style="display:flex;flex-direction:column;">
+            <text>🧪 湿胶配方</text>
+            <text wx:if="{{currentRecipeName}}" class="cur-recipe-tag">当前: {{currentRecipeName}}</text>
+         </view>
+         <view class="close-icon" bindtap="closeMixModal">×</view>
+      </view>
+      <view class="mix-toolbar">
+         <button class="btn-load" bindtap="openLoadModal">📂 读取已有配方</button>
+      </view>
+      <scroll-view scroll-y class="mix-body">
+         <view class="mix-head-row">
+           <text style="flex:1.2">组分</text> <text style="flex:0.8">比例</text> <text style="flex:1.4">单价(元/kg)</text> <text style="flex:0.8">固含(%)</text> <text style="width:40rpx"></text>
+        </view>
+        <block wx:for="{{mixList}}" wx:key="index">
+          <view class="mix-row">
+            <input class="mix-inp" style="flex:1.2" value="{{item.name}}" bindinput="onMixInput" data-index="{{index}}" data-field="name"/>
+            <input class="mix-inp" style="flex:0.8" type="digit" value="{{item.ratio}}" bindinput="onMixInput" data-index="{{index}}" data-field="ratio"/>
+            <input class="mix-inp" style="flex:1.4" type="digit" value="{{item.price}}" bindinput="onMixInput" data-index="{{index}}" data-field="price"/>
+            <input class="mix-inp" style="flex:0.8" type="digit" value="{{item.solid}}" bindinput="onMixInput" data-index="{{index}}" data-field="solid"/>
+            <view class="mix-del" bindtap="removeMixItem" data-index="{{index}}">×</view>
+          </view>
+        </block>
+        <button class="btn-add-mix" bindtap="addMixItem">+ 添加组分</button>
+        <view class="mix-result-box">
+           <view>加权单价: <text class="val">¥{{mixResultPrice}}</text></view>
+           <view>理论固含: <text class="val">{{mixResultSolid}}%</text></view>
+        </view>
+      </scroll-view>
+      <view class="mc-foot two-btn">
+         <button bindtap="closeMixModal">取消</button>
+         <button bindtap="applyMixResult">仅应用</button>
+         <button class="primary" bindtap="openSaveModal">保存并应用</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showClearModal}}" bindtap="closeClearModal">
+     <view class="modal-card clear-card" catchtap="preventBubble">
+        <view class="cc-title">确认清空</view>
+        <view class="cc-desc">此操作将重置所有输入数据，不可恢复。</view>
+        <view class="cc-btns">
+           <button class="btn-cancel" bindtap="closeClearModal">取消</button>
+           <button class="btn-confirm" bindtap="doClearAll">确认清空</button>
+        </view>
+     </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showLoadModal}}" bindtap="closeLoadModal">
+     <view class="modal-card clear-card" catchtap="preventBubble">
+        <view class="cc-title">选择配方</view>
+        <scroll-view scroll-y class="load-list">
+           <view class="load-item" wx:for="{{savedRecipeList}}" wx:key="index">
+              <view class="li-main" bindtap="doLoadRecipe" data-index="{{index}}">
+                 <text>{{item.name}}</text>
+                 <text class="li-price">¥{{item.price}}</text>
+              </view>
+              <view class="li-del" catchtap="requestDeleteRecipe" data-index="{{index}}">🗑️</view>
+           </view>
+        </scroll-view>
+        <view class="cc-btns">
+           <button class="btn-cancel" bindtap="closeLoadModal" style="width:100%">取消</button>
+        </view>
+     </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showSaveModal}}" bindtap="closeSaveModal">
+     <view class="modal-card clear-card" catchtap="preventBubble">
+        <view class="cc-title">保存配方</view>
+        <input class="save-inp" placeholder="请输入配方名称" value="{{tempRecipeName}}" bindinput="onInput" data-type="save_name"/>
+        <view class="cc-btns">
+           <button class="btn-cancel" bindtap="closeSaveModal">取消</button>
+           <button class="btn-confirm" bindtap="doSaveRecipe">确认</button>
+        </view>
+     </view>
+  </view>
+  
+  <view class="modal-mask" wx:if="{{showDeleteModal}}" bindtap="closeDeleteModal">
+     <view class="modal-card clear-card" catchtap="preventBubble">
+        <view class="cc-title">删除确认</view>
+        <view class="cc-desc">确定删除该配方吗？</view>
+        <view class="cc-btns">
+           <button class="btn-cancel" bindtap="closeDeleteModal">取消</button>
+           <button class="btn-confirm" bindtap="doDeleteRecipe">删除</button>
+        </view>
+     </view>
+  </view>
+  
+  <view class="modal-mask" wx:if="{{showFormulaModal}}" bindtap="closeFormula">
+     <view class="modal-card formula-card" catchtap="preventBubble">
+        <view class="fc-head">{{formulaTitle}}</view>
+        <scroll-view scroll-y class="fc-body">
+           <block wx:for="{{formulaContent}}" wx:key="index">
+              <view class="fc-block">
+                 <view class="fc-title">{{item.title}}</view>
+                 <view class="formula-inline" wx:if="{{item.inlineMath}}">
+                  <block wx:for="{{item.inlineMath}}" wx:for-item="x" wx:key="idx">
+                      <text>{{x.v}}</text><text class="sub" wx:if="{{x.s}}">{{x.s}}</text>
+                  </block>
+              </view>
+              <view class="formula-inline" wx:elif="{{item.displayInline}}">
+                  <text>{{item.displayInline}}</text>
+              </view>
+                 <view class="formula-display" wx:if="{{item.f}}">
+                    <view class="eqn-lhs" wx:if="{{item.lhs}}">
+                       <block wx:for="{{item.lhs}}" wx:for-item="x" wx:key="idx">
+                          <text>{{x.v}}</text><text class="sub" wx:if="{{x.s}}">{{x.s}}</text>
+                       </block>
+                       <text class="eqn-eq">=</text>
+                    </view>
+                    <view class="fraction">
+                       <view class="num">
+                          <block wx:for="{{item.f.n}}" wx:for-item="x" wx:key="idx">
+                             <text>{{x.v}}</text><text class="sub" wx:if="{{x.s}}">{{x.s}}</text>
+                          </block>
+                       </view>
+                       <view class="line"></view>
+                       <view class="den">
+                          <block wx:for="{{item.f.d}}" wx:for-item="x" wx:key="idx">
+                             <text>{{x.v}}</text><text class="sub" wx:if="{{x.s}}">{{x.s}}</text>
+                          </block>
+                       </view>
+                    </view>
+                 </view>
+                 <view class="fc-vars" wx:if="{{item.vars}}">
+                    <view class="fv-row" wx:for="{{item.vars}}" wx:for-item="v" wx:key="k">
+                       <view class="fv-k">
+                          <block wx:for="{{v.k}}" wx:for-item="x" wx:key="idx">
+                             <text>{{x.v}}</text><text class="sub" wx:if="{{x.s}}">{{x.s}}</text>
+                          </block>
+                       </view>
+                       <text class="fv-colon">:</text>
+                       <text class="fv-desc">{{v.desc}}</text>
+                       <text class="fv-u" wx:if="{{v.u}}">({{v.u}})</text>
+                    </view>
+                 </view>
+              </view>
+              <view class="fc-divider" wx:if="{{index < formulaContent.length-1}}"></view>
+           </block>
+           <view class="fc-logic-box" wx:if="{{formulaContent[0].logic}}">
+              <view class="logic-title">逻辑推导：</view>
+              <view class="logic-list">
+                 <view class="logic-item" wx:for="{{formulaContent[0].logic}}" wx:key="*this">
+                    <text class="li-idx">{{index+1}}.</text>
+                    <text class="li-txt">{{item}}</text>
+                 </view>
+              </view>
+           </view>
+        </scroll-view>
+        <view class="fc-foot" bindtap="closeFormula">关闭</view>
+     </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showMachModal}}" bindtap="closeMachModal">
+    <view class="modal-card mix-card" catchtap="preventBubble">
+      <view class="mc-head">
+         <text>🧮 机台费率估算</text>
+         <view class="close-icon" bindtap="closeMachModal">×</view>
+      </view>
+      <scroll-view scroll-y class="mix-body">
+         <view class="modal-field-row">
+            <view class="field-col">
+               <text class="f-label">C<text class="sub">fix</text> 月固定总开销</text>
+               <text class="f-sub">含设备折旧、房租、管理分摊</text>
+            </view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{machCalc.fixCost}}" bindinput="onMachInput" data-field="fixCost"/>
+               <text class="f-unit">元/月</text>
+            </view>
+         </view>
+         <view class="modal-field-row">
+            <view class="field-col">
+               <text class="f-label">N<text class="sub">line</text> 分摊线体数</text>
+               <text class="f-sub">若是车间总开销，填总线数</text>
+            </view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{machCalc.lines}}" bindinput="onMachInput" data-field="lines"/>
+               <text class="f-unit">条</text>
+            </view>
+         </view>
+         <view class="fc-divider"></view>
+         
+         <view class="modal-field-row">
+            <view class="field-col"><text class="f-label">D 月工作天数</text></view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{machCalc.days}}" bindinput="onMachInput" data-field="days"/>
+               <text class="f-unit">天</text>
+            </view>
+         </view>
+         <view class="modal-field-row">
+            <view class="field-col"><text class="f-label">H 日排班小时</text></view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{machCalc.hours}}" bindinput="onMachInput" data-field="hours"/>
+               <text class="f-unit">h</text>
+            </view>
+         </view>
+         <view class="modal-field-row">
+            <view class="field-col">
+               <text class="f-label">η 目标稼动率</text>
+               <text class="f-sub">有效生产时间占比</text>
+            </view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{machCalc.util}}" bindinput="onMachInput" data-field="util"/>
+               <text class="f-unit">%</text>
+            </view>
+         </view>
+         <view class="fc-divider"></view>
+
+         <view class="modal-field-row">
+            <view class="field-col">
+               <text class="f-label">C<text class="sub">run</text> 运行时能耗</text>
+               <text class="f-sub">开机状态下的电费+气费</text>
+            </view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{machCalc.runCost}}" bindinput="onMachInput" data-field="runCost"/>
+               <text class="f-unit">元/h</text>
+            </view>
+         </view>
+
+         <view class="formula-box">
+            <view class="fb-title">计算公式：</view>
+            <view class="fb-math">R<text class="sub">m</text> = (C<text class="sub">fix</text> / (N · D · H · η)) + C<text class="sub">run</text></view>
+            <view class="fb-res">计算结果: <text class="val">{{machCalc.result}}</text> 元/h</view>
+         </view>
+      </scroll-view>
+      <view class="mc-foot two-btn">
+         <button bindtap="closeMachModal">取消</button>
+         <button class="primary" bindtap="applyMachResult">应用结果</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showLaborModal}}" bindtap="closeLaborModal">
+    <view class="modal-card mix-card" catchtap="preventBubble">
+      <view class="mc-head">
+         <text>👷 人工费率估算</text>
+         <view class="close-icon" bindtap="closeLaborModal">×</view>
+      </view>
+      <scroll-view scroll-y class="mix-body">
+         <view class="modal-field-row">
+            <view class="field-col">
+               <text class="f-label">P 班组总人数</text>
+               <text class="f-sub">机长+主手+辅助+调胶等</text>
+            </view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{laborCalc.headcount}}" bindinput="onLaborInput" data-field="headcount"/>
+               <text class="f-unit">人</text>
+            </view>
+         </view>
+         <view class="modal-field-row">
+            <view class="field-col">
+               <text class="f-label">S 人均综合月薪</text>
+               <text class="f-sub">含工资、社保、食宿福利等</text>
+            </view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{laborCalc.salary}}" bindinput="onLaborInput" data-field="salary"/>
+               <text class="f-unit">元/月</text>
+            </view>
+         </view>
+         <view class="fc-divider"></view>
+
+         <view class="modal-field-row">
+            <view class="field-col"><text class="f-label">D 月工作天数</text></view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{laborCalc.days}}" bindinput="onLaborInput" data-field="days"/>
+               <text class="f-unit">天</text>
+            </view>
+         </view>
+         <view class="modal-field-row">
+            <view class="field-col"><text class="f-label">H 日排班小时</text></view>
+            <view class="field-col right">
+               <input class="mix-inp" type="digit" value="{{laborCalc.hours}}" bindinput="onLaborInput" data-field="hours"/>
+               <text class="f-unit">h</text>
+            </view>
+         </view>
+
+         <view class="formula-box">
+            <view class="fb-title">计算公式：</view>
+            <view class="fb-math">R<text class="sub">l</text> = (P · S) / (D · H)</view>
+            <view class="fb-res">计算结果: <text class="val">{{laborCalc.result}}</text> 元/h</view>
+         </view>
+      </scroll-view>
+      <view class="mc-foot two-btn">
+         <button bindtap="closeLaborModal">取消</button>
+         <button class="primary" bindtap="applyLaborResult">应用结果</button>
+      </view>
+    </view>
+  </view>
+</view>
