@@ -23,7 +23,7 @@
             </view>
          </view>
          <view class="top-reset-btn" bindtap="openClearModal">
-            <text>↺ 重置数据</text>
+            <text>↺ 重置</text>
          </view>
       </view>
 
@@ -50,8 +50,8 @@
           
           <view class="sh-right">
              <view class="fold-summary" wx:if="{{stage.folded}}" bindtap="toggleStageFold" data-index="{{sIdx}}">
-                <view class="fs-yield">Yield {{stage.yield || '-'}}%</view>
-                <text class="fs-cost">¥{{stage.stageTotalCost || 0}}</text>
+                <text class="fs-cost">¥ {{stage.stageTotalCost || 0}}</text>
+                <view class="fs-yield">良率 {{stage.yield || '-'}}%</view>
              </view>
              
              <view class="sh-inputs" wx:else catchtap="preventBubble">
@@ -75,7 +75,7 @@
                     <text class="ss-title">📦 材料成本计算</text>
                  </view>
                  <view class="ss-head-right">
-                    <text class="ss-mini-cost" wx:if="{{stage.matFolded}}">¥{{stage.stageMatCost || 0}}</text>
+                    <text class="ss-mini-cost" wx:if="{{stage.matFolded}}">¥ {{stage.stageMatCost || 0}}</text>
                     <view class="fold-icon small">{{stage.matFolded ? '▼' : '▲'}}</view>
                  </view>
               </view>
@@ -166,7 +166,7 @@
                     <text class="ss-title">⚙️ 工艺成本计算</text>
                  </view>
                  <view class="ss-head-right">
-                    <text class="ss-mini-cost" wx:if="{{stage.procFolded}}">¥{{stage.stageProcCost || 0}}</text>
+                    <text class="ss-mini-cost" wx:if="{{stage.procFolded}}">¥ {{stage.stageProcCost || 0}}</text>
                     <view class="fold-icon small">{{stage.procFolded ? '▼' : '▲'}}</view>
                  </view>
               </view>
@@ -247,9 +247,11 @@
     <view class="fcb-content">
        <view class="fcb-left">
           <text class="fcb-label">预估成本</text>
-          <text class="fcb-val">¥{{res_final_cost}}</text>
+          <text class="fcb-currency">¥</text>
+          <text class="fcb-val">{{res_final_cost}}</text>
           <text class="fcb-unit">/m²</text>
-          <view class="fcb-tag" wx:if="{{final_yield !== '-'}}">Yield {{final_yield}}%</view>
+          <view class="fcb-separator"></view>
+          <view class="fcb-tag" wx:if="{{final_yield !== '-'}}">直通率 {{final_yield}}%</view>
        </view>
        <view class="fcb-right">
           <button class="btn-float-calc" bindtap="calculateAll">开始计算</button>
