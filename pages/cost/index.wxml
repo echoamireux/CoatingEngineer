@@ -284,9 +284,9 @@
         </view>
       </scroll-view>
       <view class="mc-foot two-btn">
-         <button bindtap="closeMixModal">取消</button>
-         <button bindtap="applyMixResult">仅应用</button>
-         <button class="primary" bindtap="openSaveModal">保存并应用</button>
+         <button class="btn-ghost" bindtap="closeMixModal">取消</button>
+         <button class="btn-ghost" bindtap="handleApplyOnly">仅应用</button>
+         <button class="btn-primary" bindtap="openSaveModal">保存并应用</button>
       </view>
     </view>
   </view>
@@ -296,8 +296,8 @@
         <view class="cc-title">确认清空</view>
         <view class="cc-desc">此操作将重置所有输入数据，不可恢复。</view>
         <view class="cc-btns">
-           <button class="btn-cancel" bindtap="closeClearModal">取消</button>
-           <button class="btn-confirm" bindtap="doClearAll">确认清空</button>
+           <button class="btn-ghost" bindtap="closeClearModal">取消</button>
+           <button class="btn-primary-red" bindtap="doClearAll">确认清空</button>
         </view>
      </view>
   </view>
@@ -308,14 +308,14 @@
         <scroll-view scroll-y class="load-list">
            <view class="load-item" wx:for="{{savedRecipeList}}" wx:key="index">
               <view class="li-main" bindtap="doLoadRecipe" data-index="{{index}}">
-                 <text>{{item.name}}</text>
+                 <text class="li-name">{{item.name}}</text>
                  <text class="li-price">¥{{item.price}}</text>
               </view>
               <view class="li-del" catchtap="requestDeleteRecipe" data-index="{{index}}">🗑️</view>
            </view>
         </scroll-view>
         <view class="cc-btns">
-           <button class="btn-cancel" bindtap="closeLoadModal" style="width:100%">取消</button>
+           <button class="btn-ghost" bindtap="closeLoadModal" style="width:100%">取消</button>
         </view>
      </view>
   </view>
@@ -325,8 +325,8 @@
         <view class="cc-title">保存配方</view>
         <input class="save-inp" placeholder="请输入配方名称" value="{{tempRecipeName}}" bindinput="onInput" data-type="save_name"/>
         <view class="cc-btns">
-           <button class="btn-cancel" bindtap="closeSaveModal">取消</button>
-           <button class="btn-confirm" bindtap="doSaveRecipe">确认</button>
+           <button class="btn-ghost" bindtap="closeSaveModal">取消</button>
+           <button class="btn-primary" bindtap="doSaveRecipe">确认</button>
         </view>
      </view>
   </view>
@@ -336,8 +336,8 @@
         <view class="cc-title">删除确认</view>
         <view class="cc-desc">确定删除该配方吗？</view>
         <view class="cc-btns">
-           <button class="btn-cancel" bindtap="closeDeleteModal">取消</button>
-           <button class="btn-confirm" bindtap="doDeleteRecipe">删除</button>
+           <button class="btn-ghost" bindtap="closeDeleteModal">取消</button>
+           <button class="btn-primary-red" bindtap="doDeleteRecipe">删除</button>
         </view>
      </view>
   </view>
@@ -480,8 +480,8 @@
          </view>
       </scroll-view>
       <view class="mc-foot two-btn">
-         <button bindtap="closeMachModal">取消</button>
-         <button class="primary" bindtap="applyMachResult">应用结果</button>
+         <button class="btn-ghost" bindtap="closeMachModal">取消</button>
+         <button class="btn-primary" bindtap="applyMachResult">应用结果</button>
       </view>
     </view>
   </view>
@@ -537,8 +537,8 @@
          </view>
       </scroll-view>
       <view class="mc-foot two-btn">
-         <button bindtap="closeLaborModal">取消</button>
-         <button class="primary" bindtap="applyLaborResult">应用结果</button>
+         <button class="btn-ghost" bindtap="closeLaborModal">取消</button>
+         <button class="btn-primary" bindtap="applyLaborResult">应用结果</button>
       </view>
     </view>
   </view>

@@ -1,7 +1,27 @@
 /* ...保留 V22 基础样式... */
 .page-container { min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 220rpx; box-sizing: border-box; }
-.page-container.dark { --bg: #000000; --card: #1f2937; --text: #e5e7eb; --text-sub: #9ca3af; --border: #374151; --primary: #10b981; --warn: #f59e0b; --card-res: #2d3748; }
-.page-container.light { --bg: #f3f4f6; --card: #ffffff; --text: #1f2937; --text-sub: #6b7280; --border: #e5e7eb; --primary: #059669; --warn: #d97706; --card-res: #f9fafb; }
+.page-container.dark { 
+  --bg: #000000; 
+  --card: #1f2937; 
+  --text: #e5e7eb; 
+  --text-sub: #9ca3af; 
+  --border: #374151; 
+  --primary: #10b981; 
+  --warn: #f59e0b; 
+  --card-res: #2d3748; 
+  --input-bg: rgba(255,255,255,0.08); /* 弹窗输入框浅色底 */
+}
+.page-container.light { 
+  --bg: #f3f4f6; 
+  --card: #ffffff; 
+  --text: #1f2937; 
+  --text-sub: #6b7280; 
+  --border: #e5e7eb; 
+  --primary: #059669; 
+  --warn: #d97706; 
+  --card-res: #f9fafb;
+  --input-bg: rgba(0,0,0,0.05); /* 弹窗输入框浅色底 */
+}
 
 .nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 40rpx 30rpx 20rpx; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
 .nav-title { font-size: 34rpx; font-weight: bold; }
@@ -24,40 +44,15 @@
 .field { display: flex; flex-direction: column; flex: 1; }
 .label { font-size: 22rpx; color: var(--text-sub); margin-bottom: 6rpx; white-space: nowrap; }
 .label.warning { color: var(--warn); }
-/* 修改 .sub：使用相对定位强制下沉，解决Flex布局里脚标飘起的问题 */
 .sub { 
-  font-size: 0.6em; /* 字体改小一点，更精致 */
-  position: relative; /* 开启相对定位 */
-  top: 0.3em; /* 向下偏移 0.3个字高，强制沉下去 */
-  margin-left: 2rpx; 
-  font-style: normal; /* 正体显示，不倾斜 */
-  font-family: Arial, sans-serif;
-  opacity: 0.9;
+  font-size: 0.6em; position: relative; top: 0.3em; margin-left: 2rpx; font-style: normal; font-family: Arial, sans-serif; opacity: 0.9;
 }
 
-.input-with-calc {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.calc-btn {
-  position: absolute;
-  right: 10rpx;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 28rpx;
-  padding: 10rpx;
-  z-index: 10;
-  opacity: 0.8;
-}
+.input-with-calc { position: relative; display: flex; align-items: center; }
+.calc-btn { position: absolute; right: 10rpx; top: 50%; transform: translateY(-50%); font-size: 28rpx; padding: 10rpx; z-index: 10; opacity: 0.8; }
 
-/* ★★★ 输入框瘦身 ★★★ */
 .inp { 
-  background: var(--bg); color: var(--text); 
-  height: 64rpx; /* 70 -> 64 */
-  border-radius: 12rpx; padding: 0 15rpx; 
-  font-size: 26rpx; /* 28 -> 26 */
-  border: 1px solid var(--border); width: 100%; box-sizing: border-box; 
+  background: var(--bg); color: var(--text); height: 64rpx; border-radius: 12rpx; padding: 0 15rpx; font-size: 26rpx; border: 1px solid var(--border); width: 100%; box-sizing: border-box; 
 }
 .inp.tiny { width: 80rpx; text-align: center; }
 .inp.warning-border { border-color: rgba(245, 158, 11, 0.4); }
@@ -128,138 +123,23 @@
 .ar-left { display: flex; align-items: center; font-size: 24rpx; color: var(--text-sub); gap: 10rpx; }
 .ar-val { font-size: 36rpx; font-weight: bold; color: var(--text); }
 
-/* --- 底部栏布局重构 (The 3-Row Grid System) --- */
-
-.bottom-bar {
-  position: fixed; 
-  bottom: 0; 
-  left: 0; 
-  width: 100%; 
-  background: var(--card);
-  border-top: 1px solid var(--border); 
-  z-index: 100; 
-  box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.1); 
-  box-sizing: border-box;
-
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  gap: 80rpx; 
-  padding: 24rpx 30rpx calc(env(safe-area-inset-bottom) + 24rpx) 30rpx;
-}
-
-.bb-section {
-  display: flex;
-  flex-direction: column;
-  flex: 1; 
-}
-
-.bb-section.left {
-  align-items: flex-end; 
-}
-
-.bb-section.left .bb-row-upper {
-  align-items: center; 
-}
-
-.bb-section.right {
-  align-items: flex-start;
-}
-
-/* --- 第一层：Label (上) --- */
-.bb-row-1 {
-  height: 36rpx;
-  margin-bottom: 10rpx; 
-  display: flex;
-  align-items: flex-end; 
-}
-
-/* --- 第二层：Price/Button (中 - 核心锚点) --- */
-.bb-row-2 {
-  height: 84rpx; 
-  display: flex;
-  align-items: center; 
-}
-
-/* --- 第三层：Yield/Clear (下) --- */
-.bb-row-3 {
-  height: 36rpx;
-  margin-top: 10rpx; 
-  display: flex;
-  align-items: flex-start; 
-}
-
-.bb-divider-vert {
-  width: 1px;
-  height: 100rpx; 
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.bb-label {
-  font-size: 24rpx;
-  color: #9ca3af;
-  line-height: 1;
-}
-
-.price-wrap {
-  display: flex;
-  align-items: baseline;
-  margin-left: -2rpx; 
-}
-
-.currency {
-  font-size: 32rpx;
-  color: #34d399;
-  font-weight: bold;
-  margin-right: 4rpx;
-}
-
-.bb-price { 
-  font-size: 56rpx; 
-  font-weight: 800; 
-  color: #34d399; 
-  font-family: "DIN Alternate", sans-serif; 
-  line-height: 1; 
-}
-
-.unit { 
-  font-size: 24rpx; 
-  color: #9ca3af; 
-  margin-left: 6rpx;
-  font-weight: normal;
-}
-
-.bb-sub-info {
-  font-size: 22rpx;
-  color: #6b7280;
-  font-family: Arial, sans-serif;
-  letter-spacing: 0.5rpx;
-  line-height: 1; 
-}
-
-/* 按钮 */
-.bb-btn { 
-  width: 220rpx; 
-  height: 84rpx; 
-  line-height: 84rpx; 
-  margin: 0;
-  background: rgba(16, 185, 129, 0.15); 
-  color: #34d399; 
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  font-size: 28rpx; 
-  border-radius: 12rpx; 
-  box-shadow: none; 
-}
-
-.bottom-clear { 
-  font-size: 22rpx; 
-  color: #9ca3af; 
-  text-decoration: underline; 
-  opacity: 0.8;
-  width: 220rpx; 
-  text-align: center; 
-  line-height: 1; 
-}
+/* --- 底部栏布局 --- */
+.bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); z-index: 100; box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.1); box-sizing: border-box; display: flex; justify-content: center; align-items: center; gap: 80rpx; padding: 24rpx 30rpx calc(env(safe-area-inset-bottom) + 24rpx) 30rpx; }
+.bb-section { display: flex; flex-direction: column; flex: 1; }
+.bb-section.left { align-items: flex-end; }
+.bb-section.right { align-items: flex-start; }
+.bb-row-1 { height: 36rpx; margin-bottom: 10rpx; display: flex; align-items: flex-end; }
+.bb-row-2 { height: 84rpx; display: flex; align-items: center; }
+.bb-row-3 { height: 36rpx; margin-top: 10rpx; display: flex; align-items: flex-start; }
+.bb-divider-vert { width: 1px; height: 100rpx; background: rgba(255, 255, 255, 0.1); }
+.bb-label { font-size: 24rpx; color: #9ca3af; line-height: 1; }
+.price-wrap { display: flex; align-items: baseline; margin-left: -2rpx; }
+.currency { font-size: 32rpx; color: #34d399; font-weight: bold; margin-right: 4rpx; }
+.bb-price { font-size: 56rpx; font-weight: 800; color: #34d399; font-family: "DIN Alternate", sans-serif; line-height: 1; }
+.unit { font-size: 24rpx; color: #9ca3af; margin-left: 6rpx; font-weight: normal; }
+.bb-sub-info { font-size: 22rpx; color: #6b7280; font-family: Arial, sans-serif; letter-spacing: 0.5rpx; line-height: 1; }
+.bb-btn { width: 220rpx; height: 84rpx; line-height: 84rpx; margin: 0; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 28rpx; border-radius: 12rpx; box-shadow: none; }
+.bottom-clear { font-size: 22rpx; color: #9ca3af; text-decoration: underline; opacity: 0.8; width: 220rpx; text-align: center; line-height: 1; }
 
 /* 弹窗样式 */
 .modal-mask { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; display: flex; align-items: center; justify-content: center; }
@@ -274,90 +154,80 @@
 .mix-body { padding: 0 10rpx; overflow-y: auto; flex: 1; }
 .mix-head-row { display: flex; font-size: 24rpx; color: var(--text-sub); margin-bottom: 15rpx; }
 .mix-row { display: flex; gap: 15rpx; margin-bottom: 20rpx; align-items: center; }
-.mix-inp { background: var(--bg); border: 1px solid var(--border); height: 64rpx; font-size: 26rpx; padding: 0 15rpx; border-radius: 8rpx; color: var(--text); }
-.btn-add-mix { font-size: 24rpx; background: var(--bg); border: 1px dashed var(--text-sub); color: var(--text-sub); margin: 20rpx 0; width: 100%; }
+
+/* ★★★ 输入框美化：使用变量变亮，去除深黑感 ★★★ */
+.mix-inp { background: var(--input-bg); border: 1px solid var(--border); height: 64rpx; font-size: 26rpx; padding: 0 15rpx; border-radius: 8rpx; color: var(--text); }
+
+/* ★★★ 添加按钮美化：虚线、低调 ★★★ */
+.btn-add-mix { 
+  font-size: 24rpx; 
+  background: transparent; 
+  border: 1px dashed var(--text-sub); 
+  color: var(--text-sub); 
+  margin: 20rpx 0; 
+  width: 100%; 
+  opacity: 0.6;
+}
 .mix-result-box { display: flex; justify-content: space-between; font-weight: bold; font-size: 28rpx; margin: 20rpx 0; background: rgba(16, 185, 129, 0.05); padding: 20rpx; border-radius: 12rpx; border: 1px solid rgba(16, 185, 129, 0.2); }
 .val { color: var(--primary); margin-left: 10rpx; }
+
 .mc-foot.two-btn { display: flex; gap: 20rpx; margin-top: 20rpx; }
-.mc-foot button { flex: 1; font-size: 28rpx; background: var(--bg); color: var(--text-sub); border: 1px solid var(--border); }
-.mc-foot button.primary { background: var(--primary); color: #fff; border: none; }
+
+/* ★★★ 弹窗按钮全新样式：幽灵按钮 & 实心主色 ★★★ */
+.btn-ghost {
+  flex: 1;
+  font-size: 28rpx;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+}
+.btn-primary {
+  flex: 1;
+  font-size: 28rpx;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+}
+.btn-primary-red {
+  flex: 1;
+  font-size: 28rpx;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+}
+
 .mix-del { font-size: 40rpx; color: #ef4444; padding: 0 10rpx; opacity: 0.8; }
 
-/* --- 计算原理弹窗 (Formula Modal) 深度适配 --- */
-.formula-card { 
-  background: var(--card); /* 适配主题 */
-  border: 1px solid var(--border); 
-  padding: 0; overflow: hidden; max-height: 85vh; width: 90%; 
-}
-
-/* 头部和底部：使用背景变量 */
-.fc-head { 
-  background: var(--card); /* 适配主题 */
-  padding: 25rpx; text-align: center; font-weight: bold; 
-  color: #60a5fa; /* 保持蓝色高亮 */
-  font-size: 30rpx; 
-  border-bottom: 1px solid var(--border); 
-}
-
-.fc-body { 
-  padding: 30rpx 40rpx; 
-  max-height: 70vh; overflow-y: auto; box-sizing: border-box; flex: 1; 
-  /* 确保文字颜色适配 */
-  color: var(--text);
-}
-
-.fc-foot { 
-  text-align: center; padding: 25rpx; 
-  color: var(--text-sub); 
-  font-size: 28rpx; 
-  border-top: 1px solid var(--border); 
-  background: var(--card); 
-}
-
+.formula-card { background: var(--card); border: 1px solid var(--border); padding: 0; overflow: hidden; max-height: 85vh; width: 90%; }
+.fc-head { background: var(--card); padding: 25rpx; text-align: center; font-weight: bold; color: #60a5fa; font-size: 30rpx; border-bottom: 1px solid var(--border); }
+.fc-body { padding: 30rpx 40rpx; max-height: 70vh; overflow-y: auto; box-sizing: border-box; flex: 1; color: var(--text); }
+.fc-foot { text-align: center; padding: 25rpx; color: var(--text-sub); font-size: 28rpx; border-top: 1px solid var(--border); background: var(--card); }
 .fc-block { margin-bottom: 20rpx; }
 .fc-title { color: #60a5fa; font-size: 28rpx; font-weight: bold; margin-bottom: 20rpx; }
-
 .formula-display { display: flex; align-items: center; justify-content: center; margin: 20rpx 0 35rpx; }
 .formula-inline { text-align: center; font-family: "Times New Roman", serif; font-style: italic; font-size: 38rpx; color: var(--primary); margin-bottom: 20rpx; letter-spacing: 2rpx; }
-
 .eqn-lhs { display: flex; align-items: center; font-family: "Times New Roman", serif; font-style: italic; font-size: 34rpx; color: var(--primary); margin-right: 15rpx; }
 .eqn-eq { margin: 0 10rpx; color: var(--text-sub); }
-
-/* 分数线适配 */
 .fraction { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 10rpx; }
-.num { 
-  /* 关键：使用变量适配边框颜色 */
-  border-bottom: 1px solid var(--text); 
-  padding: 0 10rpx 4rpx 10rpx; 
-  font-family: "Times New Roman", serif; font-style: italic; font-size: 38rpx; color: var(--primary); 
-  display: flex; align-items: baseline; justify-content: center; width: 100%; 
-}
-.den { 
-  padding: 4rpx 10rpx 0 10rpx; 
-  font-family: "Times New Roman", serif; font-style: italic; font-size: 38rpx; color: var(--primary); 
-  display: flex; align-items: baseline; justify-content: center; width: 100%; 
-}
+.num { border-bottom: 1px solid var(--text); padding: 0 10rpx 4rpx 10rpx; font-family: "Times New Roman", serif; font-style: italic; font-size: 38rpx; color: var(--primary); display: flex; align-items: baseline; justify-content: center; width: 100%; }
+.den { padding: 4rpx 10rpx 0 10rpx; font-family: "Times New Roman", serif; font-style: italic; font-size: 38rpx; color: var(--primary); display: flex; align-items: baseline; justify-content: center; width: 100%; }
 .line { display: none; }
-/* 变量解释区适配 */
-.fc-vars { 
-  /* 浅色模式用淡灰，深色模式用淡白 */
-  background: rgba(128, 128, 128, 0.1); 
-  padding: 15rpx; border-radius: 8rpx; margin-bottom: 25rpx; 
-}
+.fc-vars { background: rgba(128, 128, 128, 0.1); padding: 15rpx; border-radius: 8rpx; margin-bottom: 25rpx; }
 .fv-row { display: flex; align-items: center; margin-bottom: 8rpx; font-size: 24rpx; }
 .fv-k { font-weight: bold; color: var(--primary); font-family: "Times New Roman", serif; font-style: italic; display: flex; align-items: center; font-size: 28rpx; }
 .fv-colon { margin: 0 10rpx; color: var(--text-sub); }
-.fv-desc { color: var(--text); } /* 适配文字颜色 */
+.fv-desc { color: var(--text); }
 .fv-u { color: var(--text-sub); margin-left: 8rpx; font-size: 22rpx; }
-
-/* 分割线适配 */
-.fc-divider { 
-  height: 1px; 
-  background: var(--border); /* 适配颜色 */
-  margin: 25rpx 0; border: none; 
-}
-
-/* 逻辑说明区 */
+.fc-divider { height: 1px; background: var(--border); margin: 25rpx 0; border: none; }
 .fc-logic-box { margin-top: 20rpx; padding-top: 20rpx; border-top: 1px dashed var(--border); }
 .logic-title { font-size: 26rpx; color: var(--text); font-weight: bold; margin-bottom: 15rpx; }
 .logic-list { display: flex; flex-direction: column; gap: 12rpx; }
@@ -369,17 +239,19 @@
 .cc-title { font-size: 32rpx; font-weight: bold; color: var(--text); margin-bottom: 20rpx; }
 .cc-desc { font-size: 26rpx; color: var(--text-sub); margin-bottom: 40rpx; }
 .cc-btns { display: flex; gap: 30rpx; }
-.btn-cancel, .btn-confirm { flex: 1; font-size: 28rpx; border-radius: 12rpx; padding: 15rpx 0; }
-.btn-cancel { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
-.btn-confirm { background: #ef4444; color: #fff; border: none; }
 
-.save-inp { border: 1px solid var(--border); background: var(--bg); height: 80rpx; border-radius: 12rpx; padding: 0 20rpx; margin-bottom: 40rpx; color: var(--text); text-align: left; }
+/* ★★★ 保存输入框：使用浅色背景变量 ★★★ */
+.save-inp { border: 1px solid var(--border); background: var(--input-bg); height: 80rpx; border-radius: 12rpx; padding: 0 20rpx; margin-bottom: 40rpx; color: var(--text); text-align: left; }
+
 .load-list { max-height: 50vh; margin-bottom: 30rpx; text-align: left; }
-.load-item { padding: 20rpx; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+
+/* ★★★ 列表项优化：垂直居中对齐 ★★★ */
+.load-item { padding: 20rpx; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .load-item:active { background: rgba(255,255,255,0.05); }
-.li-price { color: var(--primary); font-weight: bold; }
-.li-main { flex: 1; display: flex; justify-content: space-between; padding-right: 20rpx; }
-.li-del { padding: 10rpx; font-size: 32rpx; color: #ef4444; opacity: 0.8; }
+.li-name { font-size: 28rpx; color: var(--text); }
+.li-price { color: var(--primary); font-weight: bold; font-size: 28rpx; }
+.li-main { flex: 1; display: flex; justify-content: space-between; align-items: center; padding-right: 20rpx; }
+.li-del { padding: 10rpx; font-size: 32rpx; color: #ef4444; opacity: 0.8; display: flex; align-items: center; }
 
 .modal-field-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30rpx; }
 .field-col { display: flex; flex-direction: column; }
@@ -388,18 +260,8 @@
 .f-sub { font-size: 20rpx; color: #666; }
 .f-unit { font-size: 22rpx; color: #666; margin-top: 4rpx; }
 
-/* ★★★ 公式预览框：主题适配 ★★★ */
-.formula-box {
-  background: rgba(255, 255, 255, 0.05); /* 默认深色模式背景 */
-  padding: 20rpx;
-  border-radius: 12rpx;
-  margin-top: 20rpx;
-  border: 1px dashed var(--border);
-}
-.page-container.light .formula-box {
-  background: rgba(16, 185, 129, 0.08); /* 浅色模式背景：淡绿 */
-  border-color: rgba(16, 185, 129, 0.3);
-}
+.formula-box { background: rgba(255, 255, 255, 0.05); padding: 20rpx; border-radius: 12rpx; margin-top: 20rpx; border: 1px dashed var(--border); }
+.page-container.light .formula-box { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); }
 
 .fb-title { font-size: 22rpx; color: #666; margin-bottom: 10rpx; }
 .fb-math { font-family: "Times New Roman", serif; font-style: italic; color: #34d399; font-size: 26rpx; margin-bottom: 15rpx; }
