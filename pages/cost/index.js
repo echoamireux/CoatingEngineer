@@ -249,8 +249,111 @@ Page({
     }
   },
 
+  // ★★★ 本工序总成本计算：只算投入，不校验良率，不依赖前序 ★★★
   calcStageTotal(e) {
-    this.calculateAll(); 
+    const { stage } = e.currentTarget.dataset;
+    const list = this.data.stages;
+    const sData = list[stage];
+    const vat = parseFloat(this.data.vatRate) / 100 || 0.13;
+    const toExFactor = this.data.taxMode === 'inc' ? (1 / (1 + vat)) : 1;
+    
+    let currentErrors = {};
+    let hasError = false;
+    let totalMatCost = 0;
+
+    // 1. 重新计算所有材料成本 (确保数据是最新的)
+    sData.materials.forEach((m, mIdx) => {
+        let c = 0; let valid = true;
+        
+        // 校验材料必填项
+        if(!this.validateField(m.price, `s${stage}_m${mIdx}_price`, currentErrors)) valid = false;
+        
+        if(m.type === 'glue') {
+           if(!this.validatePercentage(m.solid, `s${stage}_m${mIdx}_solid`, currentErrors)) valid = false;
+           if(!this.validateField(m.gsm, `s${stage}_m${mIdx}_gsm`, currentErrors)) valid = false;
+           if(!this.validatePercentage(m.eff, `s${stage}_m${mIdx}_eff`, currentErrors)) valid = false;
+           
+           if(valid) {
+               const E = parseFloat(m.eff)/100;
+               // 胶水成本计算
+               c = (parseFloat(m.gsm)/(parseFloat(m.solid)/100)/1000/E) * parseFloat(m.price) * toExFactor;
+           }
+        } else {
+           if(!this.validateField(m.widthRaw, `s${stage}_m${mIdx}_widthRaw`, currentErrors)) valid = false;
+           if(!this.validateField(m.widthValid, `s${stage}_m${mIdx}_widthValid`, currentErrors)) valid = false;
+           
+           if(valid) {
+               // 膜材成本计算
+               c = (parseFloat(m.price)*toExFactor) / (parseFloat(m.widthValid)/parseFloat(m.widthRaw));
+           }
+        }
+        
+        if (!valid) hasError = true;
+        // 更新单项显示
+        m.cost = c.toFixed(2);
+        totalMatCost += c;
+    });
+
+    // 2. 重新计算工艺成本
+    const p = sData.process;
+    let procCost = 0;
+    let procValid = true;
+
+    // 校验工艺必填项
+    if(!this.validateField(p.machRate, `s${stage}_proc_machRate`, currentErrors)) procValid = false;
+    if(!this.validateField(p.laborRate, `s${stage}_proc_laborRate`, currentErrors)) procValid = false;
+    if(!this.validateField(p.speed, `s${stage}_proc_speed`, currentErrors)) procValid = false;
+    if(!this.validateField(p.orderLen, `s${stage}_proc_orderLen`, currentErrors)) procValid = false;
+    if(!this.validateField(p.wasteLen, `s${stage}_proc_wasteLen`, currentErrors)) procValid = false;
+
+    if(!procValid) hasError = true;
+
+    // 寻找膜宽 (用于工艺计算)
+    let refWidth = 0;
+    for (let i = parseInt(stage); i >= 0; i--) {
+      const foundMat = list[i].materials.find(m => m.type === 'film' && m.widthValid && parseFloat(m.widthValid) > 0);
+      if (foundMat) { refWidth = parseFloat(foundMat.widthValid); break; }
+    }
+
+    if(procValid && refWidth > 0) {
+        const output = parseFloat(p.speed) * 60 * (refWidth/1000);
+        const scale = (parseFloat(p.orderLen) + parseFloat(p.wasteLen)) / parseFloat(p.orderLen);
+        if(output > 0) {
+            procCost = ((parseFloat(p.machRate)+parseFloat(p.laborRate))/output) * scale;
+        }
+    } else if (procValid && refWidth === 0) {
+        // 如果工艺参数填了，但是找不到膜宽，仅仅给个提示，不阻断材料费的计算
+        wx.showToast({ title: '前序无涂宽，工艺费无法算', icon: 'none' });
+    }
+
+    // 更新界面上的单项结果
+    sData.stageMatCost = totalMatCost.toFixed(2);
+    sData.stageProcCost = procCost.toFixed(2);
+
+    // 3. 处理报错
+    this.setData({ errors: currentErrors });
+    
+    // ★★★ 核心修改：这里只拦截材料和工艺的错误，完全不看良率 ★★★
+    const errorValues = Object.values(currentErrors);
+    if (errorValues.includes('range')) {
+         return wx.showToast({ title: '数值需在0-100之间', icon: 'none' });
+    } else if (hasError) {
+         return wx.showToast({ title: '红色项必填', icon: 'none' });
+    }
+
+    // 4. 计算本工序总和 (Input Total)
+    const stageTotal = totalMatCost + procCost;
+    
+    // 更新数据
+    const key = `stages[${stage}]`;
+    this.setData({
+        [`${key}.materials`]: sData.materials, // 更新材料单价显示
+        [`${key}.stageMatCost`]: totalMatCost.toFixed(2),
+        [`${key}.stageProcCost`]: procCost.toFixed(2),
+        [`${key}.stageTotalCost`]: stageTotal.toFixed(2) // ★ 结果更新
+    });
+
+    wx.showToast({ title: '已更新本道投入', icon: 'success', duration: 800 });
   },
 
   calculateAll() {
