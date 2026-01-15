@@ -173,6 +173,21 @@
                   <view class="proc-item">
                       <view class="row-Grid three-col">
                          <view class="field">
+                           <view class="label">速度 V (m/min)</view>
+                           <input class="inp {{errors['s'+sIdx+'_proc_speed']?'error':''}}" type="digit" value="{{stage.process.speed}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="speed" placeholder="必填"/>
+                         </view>
+                         <view class="field">
+                           <view class="label">排产长度 L<text class="sub">odr</text> (m)</view>
+                           <input class="inp {{errors['s'+sIdx+'_proc_orderLen']?'error':''}}" type="digit" value="{{stage.process.orderLen}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="orderLen" placeholder="必填"/>
+                         </view>
+                         <view class="field">
+                           <view class="label">调机损耗 L<text class="sub">wst</text> (m)</view>
+                           <input class="inp {{errors['s'+sIdx+'_proc_wasteLen']?'error':''}}" type="digit" value="{{stage.process.wasteLen}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="wasteLen" placeholder="必填 (0)"/>
+                         </view>
+                      </view>
+
+                      <view class="row-Grid">
+                         <view class="field">
                            <view class="label">机台费 R<text class="sub">m</text> (元/h)</view>
                            <view class="input-with-calc">
                               <input class="inp {{errors['s'+sIdx+'_proc_machRate']?'error':''}}" type="digit" value="{{stage.process.machRate}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="machRate" placeholder="必填"/>
@@ -185,20 +200,6 @@
                               <input class="inp {{errors['s'+sIdx+'_proc_laborRate']?'error':''}}" type="digit" value="{{stage.process.laborRate}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="laborRate" placeholder="必填"/>
                               <view class="calc-btn" bindtap="openLaborCal" data-stage="{{sIdx}}">🧮</view>
                            </view>
-                         </view>
-                         <view class="field">
-                           <view class="label">速度 V (m/min)</view>
-                           <input class="inp {{errors['s'+sIdx+'_proc_speed']?'error':''}}" type="digit" value="{{stage.process.speed}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="speed" placeholder="必填"/>
-                         </view>
-                      </view>
-                      <view class="row-Grid">
-                         <view class="field">
-                           <view class="label">排产长度 L<text class="sub">odr</text> (m)</view>
-                           <input class="inp {{errors['s'+sIdx+'_proc_orderLen']?'error':''}}" type="digit" value="{{stage.process.orderLen}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="orderLen" placeholder="必填"/>
-                         </view>
-                         <view class="field">
-                           <view class="label">调机损耗 L<text class="sub">wst</text> (m)</view>
-                           <input class="inp {{errors['s'+sIdx+'_proc_wasteLen']?'error':''}}" type="digit" value="{{stage.process.wasteLen}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="wasteLen" placeholder="必填 (无则填0)"/>
                          </view>
                       </view>
                       
