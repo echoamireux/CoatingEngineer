@@ -22,7 +22,7 @@ Page({
       {
         id: 'cost',
         title: '生产成本核算',
-        desc: '精益成本核算 / 辅助费率计算',
+        desc: '多层级成本流 / 智能报价模拟',
         path: '/pages/cost/index',
         icon: '💰',
         color: '#10b981',
@@ -39,7 +39,7 @@ Page({
       {
         id: 'fluid',
         title: '流体力学计算',
-        desc: '供液管路 / 狭缝模头压降',
+        desc: '供液管路压降 / 狭缝模头压降',
         path: '/pages/fluid/index',
         icon: '💧',
         color: '#3b82f6'
