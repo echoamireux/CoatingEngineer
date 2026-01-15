@@ -168,9 +168,9 @@
 .fcb-label { font-size: 22rpx; color: var(--text-sub); margin-right: 15rpx; white-space: nowrap; }
 .fcb-currency { font-size: 28rpx; color: var(--primary); font-weight: bold; margin-right: 4rpx; font-family: "DIN Alternate", sans-serif; }
 .fcb-val { font-size: 44rpx; font-weight: 800; color: var(--primary); font-family: "DIN Alternate", sans-serif; letter-spacing: 1rpx; }
-.fcb-unit { font-size: 22rpx; color: var(--text-sub); margin-left: 5rpx; margin-right: 20rpx; }
+.fcb-unit { font-size: 22rpx; color: var(--text-sub); margin-left: 5rpx; margin-right: 10rpx; }
 
-.fcb-separator { width: 1px; height: 24rpx; background: var(--border); margin-right: 20rpx; }
+.fcb-separator { width: 1px; height: 24rpx; background: var(--border); margin-right: 10rpx; }
 
 .fcb-tag { 
   font-size: 20rpx; color: var(--text-sub); opacity: 0.8; white-space: nowrap; font-family: "DIN Alternate", sans-serif; letter-spacing: 1rpx;
@@ -185,7 +185,7 @@
   border-radius: 40rpx;
   height: 90rpx;
   line-height: 90rpx;
-  padding: 0 50rpx;
+  padding: 0 30rpx;
   font-size: 30rpx;
   font-weight: bold;
   border: none;
