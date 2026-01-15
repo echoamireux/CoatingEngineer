@@ -41,8 +41,7 @@
       <view class="ft-divider"></view>
       
       <view class="footer-btn" bindtap="openAbout">
-        <text class="ft-icon">{{showReward ? '☕️' : '👨‍💻'}}</text>
-        
+        <text class="ft-icon">{{showReward ? '☕️' : '👤'}}</text>
         <text>{{showReward ? '支持作者' : '关于作者'}}</text>
       </view>
 
@@ -87,18 +86,25 @@
 
       <block wx:else>
         <view class="about-content">
-          <view class="about-avatar">CE</view>
-          <view class="about-name">涂布智算Pro</view>
+          <view class="about-header-group">
+             <view class="about-avatar">CE</view>
+             <view class="about-name">涂布智算Pro</view>
+          </view>
 
-          <view class="about-desc">
-            <text>{{showReward ? '致力于将复杂的涂布工艺数字化，数据算法均经过严谨推导与验证。\n\n如果您觉得好用，可以请我喝杯咖啡，这将成为持续优化算法的动力。' : '致力于将复杂的涂布工艺数字化，数据算法均经过严谨推导与验证。\n\n如发现数据异常或有优化建议，欢迎点击反馈。'}}</text>
+          <view class="about-desc-group">
+            <text class="desc-text">本工具由一线涂布工程师利用业余时间开发维护，旨在提供最严谨的工艺计算支持。</text>
+            
+            <view class="desc-spacer"></view>
+
+            <text class="desc-text">{{showReward ? '如果它提升了您的工作效率，欢迎请我喝杯咖啡，这将支持服务器的持续运行与算法更新。' : '如发现计算偏差或有功能建议，诚邀点击下方按钮反馈，共建专业工具。'}}</text>
           </view>
           
           <block wx:if="{{showReward}}">
-            <button class="btn-reward-simple" bindtap="previewReward">
-              <text>☕️ 请作者喝杯咖啡</text>
+            <button class="btn-reward-gold" bindtap="previewReward">
+              <text class="btn-icon">☕️</text>
+              <text>请作者喝杯咖啡</text>
             </button>
-            <view class="qr-hint">点击预览 -> 长按识别 -> 微信扫一扫</view>
+            <view class="qr-hint">点击预览大图 → 长按识别赞赏码</view>
           </block>
 
         </view>

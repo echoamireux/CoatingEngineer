@@ -24,10 +24,14 @@
   --input-bg: rgba(255,255,255,0.05);
   
   /* ★★★ Dark模式：关于弹窗配色 ★★★ */
-  --about-text: #d1d5db;        /* 浅灰字，配深底 */
-  --reward-bg: rgba(0,0,0,0.3); /* 深黑透明底 */
-  --reward-border: #d4af37;     /* 香槟金边框 */
-  --reward-text: #d4af37;       /* 香槟金文字 */
+  --about-title: #ffffff;       /* 标题：纯白最亮 */
+  --about-tag: #e5e7eb;         /* 标签：次亮灰白 */
+  --about-text: #9ca3af;        /* 正文：更深一点的灰，拉开层次 */
+  
+  /* 按钮：不再用透明黑，改用有质感的深碳金底色 */
+  --reward-bg: #2d2a26;         
+  --reward-border: #d4af37;     /* 香槟金边框不变 */
+  --reward-text: #d4af37;       /* 香槟金文字不变 */
 }
 
 .page-container.light {
@@ -42,10 +46,14 @@
   --input-bg: rgba(0,0,0,0.03);
 
   /* ★★★ Light模式：关于弹窗配色 ★★★ */
-  --about-text: #4b5563;           /* 深灰字，配白底（关键！解决看不清） */
-  --reward-bg: rgba(212,175,55,0.1); /* 极淡的金色底，清爽 */
-  --reward-border: #b45309;        /* 深琥珀色边框，有对比度 */
-  --reward-text: #b45309;          /* 深琥珀色文字 */
+  --about-title: #111827;       /* 标题：深黑 */
+  --about-tag: #374151;         /* 标签：深灰 */
+  --about-text: #6b7280;        /* 正文：中灰 */
+  
+  /* 按钮：清爽的淡金底 */
+  --reward-bg: #fffbeb;         
+  --reward-border: #b45309;
+  --reward-text: #b45309;
 }
 
 /* 头部：标准间距，不需要计算刘海 */
@@ -167,83 +175,87 @@
 }
 .hint-text { margin-top: 24rpx; font-size: 22rpx; color: var(--text-sub); opacity: 0.6; }
 
-/* 关于作者 - 布局精修 */
+/* =============================================
+   ★★★ 终极定稿版：工程师黑金风 UI ★★★
+============================================= */
+
 .about-content { 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  /* 增加左右内边距，让文字不要撑得太满，显瘦才精致 */
-  padding: 0 20rpx; 
+  display: flex; flex-direction: column; align-items: center; 
+  padding: 10rpx 50rpx 50rpx; /* 左右留白，聚焦视线 */
+}
+
+/* --- 头部区域 --- */
+.about-header-group {
+  display: flex; flex-direction: column; align-items: center;
   margin-bottom: 40rpx; 
 }
 
 .about-avatar {
-  width: 120rpx; height: 120rpx; 
-  background: #111827; 
-  border-radius: 30rpx;
-  color: white; font-size: 48rpx; font-weight: 900; 
+  width: 100rpx; height: 100rpx;
+  background: #1f2937;
+  border-radius: 24rpx;
+  color: #fff; font-size: 40rpx; font-weight: 900; 
   display: flex; align-items: center; justify-content: center;
-  /* 增加底部距离 */
-  margin-bottom: 30rpx; 
+  margin-bottom: 20rpx;
   border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 10rpx 20rpx rgba(0,0,0,0.2);
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.2);
 }
 
 .about-name { 
-  font-size: 38rpx; /* 字号加大一点 */
-  font-weight: 900; 
-  margin-bottom: 40rpx; /* 拉大标题和正文的距离 */
-  color: var(--text);
+  font-size: 38rpx; font-weight: 900; color: var(--about-title); 
   letter-spacing: 2rpx;
 }
 
-.about-desc {
-  width: 100%;
+/* --- 正文区域 --- */
+.about-desc-group { 
+  width: 100%; 
+  margin-bottom: 50rpx; 
 }
 
-.about-desc text {
-  font-size: 28rpx; 
-  color: var(--about-text); /* 颜色更亮一点，不要太灰 */
-  line-height: 2.0; /* 增大行高，让文字更疏朗 */
-  text-align: justify; /* 两端对齐，显得方正 */
+.desc-text {
+  font-size: 28rpx; /* 字号适中，清晰易读 */
+  color: var(--about-text); 
+  line-height: 1.7; /* 行高拉开，不拥挤 */
+  text-align: justify; /* ★关键：两端对齐，看起来像整齐的方块 */
   display: block;
 }
 
-/* ★★★ 赞赏按钮：黑金轻奢风格 ★★★ */
-.btn-reward-simple {
-  /* 增加顶部距离，让它离文字远一点 */
-  margin-top: 60rpx; 
-  width: 100%;
+/* 段落间距 */
+.desc-spacer { height: 30rpx; }
+
+/* --- ★★★ 核心：精致黑金按钮 (小尺寸版) ★★★ --- */
+.btn-reward-gold {
+  width: 80%;       /* 宽度收敛，不撑满 */
+  height: 88rpx;    /* 高度适中，像个精致的胶囊 */
   
-  /* ★★★ 关键修改：全部换成变量 ★★★ */
-  background: var(--reward-bg); 
-  border: 1px solid var(--reward-border); 
-  color: var(--reward-text);
+  /* 深色透光背景 */
+  background: rgba(255, 255, 255, 0.05); 
   
-  font-size: 28rpx; 
-  font-weight: bold;
-  letter-spacing: 1rpx;
-  border-radius: 60rpx; /* 变成全圆角的胶囊形，更现代 */
-  padding: 24rpx 0;
-  display: flex; align-items: center; justify-content: center;
+  /* 金色边框和文字 */
+  border: 1px solid #b45309; 
+  color: #d97706;            
   
-  /* 加一点淡淡的金光阴影 */
-  box-shadow: 0 0 15rpx rgba(212, 175, 55, 0.1);
+  border-radius: 44rpx; /* 全圆角胶囊形 */
+  
+  display: flex; align-items: center; justify-content: center; gap: 12rpx;
+  font-size: 28rpx; font-weight: bold; letter-spacing: 1rpx;
   transition: all 0.2s;
 }
 
-/* 点击反馈：微微发亮 */
-.btn-reward-simple:active { 
-  background: rgba(212, 175, 55, 0.1); 
+/* 点击态 */
+.btn-reward-gold:active {
+  background: rgba(180, 83, 9, 0.15); 
   transform: scale(0.98);
 }
 
-/* 底部提示小字 */
+.btn-icon { font-size: 34rpx; }
+
 .qr-hint { 
-  margin-top: 30rpx; 
+  margin-top: 24rpx; 
   font-size: 22rpx; 
-  color: #6b7280; 
-  opacity: 0.8; 
+  color: var(--text-sub); 
+  opacity: 0.6; 
+  letter-spacing: 1rpx;
 }
 
 /* 底部操作 */
