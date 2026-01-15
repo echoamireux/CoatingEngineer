@@ -3,12 +3,17 @@ const app = getApp()
 // ★★★ 团队访问口令 ★★★
 const ACCESS_CODE = '2300';
 
+// ★★★ 审核模式开关 ★★★
+// true = 显示赞赏（上线后改为true）； false = 隐藏赞赏（审核时用）
+const SHOW_REWARD = true;
+
 // ★★★ 赞赏码路径 ★★★
 const REWARD_IMAGE_PATH = '/images/reward.jpg'; 
 
 Page({
   data: {
     theme: 'dark', 
+    showReward: SHOW_REWARD, // 注入到页面数据中
 
     // --- 弹窗控制状态 ---
     showModal: false,
@@ -92,11 +97,26 @@ Page({
     });
   },
 
+  // ★★★ 优化后的赞赏逻辑 (为以后开启做准备) ★★★
   previewReward() {
+    // 如果是审核模式，直接拦截（双重保险）
+    if (!SHOW_REWARD) return;
+
     wx.previewImage({
       urls: [REWARD_IMAGE_PATH],
       current: REWARD_IMAGE_PATH,
-      fail: () => wx.showToast({ title: '暂无赞赏码', icon: 'none' })
+      fail: () => {
+        // 如果预览失败，尝试提示用户保存
+        wx.showModal({
+          title: '提示',
+          content: '无法预览图片，是否保存赞赏码到相册？',
+          success: (res) => {
+            if (res.confirm) {
+              wx.saveImageToPhotosAlbum({ filePath: REWARD_IMAGE_PATH });
+            }
+          }
+        });
+      }
     });
   },
 
