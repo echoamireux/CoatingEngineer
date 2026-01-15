@@ -182,7 +182,7 @@
                          </view>
                          <view class="field">
                            <view class="label">调机损耗 L<text class="sub">wst</text> (m)</view>
-                           <input class="inp {{errors['s'+sIdx+'_proc_wasteLen']?'error':''}}" type="digit" value="{{stage.process.wasteLen}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="wasteLen" placeholder="必填 (0)"/>
+                           <input class="inp {{errors['s'+sIdx+'_proc_wasteLen']?'error':''}}" type="digit" value="{{stage.process.wasteLen}}" bindinput="onInput" data-type="process" data-stage="{{sIdx}}" data-field="wasteLen" placeholder="无损耗请填0"/>
                          </view>
                       </view>
 
