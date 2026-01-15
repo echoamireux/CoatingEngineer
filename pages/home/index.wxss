@@ -176,23 +176,28 @@
 .hint-text { margin-top: 24rpx; font-size: 22rpx; color: var(--text-sub); opacity: 0.6; }
 
 /* =============================================
-   ★★★ 终极定稿版：工程师黑金风 UI ★★★
+   ★★★ 弹窗样式（完整修复版） ★★★
+   包含：Logo修复 + 间距动态适配 + 左右边距修复
 ============================================= */
 
+/* 1. 弹窗容器 */
 .about-content { 
   display: flex; flex-direction: column; align-items: center; 
-  padding: 10rpx 50rpx 50rpx; /* 左右留白，聚焦视线 */
+  /* 左右32rpx保证文字不换行，底部10rpx拉近关闭按钮 */
+  padding: 20rpx 32rpx 10rpx; 
 }
 
-/* --- 头部区域 --- */
+/* 2. 头部区域 (找回消失的Logo) */
 .about-header-group {
   display: flex; flex-direction: column; align-items: center;
-  margin-bottom: 40rpx; 
+  /* 头部和下方文字的距离，保持适中 */
+  margin-bottom: 0; 
 }
 
+/* ★★★ Logo 样式 (之前丢失的部分) ★★★ */
 .about-avatar {
   width: 100rpx; height: 100rpx;
-  background: #1f2937;
+  background: #1f2937; /* 深色背景 */
   border-radius: 24rpx;
   color: #fff; font-size: 40rpx; font-weight: 900; 
   display: flex; align-items: center; justify-content: center;
@@ -206,43 +211,44 @@
   letter-spacing: 2rpx;
 }
 
-/* --- 正文区域 --- */
+/* 3. 正文区域 (动态间距逻辑) */
 .about-desc-group { 
   width: 100%; 
-  margin-bottom: 50rpx; 
+  /* 审核模式下，距离关闭按钮近一点 */
+  margin-bottom: 20rpx;  
+  /* 顶部稍微下移，不顶着Logo */
+  margin-top: 30rpx;     
 }
 
 .desc-text {
-  font-size: 28rpx; /* 字号适中，清晰易读 */
+  font-size: 28rpx; 
   color: var(--about-text); 
-  line-height: 1.7; /* 行高拉开，不拥挤 */
-  text-align: justify; /* ★关键：两端对齐，看起来像整齐的方块 */
+  line-height: 1.7; 
+  text-align: justify; /* 两端对齐，美观 */
   display: block;
 }
 
 /* 段落间距 */
 .desc-spacer { height: 30rpx; }
 
-/* --- ★★★ 核心：精致黑金按钮 (小尺寸版) ★★★ --- */
+/* 4. 赞赏按钮 (自带顶部间距) */
 .btn-reward-gold {
-  width: 80%;       /* 宽度收敛，不撑满 */
-  height: 88rpx;    /* 高度适中，像个精致的胶囊 */
+  /* 关键：按钮出现时，自己把上面撑开；按钮没了，这间距也没了 */
+  margin-top: 40rpx; 
   
-  /* 深色透光背景 */
+  width: 80%;       
+  height: 88rpx;    
+  
   background: rgba(255, 255, 255, 0.05); 
-  
-  /* 金色边框和文字 */
   border: 1px solid #b45309; 
   color: #d97706;            
-  
-  border-radius: 44rpx; /* 全圆角胶囊形 */
+  border-radius: 44rpx; 
   
   display: flex; align-items: center; justify-content: center; gap: 12rpx;
   font-size: 28rpx; font-weight: bold; letter-spacing: 1rpx;
   transition: all 0.2s;
 }
 
-/* 点击态 */
 .btn-reward-gold:active {
   background: rgba(180, 83, 9, 0.15); 
   transform: scale(0.98);
@@ -250,8 +256,10 @@
 
 .btn-icon { font-size: 34rpx; }
 
+/* 5. 底部提示小字 */
 .qr-hint { 
-  margin-top: 24rpx; 
+  margin-top: 12rpx; 
+  margin-bottom: 10rpx; 
   font-size: 22rpx; 
   color: var(--text-sub); 
   opacity: 0.6; 
