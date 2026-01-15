@@ -224,10 +224,43 @@
 
 .mix-del { font-size: 40rpx; color: #ef4444; padding: 0 10rpx; opacity: 0.8; }
 
-.formula-card { background: var(--card); border: 1px solid var(--border); padding: 0; overflow: hidden; max-height: 90vh; width: 90%; }
+.formula-card { 
+  background: var(--card); 
+  border: 1px solid var(--border); 
+  padding: 0; 
+  width: 90%; 
+  
+  /* ★★★ 核心修改：Flex 布局 ★★★ */
+  display: flex; 
+  flex-direction: column; 
+  max-height: 90vh; /* 限制最大高度 */
+  overflow: hidden; /* 隐藏容器级别的滚动条 */
+}
 .fc-head { background: var(--card); padding: 25rpx; text-align: center; font-weight: bold; color: #60a5fa; font-size: 30rpx; border-bottom: 1px solid var(--border); }
-.fc-body { padding: 30rpx 40rpx; max-height: 80vh; overflow-y: auto; box-sizing: border-box; flex: 1; color: var(--text); }
-.fc-foot { text-align: center; padding: 25rpx; color: var(--text-sub); font-size: 28rpx; border-top: 1px solid var(--border); background: var(--card); }
+.fc-body { 
+  /* 上 | 右(调小) | 下 | 左 */
+  padding: 30rpx 10rpx 30rpx 30rpx; 
+  
+  /* ★★★ 核心修改：弹性伸缩 ★★★ */
+  flex: 1; 
+  min-height: 0; /* 防止子元素撑开 Flex 容器 */
+  overflow-y: auto; /* ★★★ 把滚动条加回来，且只加在这里 ★★★ */
+  
+  box-sizing: border-box; 
+  color: var(--text); 
+}
+.fc-foot { 
+  text-align: center; 
+  padding: 25rpx; 
+  color: var(--text-sub); 
+  font-size: 28rpx; 
+  border-top: 1px solid var(--border); 
+  background: var(--card); 
+  
+  /* ★★★ 核心修改：防止被挤压 ★★★ */
+  flex-shrink: 0; 
+  z-index: 10;
+}
 .fc-block { margin-bottom: 20rpx; }
 .fc-title { color: #60a5fa; font-size: 28rpx; font-weight: bold; margin-bottom: 20rpx; }
 .formula-display { display: flex; align-items: center; justify-content: center; margin: 20rpx 0 35rpx; }
@@ -238,8 +271,26 @@
 .num { border-bottom: 1px solid var(--text); padding: 0 10rpx 4rpx 10rpx; font-family: "Times New Roman", serif; font-style: italic; font-size: 38rpx; color: var(--primary); display: flex; align-items: baseline; justify-content: center; width: 100%; }
 .den { padding: 4rpx 10rpx 0 10rpx; font-family: "Times New Roman", serif; font-style: italic; font-size: 38rpx; color: var(--primary); display: flex; align-items: baseline; justify-content: center; width: 100%; }
 .line { display: none; }
-.fc-vars { background: rgba(128, 128, 128, 0.1); padding: 15rpx; border-radius: 8rpx; margin-bottom: 25rpx; }
-.fv-row { display: flex; align-items: center; margin-bottom: 8rpx; font-size: 24rpx; }
+/* 修改变量容器，启用 Grid 网格布局 */
+.fc-vars { 
+  background: rgba(128, 128, 128, 0.1); 
+  padding: 20rpx; 
+  border-radius: 12rpx; 
+  margin-bottom: 25rpx; 
+  
+  /* ★★★ 新增：双列布局 ★★★ */
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 左右等分 */
+  gap: 10rpx 20rpx; /* 行间距10，列间距20 */
+}
+
+/* 修改单行样式 */
+.fv-row { 
+  display: flex; 
+  align-items: center; 
+  font-size: 24rpx; 
+  margin-bottom: 0; /*去掉底部边距，交给 grid gap 控制 */
+}
 .fv-k { font-weight: bold; color: var(--primary); font-family: "Times New Roman", serif; font-style: italic; display: flex; align-items: center; font-size: 28rpx; }
 .fv-colon { margin: 0 10rpx; color: var(--text-sub); }
 .fv-desc { color: var(--text); }
