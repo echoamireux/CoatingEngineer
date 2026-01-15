@@ -492,7 +492,7 @@
 
          <view class="formula-box">
             <view class="fb-title">计算公式：</view>
-            <view class="fb-math">R<text class="sub">m</text> = (C<text class="sub">fix</text> / (N · D · H · η)) + C<text class="sub">run</text></view>
+            <view class="fb-math">R<text class="sub">m</text> = (C<text class="sub">fix</text> / (N<text class="sub">line</text> · D · H · η)) + C<text class="sub">run</text></view>
             <view class="fb-res">计算结果: <text class="val">{{machCalc.result}}</text> 元/h</view>
          </view>
       </scroll-view>
