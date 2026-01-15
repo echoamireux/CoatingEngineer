@@ -2,6 +2,7 @@
   <view class="nav-bar">
     <view class="nav-title">成本工序流</view>
     <view class="actions">
+      <view class="icon-btn" bindtap="openClearModal">↺</view>
       <view class="icon-btn" bindtap="toggleTheme">{{theme==='dark'?'☀️':'🌑'}}</view>
     </view>
   </view>
@@ -21,9 +22,6 @@
                 <text class="label">增值税(%)</text>
                 <input class="inp tiny" type="digit" value="{{vatRate}}" bindinput="onInput" data-field="vatRate" data-type="global"/>
             </view>
-         </view>
-         <view class="top-reset-btn" bindtap="openClearModal">
-            <text>↺ 重置</text>
          </view>
       </view>
 
