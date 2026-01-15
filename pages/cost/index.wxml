@@ -2,7 +2,7 @@
   <view class="nav-bar">
     <view class="nav-title">成本工序流</view>
     <view class="actions">
-      <view class="icon-btn" bindtap="openClearModal">↺</view>
+      <view class="icon-btn" bindtap="openClearModal">🧹</view>
       <view class="icon-btn" bindtap="toggleTheme">{{theme==='dark'?'☀️':'🌑'}}</view>
     </view>
   </view>
@@ -115,6 +115,7 @@
                         <view class="res-card-block mat" bindtap="calcMaterialItem" data-stage="{{sIdx}}" data-index="{{index}}">
                            <view class="rc-left">
                               <text class="rc-title">胶层单位成本 C<text class="sub">glue</text></text>
+                              <text style="font-size:20rpx; color:#9ca3af; margin-left:10rpx; white-space:nowrap;">(纯胶层)</text>
                            </view>
                            <view class="rc-right">
                             <text class="rc-val">¥ {{ (item.cost !== undefined && item.cost !== null) ? item.cost : '-' }}<text class="unit">/m²</text></text>
@@ -141,6 +142,7 @@
                         <view class="res-card-block mat" bindtap="calcMaterialItem" data-stage="{{sIdx}}" data-index="{{index}}">
                            <view class="rc-left">
                               <text class="rc-title">膜材单位成本 C<text class="sub">film</text></text>
+                              <text style="font-size:20rpx; color:#9ca3af; margin-left:10rpx; white-space:nowrap;">(纯膜材)</text>
                            </view>
                            <view class="rc-right">
                             <text class="rc-val">¥ {{ (item.cost !== undefined && item.cost !== null) ? item.cost : '-' }}<text class="unit">/m²</text></text>
@@ -206,9 +208,10 @@
                       <view class="res-card-block proc" bindtap="calcProcessItem" data-stage="{{sIdx}}">
                          <view class="rc-left">
                             <text class="rc-title">加工单位成本 C<text class="sub">proc</text></text>
+                            <text style="font-size:20rpx; color:#9ca3af; margin-left:10rpx; white-space:nowrap;">(纯加工)</text>
                          </view>
                          <view class="rc-right">
-                          <text class="rc-val">¥ {{ (stage.stageProcCost !== undefined && stage.stageProcCost !== null) ? stage.stageProcCost : '-' }}<text class="unit">/m²</text></text>
+                          <text class="rc-val">¥ {{ (stage.stageProcCost && stage.stageProcCost!=0) ? stage.stageProcCost : '-' }}<text class="unit">/m²</text></text>
                             <view class="rc-refresh">🔄</view>
                          </view>
                       </view>
@@ -220,17 +223,20 @@
                <view class="res-card-block sum" bindtap="calcStageTotal" data-stage="{{sIdx}}">
                   <view class="rc-left">
                      <text class="rc-title">本工序总单位成本 C<text class="sub">stage</text></text>
+                     <text style="font-size:20rpx; color:#9ca3af; margin-left:10rpx; font-weight:normal;">(不含良率)</text>
                   </view>
                   <view class="rc-right">
-                    <text class="rc-val">¥ {{ (stage.stageTotalCost !== undefined && stage.stageTotalCost !== null) ? stage.stageTotalCost : '-' }}<text class="unit">/m²</text></text>
+                    <text class="rc-val">¥ {{ (stage.stageTotalCost && stage.stageTotalCost!=0) ? stage.stageTotalCost : '-' }}<text class="unit">/m²</text></text>
                      <view class="rc-refresh">🔄</view>
                   </view>
                </view>
                <view class="accum-row">
-                  <view class="ar-left">
+                  <view class="ar-left" style="display:flex; flex-direction:column; align-items:flex-start; gap:0;">
                      <text>当前累计单位成本</text>
+                     <text style="font-size:20rpx; color:#10b981; margin-top:2rpx;">(含良率)</text>
                   </view>
-                  <text class="ar-val">¥ {{ (stage.accumCost !== undefined && stage.accumCost !== null) ? stage.accumCost : '-' }}<text class="unit">/m²</text></text>
+                  
+                  <text class="ar-val" style="color:#10b981">¥ {{ (stage.accumCost && stage.accumCost!=0) ? stage.accumCost : '-' }}<text class="unit">/m²</text></text>
                </view>
             </view>
         </view>
@@ -245,7 +251,7 @@
   <view class="floating-capsule-bar">
     <view class="fcb-content">
        <view class="fcb-left">
-          <text class="fcb-label">预估成本</text>
+          <text class="fcb-label">总成本</text>
           <text class="fcb-currency">¥</text>
           <text class="fcb-val">{{res_final_cost}}</text>
           <text class="fcb-unit">/m²</text>

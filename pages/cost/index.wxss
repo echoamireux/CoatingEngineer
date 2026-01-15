@@ -27,10 +27,57 @@
   --capsule-shadow: 0 8rpx 32rpx rgba(0,0,0,0.1);
 }
 
-.nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 40rpx 30rpx 20rpx; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+.nav-bar { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 20rpx 30rpx 20rpx; /*稍微调整padding使其更紧凑*/
+  background: var(--card); 
+  border-bottom: 1px solid var(--border); 
+  position: sticky; 
+  top: 0; 
+  z-index: 50; 
+  
+  /* ★★★ 核心修复：向上延伸 1px 的阴影，堵住缝隙 ★★★ */
+  box-shadow: 0 -1px 0 var(--card); 
+}
 .nav-title { font-size: 38rpx; font-weight: bold; }
 .actions { display: flex; gap: 20rpx; }
-.icon-btn { padding: 10rpx 20rpx; background: var(--bg); border-radius: 12rpx; font-size: 32rpx; }
+.icon-btn { 
+  /* 1. 尺寸优化：从 70rpx -> 60rpx，更精致 */
+  width: 60rpx;
+  height: 60rpx;
+  padding: 0; 
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* 2. 颜色优化：核心改动！ 
+     不再使用 var(--bg) 这种死黑/死白，
+     而是用 var(--input-bg) 这种半透明色。
+     效果：暗黑模式是微透的亮色，白天模式是微透的灰色。
+  */
+  background: var(--input-bg);
+  
+  border: 1px solid var(--border); 
+  border-radius: 16rpx; /* 圆角稍微收一点，适配小尺寸 */
+  
+  /* 3. 图标大小：稍微调小一点，保持呼吸感 */
+  font-size: 28rpx; 
+  transition: all 0.2s;
+}
+
+/* 点击时的反馈保持不变 */
+.icon-btn:active {
+  transform: scale(0.9);
+  opacity: 0.8;
+}
+
+.icon-btn:active {
+  transform: scale(0.9); /* 点击时的缩小动效 */
+  opacity: 0.8;
+}
 .main-scroll { padding: 20rpx; box-sizing: border-box; }
 
 .card { background: var(--card); border-radius: 20rpx; padding: 30rpx; border: 1px solid var(--border); margin-bottom: 30rpx; }
