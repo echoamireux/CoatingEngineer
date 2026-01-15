@@ -5,7 +5,7 @@ const ACCESS_CODE = '2300';
 
 // ★★★ 审核模式开关 ★★★
 // true = 显示赞赏（上线后改为true）； false = 隐藏赞赏（审核时用）
-const SHOW_REWARD = true;
+const SHOW_REWARD = false;
 
 // ★★★ 赞赏码路径 ★★★
 const REWARD_IMAGE_PATH = '/images/reward.jpg'; 
