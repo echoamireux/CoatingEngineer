@@ -4,3 +4,4 @@ unpackage/
 dist/
 project.private.config.json
 sitemap.json
+.spec-workflow/
