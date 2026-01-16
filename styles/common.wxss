@@ -1,0 +1,144 @@
+/* ============================================================
+   涂布工程专家 - 公共样式
+   全局通用的样式类
+   ============================================================ */
+
+/* === 页面容器 === */
+.page-container {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+
+/* === 导航栏 === */
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.nav-title {
+  font-size: 38rpx;
+  font-weight: bold;
+  color: var(--text);
+}
+
+/* === 按钮样式 === */
+.icon-btn {
+  width: 60rpx;
+  height: 60rpx;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  transition: all 0.2s;
+}
+
+.icon-btn:active {
+  transform: scale(0.9);
+  opacity: 0.8;
+}
+
+/* === 卡片样式 === */
+.card {
+  background: var(--card);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  border: 1px solid var(--border);
+  margin-bottom: 30rpx;
+  box-shadow: var(--card-shadow);
+}
+
+/* === 输入框样式 === */
+.input {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  height: 64rpx;
+  padding: 0 24rpx;
+  border-radius: 12rpx;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--accent-dim, rgba(16, 185, 129, 0.1));
+}
+
+/* === 标签样式 === */
+.label {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  margin-bottom: 6rpx;
+  display: block;
+}
+
+/* === 文字颜色 === */
+.text-sub {
+  color: var(--text-sub);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+/* === 间距工具类 === */
+.mb-16 { margin-bottom: 16rpx; }
+.mb-24 { margin-bottom: 24rpx; }
+.mb-32 { margin-bottom: 32rpx; }
+
+.mt-16 { margin-top: 16rpx; }
+.mt-24 { margin-top: 24rpx; }
+.mt-32 { margin-top: 32rpx; }
+
+/* === 弹性布局 === */
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* === 文本对齐 === */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* === 安全区域适配 === */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}

@@ -1,23 +1,23 @@
-/* === V25 风格样式 === */
+/* ============================================================
+   历史记录页样式
+   使用 theme-history 主题，主题变量定义在 styles/theme.wxss
+   ============================================================ */
+
+/* 历史记录页特有变量：不同模块的标签颜色 */
 page {
-  --bg: #10141e; 
-  --card: #1f2937; 
-  --text: #f3f4f6; 
-  --text-sub: #9ca3af;
-  --border: #374151; 
-  --accent: #3b82f6;
-  /* 不同模块的标签颜色 */
-  --tag-fluid: #3b82f6; 
-  --tag-conv: #8b5cf6; 
+  --tag-fluid: #3b82f6;
+  --tag-conv: #8b5cf6;
   --tag-coat: #6366f1;
-}
-.page-container.light {
-  --bg: #f2f4f7; --card: #ffffff; --text: #333; --text-sub: #666; --border: #e0e0e0;
 }
 
 .page-container {
-  min-height: 100vh; background: var(--bg); color: var(--text);
-  padding: 24rpx; box-sizing: border-box; display: flex; flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  padding: 24rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   font-family: -apple-system, sans-serif;
 }
 

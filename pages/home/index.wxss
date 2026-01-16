@@ -1,3 +1,8 @@
+/* ============================================================
+   首页样式
+   主题变量已移至 styles/theme.wxss
+   ============================================================ */
+
 /* 页面容器 */
 .page-container {
   min-height: 100vh;
@@ -8,52 +13,6 @@
   transition: all 0.3s;
   display: flex;
   flex-direction: column;
-}
-
-/* 主题变量 */
-/* 主题变量定义 */
-.page-container.dark {
-  --bg: #111827;
-  --card: #1f2937;
-  --text: #e5e7eb;
-  --text-sub: #9ca3af;
-  --primary: #10b981;
-  --border: #374151;
-  --title-shadow: 0 4rpx 8rpx rgba(0,0,0,0.5);
-  --modal-shadow: 0 24rpx 48rpx rgba(0,0,0,0.5); 
-  --input-bg: rgba(255,255,255,0.05);
-  
-  /* ★★★ Dark模式：关于弹窗配色 ★★★ */
-  --about-title: #ffffff;       /* 标题：纯白最亮 */
-  --about-tag: #e5e7eb;         /* 标签：次亮灰白 */
-  --about-text: #9ca3af;        /* 正文：更深一点的灰，拉开层次 */
-  
-  /* 按钮：不再用透明黑，改用有质感的深碳金底色 */
-  --reward-bg: #2d2a26;         
-  --reward-border: #d4af37;     /* 香槟金边框不变 */
-  --reward-text: #d4af37;       /* 香槟金文字不变 */
-}
-
-.page-container.light {
-  --bg: #f3f4f6;
-  --card: #ffffff;
-  --text: #1f2937;
-  --text-sub: #6b7280;
-  --primary: #059669;
-  --border: rgba(0,0,0,0.05);
-  --title-shadow: 0 2rpx 4rpx rgba(0,0,0,0.05);
-  --modal-shadow: 0 24rpx 48rpx rgba(0,0,0,0.1); 
-  --input-bg: rgba(0,0,0,0.03);
-
-  /* ★★★ Light模式：关于弹窗配色 ★★★ */
-  --about-title: #111827;       /* 标题：深黑 */
-  --about-tag: #374151;         /* 标签：深灰 */
-  --about-text: #6b7280;        /* 正文：中灰 */
-  
-  /* 按钮：清爽的淡金底 */
-  --reward-bg: #fffbeb;         
-  --reward-border: #b45309;
-  --reward-text: #b45309;
 }
 
 /* 头部：标准间距，不需要计算刘海 */

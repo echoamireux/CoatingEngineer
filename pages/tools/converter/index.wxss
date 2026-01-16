@@ -1,19 +1,26 @@
-/* === V25 午夜蓝主题变量 === */
+/* ============================================================
+   单位换算页样式
+   使用 theme-converter 主题，主题变量定义在 styles/theme.wxss
+   ============================================================ */
+
+/* 单位换算页特有变量：导航栏和侧边栏 */
 page {
-  --bg: #10141e; --card: #1f2937; --text: #f3f4f6; --text-sub: #9ca3af;
-  --accent: #3b82f6; --highlight: #38bdf8; --border: #374151; --input: #111827;
-  --nav-bg: #161e2a; /* 侧栏背景 */
+  --nav-bg: #161e2a;  /* 暗黑模式侧栏背景 */
   --nav-active: rgba(59,130,246,0.15);
 }
-.page-container.light {
-  --bg: #f2f4f7; --card: #ffffff; --text: #333; --text-sub: #666; 
-  --accent: #1989fa; --highlight: #1989fa; --input: #f7f8fa; --border: #e0e0e0;
-  --nav-bg: #eef2f6; --nav-active: #ffffff;
+
+page.light {
+  --nav-bg: #eef2f6;  /* 明亮模式侧栏背景 */
+  --nav-active: #ffffff;
 }
 
 .page-container {
-  height: 100vh; background: var(--bg); color: var(--text);
-  display: flex; flex-direction: column; overflow: hidden;
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   font-family: -apple-system, sans-serif;
 }
 

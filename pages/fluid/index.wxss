@@ -1,7 +1,25 @@
-/* V25 午夜蓝主题变量 */
-page { --bg: #10141e; --card: #1f2937; --text: #f3f4f6; --text-sub: #9ca3af; --accent: #3b82f6; --highlight: #38bdf8; --border: #374151; --input: #111827; --btn-sub: #374151; --error: #ef4444; }
-.page-container.light { --bg: #f2f4f7; --card: #ffffff; --text: #333; --text-sub: #666; --accent: #1989fa; --highlight: #1989fa; --input: #f7f8fa; --border: #e0e0e0; }
-.page-container { min-height: 100vh; background: var(--bg); color: var(--text); padding: 24rpx; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+/* ============================================================
+   流体力学页样式 - 午夜蓝主题
+   使用 theme-fluid 主题，主题变量定义在 styles/theme.wxss
+   ============================================================ */
+
+/* 主题变量补充：流体页特有的 --input 变量 */
+page {
+  --input: #111827;  /* 暗黑模式 */
+}
+
+page.light {
+  --input: #f7f8fa;  /* 明亮模式 */
+}
+
+.page-container {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  padding: 24rpx;
+  box-sizing: border-box;
+  font-family: -apple-system, sans-serif;
+}
 
 .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx; }
 .nav-title { font-size: 34rpx; font-weight: 800; letter-spacing: 1px; }
