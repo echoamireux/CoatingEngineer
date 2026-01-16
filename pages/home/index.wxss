@@ -271,3 +271,25 @@
 .btn-pro { flex: 1; font-size: 30rpx; font-weight: bold; height: 88rpx; line-height: 88rpx; border-radius: 20rpx; }
 .btn-cancel { background: transparent; color: var(--text-sub); border: 1px solid var(--border); }
 .btn-confirm { background: var(--primary); color: #fff; box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1); }
+
+/* 底部版权：腾讯风低调灰 */
+.copyright-box {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  
+  /* 距离上方内容远一点，距离底部留点空隙 */
+  margin-top: 60rpx; 
+  padding-bottom: 30rpx; 
+  
+  /* ★关键：透明度调低，让它看起来灰灰的，很高级 */
+  opacity: 0.25; 
+}
+
+.copyright-text {
+  font-size: 18rpx; /* 字号极小，像合同条款一样 */
+  font-family: Arial, Helvetica, sans-serif; /* 用西文字体，数字和英文更好看 */
+  color: var(--text-sub); /* 跟随主题灰色 */
+  letter-spacing: 1rpx; 
+}

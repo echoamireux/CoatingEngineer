@@ -54,8 +54,7 @@
     </view>
 
     <view class="copyright-box">
-      <text class="copyright">CoatingMaster Pro © 2026</text>
-      <text class="slogan">Powered by echoamireux</text>
+      <text class="copyright">Copyright © 2026 EA Studio. All Rights Reserved.</text>
     </view>
   </view>
 
@@ -92,7 +91,7 @@
           </view>
 
           <view class="about-desc-group">
-            <text class="desc-text">本工具由一线涂布工程师利用业余时间开发维护，旨在提供最严谨的工艺计算支持。</text>
+            <text class="desc-text">本工具由 EA Studio (个人工作室) 利用业余时间开发维护，旨在解决现场计算繁琐痛点，提供严谨的工艺数据支持。</text>
             
             <view class="desc-spacer"></view>
 
