@@ -1,12 +1,13 @@
 <view class="page-container {{theme}}">
   <view class="nav-bar">
     <view class="nav-title">流体力学计算</view>
-    <view class="nav-tools">
+    <view class="actions">
+      <view class="icon-btn" bindtap="toggleFormula">📐</view>
+      <view class="icon-btn" bindtap="saveHistory" wx:if="{{result.hasResult}}">💾</view>
       <view class="icon-btn" bindtap="openHistoryModal">📜</view>
-      <view class="icon-btn" bindtap="toggleFormula">📐 公式</view>
+      <view class="icon-btn" bindtap="confirmReset">🧹</view>
     </view>
   </view>
-
   <view class="card fluid-card compact">
     <view class="card-head">流体属性 (Fluid Properties)</view>
     <view class="fluid-grid-container {{isPowerLaw ? 'grid-2x2' : 'grid-1x2'}}">
@@ -29,7 +30,8 @@
             type="digit" placeholder="请输入" value="{{K_val}}" bindinput="onInput" data-field="K_val"
             placeholder-class="ph" /></view>
         <view class="field {{errors.n_val?'err':''}}"><text class="label">幂律指数 n</text><input class="inp" type="digit"
-            placeholder="请输入" value="{{n_val}}" bindinput="onInput" data-field="n_val" placeholder-class="ph" /></view>
+            placeholder="请输入" value="{{n_val}}" bindinput="onInput" data-field="n_val" placeholder-class="ph" />
+        </view>
       </block>
     </view>
   </view>

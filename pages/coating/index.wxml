@@ -1,13 +1,23 @@
-<view class="wrapper {{theme}}">
+<view class="page-container {{theme}}">
 
-  <view class="header">
-    <text class="app-title">涂布与卷材计算</text>
+  <!-- 统一的导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-title">涂布与卷材计算</view>
+    <view class="actions">
+      <view class="icon-btn" bindtap="saveCompHistory"
+        wx:if="{{currentTab=='composite' && (result_diameter !== '-' || result_weight !== '-')}}">💾</view>
+      <view class="icon-btn" bindtap="saveGlueHistory"
+        wx:if="{{currentTab=='glue' && (result_pump_speed !== '-' || result_wet_weight !== '-')}}">💾</view>
+      <view class="icon-btn" bindtap="resetComposite" wx:if="{{currentTab=='composite'}}">🧹</view>
+      <view class="icon-btn" bindtap="resetGlue" wx:if="{{currentTab=='glue'}}">🧹</view>
+    </view>
   </view>
 
+  <!-- Tabs 移动到导航栏下方 -->
   <view class="tabs">
-    <view class="tab-item {{currentTab=='composite' ? 'active' : ''}}" bindtap="switchTab" data-tab="composite">复合卷材计算
+    <view class="tab-item {{currentTab=='composite' ? 'active' : ''}}" bindtap="switchTab" data-tab="composite">复合卷材
     </view>
-    <view class="tab-item {{currentTab=='glue' ? 'active' : ''}}" bindtap="switchTab" data-tab="glue">涂布工艺计算</view>
+    <view class="tab-item {{currentTab=='glue' ? 'active' : ''}}" bindtap="switchTab" data-tab="glue">涂布工艺</view>
   </view>
 
   <view class="panel" wx:if="{{currentTab=='composite'}}">
