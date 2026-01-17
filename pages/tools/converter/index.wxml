@@ -2,6 +2,9 @@
 
   <view class="nav-bar">
     <view class="nav-title">单位换算器</view>
+    <view class="actions">
+      <view class="icon-btn" bindtap="handleClear">🧹</view>
+    </view>
   </view>
 
   <view class="main-layout">
@@ -20,7 +23,7 @@
         <view class="card">
           <view class="card-head-row">
             <view class="head-title">涂布干重/厚度</view>
-            <view class="reset-link" bindtap="clearCoating">清空</view>
+            <!-- <view class="reset-link" bindtap="clearCoating">清空</view> -->
           </view>
 
           <view class="field">
@@ -57,7 +60,6 @@
         <view class="card">
           <view class="card-head-row">
             <view class="head-title">{{tabs[currentTab].name}}换算</view>
-            <view class="reset-link" bindtap="clearCommon">清空</view>
           </view>
 
           <view class="unit-list">

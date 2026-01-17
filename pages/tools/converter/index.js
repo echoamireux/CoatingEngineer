@@ -30,6 +30,15 @@ Page({
     this.initUnits(idx);
   },
 
+  handleClear() {
+    if (this.data.currentTab === 0) {
+      this.clearCoating();
+    } else {
+      this.clearCommon();
+    }
+    wx.showToast({ title: '已清空', icon: 'none' });
+  },
+
   fmt(num) {
     return formatNumberConverter(num);
   },

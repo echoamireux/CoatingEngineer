@@ -100,20 +100,12 @@
           <button class="btn btn-primary" bindtap="calculateComposite">一键计算全部</button>
           <text class="hint-text">需要: 所有参数</text>
         </view>
-        <view class="btn-wrapper full-width">
-          <button class="btn btn-outline" bindtap="resetComposite">清空所有数据</button>
-        </view>
+
       </view>
     </view>
 
     <view class="card">
-      <view class="section-title" style="justify-content:space-between">
-        <text>计算结果</text>
-        <view style="display:flex; gap:20rpx;">
-          <view class="tool-btn" bindtap="saveCompHistory">💾 保存</view>
-          <view class="tool-btn" bindtap="openHistory">🕒 历史</view>
-        </view>
-      </view>
+      <view class="section-title">计算结果</view>
 
       <view class="result-row">
         <view class="result-header">
@@ -228,20 +220,12 @@
           <button class="btn btn-primary" bindtap="calculateGlue">一键计算全部</button>
           <text class="hint-text">需要: 所有参数</text>
         </view>
-        <view class="btn-wrapper full-width">
-          <button class="btn btn-outline" bindtap="resetGlue">清空所有数据</button>
-        </view>
+
       </view>
     </view>
 
     <view class="card">
-      <view class="section-title" style="justify-content:space-between">
-        <text>计算结果</text>
-        <view style="display:flex; gap:20rpx;">
-          <view class="tool-btn" bindtap="saveGlueHistory">💾 保存</view>
-          <view class="tool-btn" bindtap="openHistory">🕒 历史</view>
-        </view>
-      </view>
+      <view class="section-title">计算结果</view>
 
       <view class="result-row">
         <view class="result-header">
