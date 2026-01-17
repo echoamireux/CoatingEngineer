@@ -2,7 +2,7 @@ const app = getApp()
 const { initTheme, round, formatTime } = require('../../utils/common')
 const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('../../utils/cost-calc')
 const { validateRequired, validatePercentage: vPercent, hasRangeError } = require('../../utils/validator')
-const { saveHistory } = require('../../utils/history')
+const { saveHistory, getHistory } = require('../../utils/history')
 
 Page({
   data: {
@@ -24,6 +24,9 @@ Page({
     showDeleteModal: false,
     showOverwriteModal: false,
     pendingSaveName: '',
+
+    showHistoryModal: false,
+    localHistory: [],
 
     tempRecipeName: '',
     deleteTargetIndex: -1,
@@ -50,6 +53,38 @@ Page({
 
   onShow() {
     this.restoreFromHistory();
+    this.loadLocalHistory();
+  },
+
+  loadLocalHistory() {
+    const history = getHistory('cost');
+    this.setData({ localHistory: history });
+  },
+
+  openHistoryModal() {
+    this.loadLocalHistory();
+    this.setData({ showHistoryModal: true });
+  },
+
+  closeHistoryModal() {
+    this.setData({ showHistoryModal: false });
+  },
+
+  restoreHistory(e) {
+    const index = e.currentTarget.dataset.index;
+    const item = this.data.localHistory[index];
+
+    if (item && item.rawData) {
+      this.setData({
+        taxMode: item.rawData.taxMode || 'ex',
+        vatRate: item.rawData.vatRate || '13',
+        stages: item.rawData.stages || [],
+        final_yield: item.rawData.final_yield || '-',
+        res_final_cost: item.rawData.res_final_cost || '-',
+        showHistoryModal: false
+      });
+      wx.showToast({ title: '已回填', icon: 'success' });
+    }
   },
 
   restoreFromHistory() {
@@ -485,6 +520,7 @@ Page({
     };
 
     saveHistory('cost', 'costing', displayData, rawData);
+    this.loadLocalHistory(); // 重新加载本地历史
     wx.showToast({ title: '已保存', icon: 'success' });
   },
 

@@ -2,6 +2,7 @@
    <view class="nav-bar">
       <view class="nav-title">成本工序流</view>
       <view class="actions">
+         <view class="icon-btn" bindtap="openHistoryModal">📜</view>
          <view class="icon-btn" bindtap="openClearModal">🧹</view>
       </view>
    </view>
@@ -615,6 +616,31 @@
          <view class="mc-foot two-btn">
             <button class="btn-ghost" bindtap="closeLaborModal">取消</button>
             <button class="btn-primary" bindtap="applyLaborResult">应用结果</button>
+         </view>
+      </view>
+   </view>
+
+   <!-- 历史记录弹窗 -->
+   <view class="modal-mask" wx:if="{{showHistoryModal}}" bindtap="closeHistoryModal">
+      <view class="modal-card history-card" catchtap="preventBubble">
+         <view class="mc-head">历史记录</view>
+         <scroll-view scroll-y class="history-scroll">
+            <block wx:if="{{localHistory.length > 0}}">
+               <view class="history-item" wx:for="{{localHistory}}" wx:key="id" bindtap="restoreHistory"
+                  data-index="{{index}}">
+                  <view class="hi-time">{{item.time}}</view>
+                  <view class="hi-data">
+                     <view class="hi-row" wx:for="{{item.data}}" wx:key="k" wx:for-item="sub">
+                        <text class="hi-k">{{sub.k}}</text>
+                        <text class="hi-v">{{sub.v}}</text>
+                     </view>
+                  </view>
+               </view>
+            </block>
+            <view class="empty-hint" wx:else>暂无历史记录</view>
+         </scroll-view>
+         <view class="mc-foot">
+            <button class="btn-ghost" bindtap="closeHistoryModal">关闭</button>
          </view>
       </view>
    </view>
