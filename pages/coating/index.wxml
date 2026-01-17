@@ -257,26 +257,16 @@
     <view class="modal-card history-card" catchtap="true">
       <view class="mc-head">{{currentTab=='composite'?'复合卷材历史':'涂布工艺历史'}}</view>
       <scroll-view scroll-y class="history-scroll">
-        <block wx:if="{{currentTab=='composite'}}">
-          <view class="history-item" wx:for="{{historyList}}" wx:key="ts" bindtap="loadHistoryItem"
-            data-item="{{item}}">
-            <view class="h-info">
-              <text class="h-desc">{{item.desc}}</text>
-              <text class="h-time">{{item.dateStr}}</text>
+        <view class="history-item" wx:for="{{historyList}}" wx:key="id" bindtap="loadHistoryItem" data-item="{{item}}">
+          <view class="hi-time">{{item.time}}</view>
+          <view class="hi-data">
+            <view class="hi-row" wx:for="{{item.data}}" wx:for-item="d" wx:key="k">
+              <text class="hi-k">{{d.k}}:</text>
+              <text class="hi-v">{{d.v}}</text>
             </view>
-            <view class="h-del" catchtap="deleteHistoryItem" data-ts="{{item.ts}}">删除</view>
           </view>
-        </block>
-        <block wx:else>
-          <view class="history-item" wx:for="{{historyList}}" wx:key="ts" bindtap="loadHistoryItem"
-            data-item="{{item}}">
-            <view class="h-info">
-              <text class="h-desc">{{item.desc}}</text>
-              <text class="h-time">{{item.dateStr}}</text>
-            </view>
-            <view class="h-del" catchtap="deleteHistoryItem" data-ts="{{item.ts}}">删除</view>
-          </view>
-        </block>
+          <view class="hi-del" catchtap="deleteHistoryItem" data-id="{{item.id}}">删除</view>
+        </view>
         <view class="empty-hint" wx:if="{{historyList.length==0}}">暂无记录</view>
       </scroll-view>
       <view class="mc-foot">
@@ -306,4 +296,6 @@
     </view>
   </view>
 
+  <confirm-modal show="{{showResetModal}}" title="重置确认" content="确定要清空当前页面的所有输入数据吗？" bind:confirm="confirmClear"
+    bind:cancel="cancelClear" />
 </view>

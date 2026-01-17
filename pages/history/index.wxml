@@ -3,7 +3,7 @@
   <view class="nav-bar">
     <view class="nav-title">历史记录</view>
     <view class="actions">
-      <view class="icon-btn danger" bindtap="clearAll" wx:if="{{filteredList.length > 0}}">🗑️</view>
+      <view class="icon-btn" bindtap="clearAll" wx:if="{{filteredList.length > 0}}">🧹</view>
     </view>
   </view>
 
@@ -44,7 +44,6 @@
   </scroll-view>
 
   <!-- 使用通用确认弹窗组件 -->
-  <confirm-modal show="{{showResetModal}}" title="清空确认"
-    content="确定要删除{{currentModule === 'all' ? '所有' : '当前筛选的'}}历史记录吗？" confirmText="确定删除" confirmDanger="{{true}}"
-    bind:cancel="cancelReset" bind:confirm="execReset" />
+  <confirm-modal show="{{showResetModal}}" title="确认清空？" content="此操作将清空当前筛选下的所有历史记录，且无法恢复。" bind:confirm="execReset"
+    bind:cancel="cancelReset" />
 </view>

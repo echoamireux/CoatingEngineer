@@ -1,4 +1,42 @@
 /**app.wxss**/
+page {
+  /* Default Theme (Dark) Variables */
+  --bg: #111827;
+  --card: #1f2937;
+  --card-bg: #1f2937;
+  /* Alias for confirm-modal */
+  --text: #e5e7eb;
+  --text-main: #e5e7eb;
+  --text-sub: #9ca3af;
+  --primary: #10b981;
+  --border: #374151;
+  --modal-shadow: 0 24rpx 48rpx rgba(0, 0, 0, 0.5);
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --btn-ghost-bg: rgba(255, 255, 255, 0.1);
+}
+
+.page-container {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+
+.page-container.light {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --text-main: #1f2937;
+  --text-sub: #6b7280;
+  --primary: #059669;
+  --border: rgba(0, 0, 0, 0.05);
+  --modal-shadow: 0 24rpx 48rpx rgba(0, 0, 0, 0.1);
+  --input-bg: rgba(0, 0, 0, 0.03);
+  --btn-ghost-bg: rgba(0, 0, 0, 0.05);
+}
+
 .container {
   height: 100%;
   display: flex;
@@ -7,4 +45,4 @@
   justify-content: space-between;
   padding: 200rpx 0;
   box-sizing: border-box;
-} 
+}

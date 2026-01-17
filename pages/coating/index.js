@@ -1,5 +1,5 @@
 const { initTheme, formatNumber, formatTime } = require('../../utils/common')
-const { saveHistory } = require('../../utils/history')
+const { saveHistory, getHistory, deleteHistory } = require('../../utils/history')
 
 Page({
   data: {
@@ -15,6 +15,8 @@ Page({
     showHistoryModal: false,
     historyList: [],
     historyType: '',
+    // --- 确认弹窗 ---
+    showResetModal: false,
 
     // --- 复合卷材 ---
     comp_i: '', comp_c: '', comp_L: '',
@@ -129,17 +131,24 @@ Page({
   closeFormulaBar() { this.setData({ showFormulaBar: false }); },
 
   // === 历史记录 ===
+  // === 历史记录 ===
   openHistory() {
-    const type = this.data.currentTab;
-    const key = type === 'composite' ? 'history_comp' : 'history_glue';
-    const list = wx.getStorageSync(key) || [];
-    this.setData({ historyType: type, historyList: list, showHistoryModal: true });
+    const tab = this.data.currentTab;
+    const all = getHistory('coating') || [];
+    const list = all.filter(item => item.type === tab);
+
+    this.setData({
+      historyType: tab,
+      historyList: list,
+      showHistoryModal: true
+    });
   },
+
   closeHistory() { this.setData({ showHistoryModal: false }); },
 
   loadHistoryItem(e) {
     const item = e.currentTarget.dataset.item;
-    const p = item.params;
+    const p = item.rawData;
 
     if (this.data.historyType === 'composite') {
       this.setData({
@@ -164,15 +173,17 @@ Page({
       });
     }
     this.setData({ showHistoryModal: false });
-    vibrateSuccess();
+    // vibrateSuccess();
   },
 
   deleteHistoryItem(e) {
-    const ts = e.currentTarget.dataset.ts;
-    const type = this.data.historyType;
-    const key = type === 'composite' ? 'history_comp' : 'history_glue';
-    let list = this.data.historyList.filter(i => i.ts !== ts);
-    wx.setStorageSync(key, list);
+    const id = e.currentTarget.dataset.id;
+    deleteHistory(id);
+
+    // Refresh list
+    const tab = this.data.currentTab;
+    const all = getHistory('coating') || [];
+    const list = all.filter(item => item.type === tab);
     this.setData({ historyList: list });
   },
 
@@ -259,11 +270,29 @@ Page({
   },
 
   resetComposite() {
-    this.setData({
-      comp_i: '', comp_c: '', comp_L: '',
-      layers: [{ width: '', thickness: '', density: '', err_w: false, err_t: false, err_d: false }],
-      result_diameter: '-', result_weight: '-', errors: {}
-    });
+    this.setData({ showResetModal: true });
+  },
+
+  confirmClear() {
+    if (this.data.currentTab === 'composite') {
+      this.setData({
+        comp_i: '', comp_c: '', comp_L: '',
+        layers: [{ width: '', thickness: '', density: '', err_w: false, err_t: false, err_d: false }],
+        result_diameter: '-', result_weight: '-', errors: {}
+      });
+    } else {
+      this.setData({
+        glue_t_dry: '', glue_rho_dry: '', glue_m_dry: '',
+        glue_S: '', glue_rho_wet: '', glue_W: '', glue_v: '', glue_Dp: '', glue_L: '',
+        result_pump_speed: '-', result_wet_weight: '-', errors: {}
+      });
+    }
+    this.setData({ showResetModal: false });
+    wx.showToast({ title: '已清空', icon: 'success' });
+  },
+
+  cancelClear() {
+    this.setData({ showResetModal: false });
   },
 
   saveCompHistory() {
@@ -311,11 +340,7 @@ Page({
   updateFormulas(type) { },
 
   resetGlue() {
-    this.setData({
-      glue_t_dry: '', glue_rho_dry: '', glue_m_dry: '',
-      glue_S: '', glue_rho_wet: '', glue_W: '', glue_v: '', glue_Dp: '', glue_L: '',
-      result_pump_speed: '-', result_wet_weight: '-', errors: {}
-    });
+    this.setData({ showResetModal: true });
   },
 
   _validateGlue(specificFields, isSilent) {
