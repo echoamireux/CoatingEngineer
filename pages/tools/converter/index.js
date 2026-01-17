@@ -1,4 +1,4 @@
-const { initTheme, toggleTheme: commonToggleTheme, formatNumberConverter, parseNumber } = require('../../../utils/common')
+const { initTheme, formatNumberConverter, parseNumber } = require('../../../utils/common')
 
 Page({
   data: {
@@ -23,8 +23,6 @@ Page({
     initTheme(this);
     this.initUnits(0);
   },
-
-  toggleTheme() { commonToggleTheme(this); },
 
   switchTab(e) {
     const idx = Number(e.currentTarget.dataset.index);

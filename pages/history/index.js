@@ -1,5 +1,5 @@
 const app = getApp()
-const { initTheme, toggleTheme: commonToggleTheme } = require('../../utils/common')
+const { initTheme } = require('../../utils/common')
 
 Page({
   data: {
@@ -16,10 +16,6 @@ Page({
   loadHistory() {
     const list = wx.getStorageSync('calc_history') || [];
     this.setData({ historyList: list.reverse() });
-  },
-
-  toggleTheme() {
-    commonToggleTheme(this);
   },
 
   // 🔥 修改 1：点击垃圾桶，只显示弹窗，不直接调用系统弹窗

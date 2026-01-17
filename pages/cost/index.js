@@ -1,5 +1,5 @@
 const app = getApp()
-const { initTheme, toggleTheme: commonToggleTheme, round } = require('../../utils/common')
+const { initTheme, round } = require('../../utils/common')
 const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('../../utils/cost-calc')
 const { validateRequired, validatePercentage: vPercent, hasRangeError } = require('../../utils/validator')
 
@@ -45,10 +45,6 @@ Page({
     initTheme(this);
     this.loadRecipesFromStorage();
     if (this.data.stages.length === 0) this.addStage('涂布工序');
-  },
-
-  toggleTheme() {
-    commonToggleTheme(this);
   },
 
   // 使用 validator.js 的函数

@@ -1,4 +1,4 @@
-const { initTheme, toggleTheme: commonToggleTheme, vibrateSuccess, formatNumber, formatTime } = require('../../utils/common')
+const { initTheme, vibrateSuccess, formatNumber, formatTime } = require('../../utils/common')
 
 Page({
   data: {
@@ -39,10 +39,6 @@ Page({
   },
 
   onLoad() { initTheme(this); },
-
-  toggleTheme() {
-    commonToggleTheme(this);
-  },
 
   switchTab(e) {
     this.setData({

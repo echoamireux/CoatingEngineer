@@ -1,21 +1,19 @@
 <view class="wrapper {{theme}}">
-  
+
   <view class="header">
     <text class="app-title">涂布与卷材计算</text>
-    <view class="theme-switch" bindtap="toggleTheme">
-      <text>{{theme === 'dark' ? '☀️' : '🌑'}}</text>
-    </view>
   </view>
 
   <view class="tabs">
-    <view class="tab-item {{currentTab=='composite' ? 'active' : ''}}" bindtap="switchTab" data-tab="composite">复合卷材计算</view>
+    <view class="tab-item {{currentTab=='composite' ? 'active' : ''}}" bindtap="switchTab" data-tab="composite">复合卷材计算
+    </view>
     <view class="tab-item {{currentTab=='glue' ? 'active' : ''}}" bindtap="switchTab" data-tab="glue">涂布工艺计算</view>
   </view>
 
   <view class="panel" wx:if="{{currentTab=='composite'}}">
     <view class="card">
       <view class="section-title">基础参数输入</view>
-      
+
       <view class="input-row">
         <view class="label-row">
           <text class="label">管芯内径 i (mm)</text>
@@ -25,45 +23,55 @@
             <view class="tag" bindtap="setCoreSize" data-size="0">清空</view>
           </view>
         </view>
-        <input class="input {{errors.comp_i?'error-border':''}}" type="digit" bindinput="bindInput" data-field="comp_i" value="{{comp_i}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+        <input class="input {{errors.comp_i?'error-border':''}}" type="digit" bindinput="bindInput" data-field="comp_i"
+          value="{{comp_i}}" placeholder="请输入" placeholder-class="input-placeholder" />
       </view>
 
       <view class="flex-row">
         <view class="input-row flex-item">
           <text class="label">管芯壁厚 c (mm)</text>
-          <input class="input {{errors.comp_c?'error-border':''}}" type="digit" bindinput="bindInput" data-field="comp_c" value="{{comp_c}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+          <input class="input {{errors.comp_c?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="comp_c" value="{{comp_c}}" placeholder="请输入" placeholder-class="input-placeholder" />
         </view>
         <view class="input-row flex-item">
           <text class="label">卷材长度 L (m)</text>
-          <input class="input {{errors.comp_L?'error-border':''}}" type="digit" bindinput="bindInput" data-field="comp_L" value="{{comp_L}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+          <input class="input {{errors.comp_L?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="comp_L" value="{{comp_L}}" placeholder="请输入" placeholder-class="input-placeholder" />
         </view>
       </view>
 
       <view class="divider"></view>
-      
+
       <view class="section-title" style="justify-content: space-between;">
         <text>材料层结构 ({{layers.length}}层)</text>
         <text class="btn-text-plain" bindtap="addLayer">+ 添加层</text>
       </view>
-      
+
       <block wx:for="{{layers}}" wx:key="id">
         <view class="layer-item">
           <view class="layer-header">
             <text style="color:var(--text-sub); font-size:26rpx; font-weight:bold;">材料层 #{{index+1}}</text>
-            <text style="color:#ef4444; font-size:26rpx;" bindtap="removeLayer" data-index="{{index}}" wx:if="{{index > 0}}">删除</text>
+            <text style="color:#ef4444; font-size:26rpx;" bindtap="removeLayer" data-index="{{index}}"
+              wx:if="{{index > 0}}">删除</text>
           </view>
           <view class="grid-3">
             <view class="input-group">
               <text class="label">幅宽 W(mm)</text>
-              <input class="input {{item.err_w?'error-border':''}}" type="digit" bindinput="bindLayerInput" data-index="{{index}}" data-field="width" value="{{item.width}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+              <input class="input {{item.err_w?'error-border':''}}" type="digit" bindinput="bindLayerInput"
+                data-index="{{index}}" data-field="width" value="{{item.width}}" placeholder="请输入"
+                placeholder-class="input-placeholder" />
             </view>
             <view class="input-group">
               <text class="label">厚度 t(µm)</text>
-              <input class="input {{item.err_t?'error-border':''}}" type="digit" bindinput="bindLayerInput" data-index="{{index}}" data-field="thickness" value="{{item.thickness}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+              <input class="input {{item.err_t?'error-border':''}}" type="digit" bindinput="bindLayerInput"
+                data-index="{{index}}" data-field="thickness" value="{{item.thickness}}" placeholder="请输入"
+                placeholder-class="input-placeholder" />
             </view>
             <view class="input-group">
               <text class="label">密度 ρ(g/cm³)</text>
-              <input class="input {{item.err_d?'error-border':''}}" type="digit" bindinput="bindLayerInput" data-index="{{index}}" data-field="density" value="{{item.density}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+              <input class="input {{item.err_d?'error-border':''}}" type="digit" bindinput="bindLayerInput"
+                data-index="{{index}}" data-field="density" value="{{item.density}}" placeholder="请输入"
+                placeholder-class="input-placeholder" />
             </view>
           </view>
         </view>
@@ -90,13 +98,13 @@
 
     <view class="card">
       <view class="section-title" style="justify-content:space-between">
-          <text>计算结果</text>
-          <view style="display:flex; gap:20rpx;">
-             <view class="tool-btn" bindtap="saveCompHistory">💾 保存</view>
-             <view class="tool-btn" bindtap="openHistory">🕒 历史</view>
-          </view>
+        <text>计算结果</text>
+        <view style="display:flex; gap:20rpx;">
+          <view class="tool-btn" bindtap="saveCompHistory">💾 保存</view>
+          <view class="tool-btn" bindtap="openHistory">🕒 历史</view>
+        </view>
       </view>
-      
+
       <view class="result-row">
         <view class="result-header">
           <view class="label-group">
@@ -124,63 +132,76 @@
     <view class="card">
       <view class="section-title">计算基准</view>
       <view class="radio-group">
-        <view class="radio-item {{glueCalcType=='thickness' ? 'checked' : ''}}" bindtap="switchGlueType" data-type="thickness">干厚 (t_dry)</view>
-        <view class="radio-item {{glueCalcType=='weight' ? 'checked' : ''}}" bindtap="switchGlueType" data-type="weight">干涂量 (m_dry)</view>
+        <view class="radio-item {{glueCalcType=='thickness' ? 'checked' : ''}}" bindtap="switchGlueType"
+          data-type="thickness">干厚 (t_dry)</view>
+        <view class="radio-item {{glueCalcType=='weight' ? 'checked' : ''}}" bindtap="switchGlueType"
+          data-type="weight">干涂量 (m_dry)</view>
       </view>
 
       <view class="divider"></view>
       <view class="section-title">核心参数</view>
-      
+
       <block wx:if="{{glueCalcType=='thickness'}}">
         <view class="flex-row">
           <view class="input-row flex-item">
             <text class="label">干厚 t_dry (µm)</text>
-            <input class="input {{errors.glue_t_dry?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_t_dry" value="{{glue_t_dry}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+            <input class="input {{errors.glue_t_dry?'error-border':''}}" type="digit" bindinput="bindInput"
+              data-field="glue_t_dry" value="{{glue_t_dry}}" placeholder="请输入" placeholder-class="input-placeholder" />
           </view>
           <view class="input-row flex-item">
             <text class="label">干胶密度 <text class="sym">ρ_dry</text> (g/cm³)</text>
-            <input class="input {{errors.glue_rho_dry?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_rho_dry" value="{{glue_rho_dry}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+            <input class="input {{errors.glue_rho_dry?'error-border':''}}" type="digit" bindinput="bindInput"
+              data-field="glue_rho_dry" value="{{glue_rho_dry}}" placeholder="请输入"
+              placeholder-class="input-placeholder" />
           </view>
         </view>
       </block>
       <block wx:else>
-         <view class="input-row">
+        <view class="input-row">
           <text class="label">干涂量 m_dry (g/m²)</text>
-          <input class="input {{errors.glue_m_dry?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_m_dry" value="{{glue_m_dry}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+          <input class="input {{errors.glue_m_dry?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_m_dry" value="{{glue_m_dry}}" placeholder="请输入" placeholder-class="input-placeholder" />
         </view>
       </block>
 
       <view class="divider"></view>
       <view class="section-title">胶液与工艺参数</view>
-      
+
       <view class="grid-2">
         <view class="input-group">
-           <text class="label">固含量 S (%)</text>
-           <input class="input {{errors.glue_S?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_S" value="{{glue_S}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+          <text class="label">固含量 S (%)</text>
+          <input class="input {{errors.glue_S?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_S" value="{{glue_S}}" placeholder="请输入" placeholder-class="input-placeholder" />
         </view>
-         <view class="input-group">
-           <text class="label">湿胶密度 ρ_wet (g/cm³)</text>
-            <input class="input {{errors.glue_rho_wet?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_rho_wet" value="{{glue_rho_wet}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+        <view class="input-group">
+          <text class="label">湿胶密度 ρ_wet (g/cm³)</text>
+          <input class="input {{errors.glue_rho_wet?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_rho_wet" value="{{glue_rho_wet}}" placeholder="请输入"
+            placeholder-class="input-placeholder" />
         </view>
       </view>
       <view class="grid-2" style="margin-top:20rpx">
         <view class="input-group">
-           <text class="label">涂布幅宽 W (mm)</text>
-           <input class="input {{errors.glue_W?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_W" value="{{glue_W}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+          <text class="label">涂布幅宽 W (mm)</text>
+          <input class="input {{errors.glue_W?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_W" value="{{glue_W}}" placeholder="请输入" placeholder-class="input-placeholder" />
         </view>
         <view class="input-group">
-           <text class="label">生产线速 v (m/min)</text>
-           <input class="input {{errors.glue_v?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_v" value="{{glue_v}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+          <text class="label">生产线速 v (m/min)</text>
+          <input class="input {{errors.glue_v?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_v" value="{{glue_v}}" placeholder="请输入" placeholder-class="input-placeholder" />
         </view>
       </view>
       <view class="grid-2" style="margin-top:20rpx">
         <view class="input-group">
-           <text class="label">泵排量 Dp (cc/rev)</text>
-           <input class="input {{errors.glue_Dp?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_Dp" value="{{glue_Dp}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+          <text class="label">泵排量 Dp (cc/rev)</text>
+          <input class="input {{errors.glue_Dp?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_Dp" value="{{glue_Dp}}" placeholder="请输入" placeholder-class="input-placeholder" />
         </view>
         <view class="input-group">
-           <text class="label">涂布长度 L (m)</text>
-           <input class="input {{errors.glue_L?'error-border':''}}" type="digit" bindinput="bindInput" data-field="glue_L" value="{{glue_L}}" placeholder="请输入" placeholder-class="input-placeholder"/>
+          <text class="label">涂布长度 L (m)</text>
+          <input class="input {{errors.glue_L?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_L" value="{{glue_L}}" placeholder="请输入" placeholder-class="input-placeholder" />
         </view>
       </view>
 
@@ -205,13 +226,13 @@
 
     <view class="card">
       <view class="section-title" style="justify-content:space-between">
-          <text>计算结果</text>
-          <view style="display:flex; gap:20rpx;">
-             <view class="tool-btn" bindtap="saveGlueHistory">💾 保存</view>
-             <view class="tool-btn" bindtap="openHistory">🕒 历史</view>
-          </view>
+        <text>计算结果</text>
+        <view style="display:flex; gap:20rpx;">
+          <view class="tool-btn" bindtap="saveGlueHistory">💾 保存</view>
+          <view class="tool-btn" bindtap="openHistory">🕒 历史</view>
+        </view>
       </view>
-      
+
       <view class="result-row">
         <view class="result-header">
           <view class="label-group">

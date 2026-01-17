@@ -1,18 +1,17 @@
 <view class="page-container {{theme}}">
-  
+
   <view class="nav-bar">
     <view class="nav-title">历史记录</view>
     <view class="actions">
-      <view class="icon-btn" bindtap="toggleTheme">{{theme==='dark'?'☀️':'🌑'}}</view>
       <view class="icon-btn danger" bindtap="clearAll" wx:if="{{historyList.length > 0}}">🗑️</view>
     </view>
   </view>
 
   <scroll-view scroll-y class="history-list">
-    
+
     <block wx:if="{{historyList.length > 0}}">
       <view class="h-card" wx:for="{{historyList}}" wx:key="time">
-        
+
         <view class="hc-head">
           <view class="hc-tag {{item.module}}">{{item.moduleName}}</view>
           <view class="hc-time">{{item.time}}</view>

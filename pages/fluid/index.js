@@ -1,4 +1,4 @@
-const { initTheme, toggleTheme: commonToggleTheme, formatNumberObj, formatTime } = require('../../utils/common')
+const { initTheme, formatNumberObj, formatTime } = require('../../utils/common')
 
 Page({
   data: {
@@ -29,7 +29,6 @@ Page({
     this.loadLocalHistory();
   },
 
-  toggleTheme() { commonToggleTheme(this); },
   toggleModel(e) { this.setData({ isPowerLaw: e.detail.value, 'result.hasResult': false }); },
   toggleFormula() { this.setData({ showFormula: !this.data.showFormula }); },
 

@@ -3,7 +3,6 @@
     <view class="nav-title">成本工序流</view>
     <view class="actions">
       <view class="icon-btn" bindtap="openClearModal">🧹</view>
-      <view class="icon-btn" bindtap="toggleTheme">{{theme==='dark'?'☀️':'🌑'}}</view>
     </view>
   </view>
 
@@ -39,29 +38,29 @@
 
     <block wx:for="{{stages}}" wx:for-item="stage" wx:for-index="sIdx" wx:key="sIdx">
       <view class="stage-container">
-        
+
         <view class="stage-header">
           <view class="sh-left" catchtap="preventBubble">
             <view class="sh-badge">{{sIdx + 1}}</view>
             <input class="sh-name" value="{{stage.name}}" placeholder="输入工序名称" bindinput="onInput" data-type="stage_name" data-stage="{{sIdx}}"/>
           </view>
-          
+
           <view class="sh-right">
              <view class="fold-summary" wx:if="{{stage.folded}}" bindtap="toggleStageFold" data-index="{{sIdx}}">
                 <text class="fs-cost">¥ {{stage.stageTotalCost || 0}}</text>
                 <view class="fs-yield">良率 {{stage.yield || '-'}}%</view>
              </view>
-             
+
              <view class="sh-inputs" wx:else catchtap="preventBubble">
                 <text class="yield-label">良率</text>
                 <input class="yield-inp {{errors['s'+sIdx+'_yield']?'error':''}}" type="digit" value="{{stage.yield}}" placeholder="必填" bindinput="onInput" data-type="stage_yield" data-stage="{{sIdx}}"/>
                 <text class="yield-unit">%</text>
              </view>
-             
+
              <view class="fold-btn" bindtap="toggleStageFold" data-index="{{sIdx}}">
                 {{stage.folded ? '▼' : '▲'}}
              </view>
-             
+
              <view class="stage-del-btn" catchtap="removeStage" data-index="{{sIdx}}" wx:if="{{sIdx>0 && !stage.folded}}">🗑️</view>
           </view>
         </view>
@@ -77,7 +76,7 @@
                     <view class="fold-icon small">{{stage.matFolded ? '▼' : '▲'}}</view>
                  </view>
               </view>
-              
+
               <block wx:if="{{!stage.matFolded}}">
                   <block wx:for="{{stage.materials}}" wx:key="index">
                     <view class="mat-item">
@@ -204,7 +203,7 @@
                            </view>
                          </view>
                       </view>
-                      
+
                       <view class="res-card-block proc" bindtap="calcProcessItem" data-stage="{{sIdx}}">
                          <view class="rc-left">
                             <text class="rc-title">加工单位成本 C<text class="sub">proc</text></text>
@@ -235,7 +234,7 @@
                      <text>当前累计单位成本</text>
                      <text style="font-size:20rpx; color:#10b981; margin-top:2rpx;">(含良率)</text>
                   </view>
-                  
+
                   <text class="ar-val" style="color:#10b981">¥ {{ (stage.accumCost && stage.accumCost!=0) ? stage.accumCost : '-' }}<text class="unit">/m²</text></text>
                </view>
             </view>
@@ -243,7 +242,7 @@
       </view>
       <view class="flow-arrow" wx:if="{{sIdx < stages.length-1}}">⬇</view>
     </block>
-    
+
     <button class="btn-add-stage" bindtap="addStage">+ 增加下道工序</button>
     <view class="footer-spacer-pro"></view>
   </scroll-view>
@@ -353,7 +352,7 @@
         </view>
      </view>
   </view>
-  
+
   <view class="modal-mask" wx:if="{{showDeleteModal}}" bindtap="closeDeleteModal">
      <view class="modal-card clear-card" catchtap="preventBubble">
         <view class="cc-title">删除确认</view>
@@ -364,7 +363,7 @@
         </view>
      </view>
   </view>
-  
+
   <view class="modal-mask" wx:if="{{showFormulaModal}}" bindtap="closeFormula">
      <view class="modal-card formula-card" catchtap="preventBubble">
         <view class="fc-head">{{formulaTitle}}</view>
@@ -458,7 +457,7 @@
             </view>
          </view>
          <view class="fc-divider"></view>
-         
+
          <view class="modal-field-row">
             <view class="field-col"><text class="f-label">D 月工作天数</text></view>
             <view class="field-col right">
