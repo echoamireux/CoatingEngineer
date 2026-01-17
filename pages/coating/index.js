@@ -1,4 +1,4 @@
-const { initTheme, vibrateSuccess, formatNumber, formatTime } = require('../../utils/common')
+const { initTheme, formatNumber, formatTime } = require('../../utils/common')
 const { saveHistory } = require('../../utils/history')
 
 Page({
@@ -296,7 +296,6 @@ Page({
     };
 
     saveHistory('coating', 'composite', displayData, rawData);
-    vibrateSuccess();
     wx.showToast({ title: '已保存', icon: 'success' });
   },
 
@@ -414,7 +413,6 @@ Page({
     };
 
     saveHistory('coating', 'glue', displayData, rawData);
-    vibrateSuccess();
     wx.showToast({ title: '已保存', icon: 'success' });
   }
 })
