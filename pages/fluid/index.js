@@ -28,7 +28,43 @@ Page({
   onShow() {
     initTheme(this);
     this.loadLocalHistory();
+
+    // 检查并回填历史数据
+    this.restoreFromHistory();
   },
+
+  restoreFromHistory() {
+    const restoreData = wx.getStorageSync('history_restore_data');
+    const restoreModule = wx.getStorageSync('history_restore_module');
+
+    if (restoreData && restoreModule === 'fluid') {
+      // 清除标记
+      wx.removeStorageSync('history_restore_data');
+      wx.removeStorageSync('history_restore_module');
+      wx.removeStorageSync('history_restore_type');
+
+      // 回填数据
+      this.setData({
+        rho_wet: restoreData.rho_wet || '',
+        isPowerLaw: restoreData.isPowerLaw || false,
+        viscosity: restoreData.viscosity || '',
+        K_val: restoreData.K_val || '',
+        n_val: restoreData.n_val || '',
+        pipe_Q: restoreData.pipe_Q || '',
+        pipe_D: restoreData.pipe_D || '',
+        pipe_L: restoreData.pipe_L || '',
+        pipe_dz: restoreData.pipe_dz || '',
+        pipe_K_loss: restoreData.pipe_K_loss || '',
+        slot_W: restoreData.slot_W || '',
+        slot_H: restoreData.slot_H || '',
+        slot_Ls: restoreData.slot_Ls || '',
+        result: restoreData.resultCache || this.data.result
+      });
+
+      wx.showToast({ title: '已回填历史数据', icon: 'success' });
+    }
+  },
+
 
   toggleModel(e) { this.setData({ isPowerLaw: e.detail.value, 'result.hasResult': false }); },
   toggleFormula() { this.setData({ showFormula: !this.data.showFormula }); },
