@@ -1,3 +1,5 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "confirm-modal": "/components/confirm-modal/confirm-modal"
+  }
 }

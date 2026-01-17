@@ -1,7 +1,8 @@
 const app = getApp()
-const { initTheme, round } = require('../../utils/common')
+const { initTheme, round, formatTime } = require('../../utils/common')
 const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('../../utils/cost-calc')
 const { validateRequired, validatePercentage: vPercent, hasRangeError } = require('../../utils/validator')
+const { saveHistory } = require('../../utils/history')
 
 Page({
   data: {
@@ -45,6 +46,33 @@ Page({
     initTheme(this);
     this.loadRecipesFromStorage();
     if (this.data.stages.length === 0) this.addStage('涂布工序');
+  },
+
+  onShow() {
+    this.restoreFromHistory();
+  },
+
+  restoreFromHistory() {
+    const restoreData = wx.getStorageSync('history_restore_data');
+    const restoreModule = wx.getStorageSync('history_restore_module');
+
+    if (restoreData && restoreModule === 'cost') {
+      // 清除标记
+      wx.removeStorageSync('history_restore_data');
+      wx.removeStorageSync('history_restore_module');
+      wx.removeStorageSync('history_restore_type');
+
+      // 回填数据
+      this.setData({
+        taxMode: restoreData.taxMode || 'ex',
+        vatRate: restoreData.vatRate || '13',
+        stages: restoreData.stages || [],
+        final_yield: restoreData.final_yield || '-',
+        res_final_cost: restoreData.res_final_cost || '-'
+      });
+
+      wx.showToast({ title: '已回填历史数据', icon: 'success' });
+    }
   },
 
   // 使用 validator.js 的函数
@@ -433,6 +461,31 @@ Page({
     });
 
     wx.showToast({ title: '计算完成', icon: 'success' });
+  },
+
+  saveCostHistory() {
+    if (this.data.res_final_cost === '-') {
+      wx.showToast({ title: '请先计算成本', icon: 'none' });
+      return;
+    }
+
+    const displayData = [
+      { k: '总成本', v: `¥${this.data.res_final_cost}/m²` },
+      { k: '直通率', v: `${this.data.final_yield}%` },
+      { k: '工序数', v: `${this.data.stages.length}个` },
+      { k: '计价模式', v: this.data.taxMode === 'ex' ? '未税' : '含税' }
+    ];
+
+    const rawData = {
+      taxMode: this.data.taxMode,
+      vatRate: this.data.vatRate,
+      stages: this.data.stages,
+      final_yield: this.data.final_yield,
+      res_final_cost: this.data.res_final_cost
+    };
+
+    saveHistory('cost', 'costing', displayData, rawData);
+    wx.showToast({ title: '已保存', icon: 'success' });
   },
 
   addStage(name) {
