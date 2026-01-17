@@ -87,7 +87,6 @@
       </view>
     </view>
     <view class="main-action"><button class="main-btn" bindtap="handleCalc" data-mode="total">一键计算全部</button>
-      <view class="reset-link" bindtap="confirmReset">清空所有数据</view>
     </view>
   </view>
 
