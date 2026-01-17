@@ -416,7 +416,7 @@ page {
 .sci-box-big {
   margin-left: 8rpx;
   font-size: 60%;
-  color: var(--highlight);
+  color: var(--text);
 }
 
 .sup-big {
@@ -464,7 +464,7 @@ page {
 .s-big {
   font-size: 56rpx;
   font-weight: bold;
-  color: var(--highlight);
+  color: var(--text);
   margin: 20rpx 0;
   display: flex;
   justify-content: center;
