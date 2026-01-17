@@ -1,4 +1,5 @@
 const { initTheme, vibrateSuccess, formatNumber, formatTime } = require('../../utils/common')
+const { saveHistory } = require('../../utils/history')
 
 Page({
   data: {
@@ -226,20 +227,30 @@ Page({
     const hasM = this.data.result_weight != '-';
     if (hasR && !hasM) tag = '[仅卷径]';
     if (!hasR && hasM) tag = '[仅重量]';
+
     const d = this.data;
-    const item = {
-      ts: new Date().getTime(),
-      dateStr: formatTime(),
-      desc: `${tag} L:${d.comp_L}m | ${d.layers.length}层`,
-      params: { comp_i: d.comp_i, comp_c: d.comp_c, comp_L: d.comp_L, layers: d.layers }
+    const displayData = [
+      { k: '计算类型', v: tag },
+      { k: '卷材长度', v: `${d.comp_L}m` },
+      { k: '层数', v: `${d.layers.length}层` }
+    ];
+    if (hasR) displayData.push({ k: '卷径', v: `${this.data.result_diameter}mm` });
+    if (hasM) displayData.push({ k: '重量', v: `${this.data.result_weight}kg` });
+
+    const rawData = {
+      comp_i: d.comp_i,
+      comp_c: d.comp_c,
+      comp_L: d.comp_L,
+      layers: d.layers,
+      result_diameter: this.data.result_diameter,
+      result_weight: this.data.result_weight
     };
-    /* 👆👆👆 替换结束 👆👆👆 */
-    let list = wx.getStorageSync('history_comp') || [];
-    list.unshift(item); if (list.length > 20) list.pop();
-    wx.setStorageSync('history_comp', list);
+
+    saveHistory('coating', 'composite', displayData, rawData);
     vibrateSuccess();
     wx.showToast({ title: '已保存', icon: 'success' });
   },
+
 
   // ================= 2. 涂布工艺 =================
   switchGlueType(e) {
@@ -324,18 +335,36 @@ Page({
     let tag = '[全套]';
     if (hasN && !hasM) tag = '[仅泵速]';
     if (!hasN && hasM) tag = '[仅湿重]';
+
     const d = this.data;
-    const item = {
-      ts: new Date().getTime(),
-      dateStr: formatTime(),
-      type: d.glueCalcType,
-      desc: `${tag} ${d.glueCalcType === 'thickness' ? '干厚:' + d.glue_t_dry : '干涂量:' + d.glue_m_dry}`,
-      params: { ...d }
+    const displayData = [
+      { k: '计算类型', v: tag },
+      { k: '计算基准', v: d.glueCalcType === 'thickness' ? '干厚' : '干涂量' }
+    ];
+    if (d.glueCalcType === 'thickness') {
+      displayData.push({ k: '干厚', v: `${d.glue_t_dry}μm` });
+    } else {
+      displayData.push({ k: '干涂量', v: `${d.glue_m_dry}g/m²` });
+    }
+    if (hasN) displayData.push({ k: '泵速', v: `${this.data.result_pump_speed}rpm` });
+    if (hasM) displayData.push({ k: '湿重', v: `${this.data.result_wet_weight}kg` });
+
+    const rawData = {
+      glueCalcType: d.glueCalcType,
+      glue_t_dry: d.glue_t_dry,
+      glue_rho_dry: d.glue_rho_dry,
+      glue_m_dry: d.glue_m_dry,
+      glue_S: d.glue_S,
+      glue_rho_wet: d.glue_rho_wet,
+      glue_W: d.glue_W,
+      glue_v: d.glue_v,
+      glue_Dp: d.glue_Dp,
+      glue_L: d.glue_L,
+      result_pump_speed: this.data.result_pump_speed,
+      result_wet_weight: this.data.result_wet_weight
     };
-    /* 👆👆👆 替换结束 👆👆👆 */
-    let list = wx.getStorageSync('history_glue') || [];
-    list.unshift(item); if (list.length > 20) list.pop();
-    wx.setStorageSync('history_glue', list);
+
+    saveHistory('coating', 'glue', displayData, rawData);
     vibrateSuccess();
     wx.showToast({ title: '已保存', icon: 'success' });
   }
