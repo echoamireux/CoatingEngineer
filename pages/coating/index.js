@@ -41,6 +41,55 @@ Page({
 
   onLoad() { initTheme(this); },
 
+  onShow() {
+    this.restoreFromHistory();
+  },
+
+  restoreFromHistory() {
+    const restoreData = wx.getStorageSync('history_restore_data');
+    const restoreModule = wx.getStorageSync('history_restore_module');
+    const restoreType = wx.getStorageSync('history_restore_type');
+
+    if (restoreData && restoreModule === 'coating') {
+      // 清除标记
+      wx.removeStorageSync('history_restore_data');
+      wx.removeStorageSync('history_restore_module');
+      wx.removeStorageSync('history_restore_type');
+
+      if (restoreType === 'composite') {
+        // 回填复合卷材数据
+        this.setData({
+          currentTab: 'composite',
+          comp_i: restoreData.comp_i || '',
+          comp_c: restoreData.comp_c || '',
+          comp_L: restoreData.comp_L || '',
+          layers: restoreData.layers || [{ width: '', thickness: '', density: '', err_w: false, err_t: false, err_d: false }],
+          result_diameter: restoreData.result_diameter || '-',
+          result_weight: restoreData.result_weight || '-'
+        });
+      } else if (restoreType === 'glue') {
+        // 回填涂布工艺数据
+        this.setData({
+          currentTab: 'glue',
+          glueCalcType: restoreData.glueCalcType || 'thickness',
+          glue_t_dry: restoreData.glue_t_dry || '',
+          glue_rho_dry: restoreData.glue_rho_dry || '',
+          glue_m_dry: restoreData.glue_m_dry || '',
+          glue_S: restoreData.glue_S || '',
+          glue_rho_wet: restoreData.glue_rho_wet || '',
+          glue_W: restoreData.glue_W || '',
+          glue_v: restoreData.glue_v || '',
+          glue_Dp: restoreData.glue_Dp || '',
+          glue_L: restoreData.glue_L || '',
+          result_pump_speed: restoreData.result_pump_speed || '-',
+          result_wet_weight: restoreData.result_wet_weight || '-'
+        });
+      }
+
+      wx.showToast({ title: '已回填历史数据', icon: 'success' });
+    }
+  },
+
   switchTab(e) {
     this.setData({
       currentTab: e.currentTarget.dataset.tab,
