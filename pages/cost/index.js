@@ -1,6 +1,7 @@
 const app = getApp()
 const { initTheme, toggleTheme: commonToggleTheme, round } = require('../../utils/common')
-const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor, validateField: vField, validatePercentage: vPercent } = require('../../utils/cost-calc')
+const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('../../utils/cost-calc')
+const { validateRequired, validatePercentage: vPercent, hasRangeError } = require('../../utils/validator')
 
 Page({
   data: {
@@ -50,29 +51,13 @@ Page({
     commonToggleTheme(this);
   },
 
+  // 使用 validator.js 的函数
   validateField(val, key, errObj) {
-    if (val === undefined || val === null || val === '') {
-      errObj[key] = true;
-      return false;
-    }
-    return true;
+    return validateRequired(val, key, errObj);
   },
 
-  // 👇 新增这个函数：不仅查空，还查是否在 0-100 之间
   validatePercentage(val, key, errObj) {
-    // 1. 先查空 (如果为空，设为 true，表示普通必填错误)
-    if (val === undefined || val === null || val === '') {
-      errObj[key] = true;
-      return false;
-    }
-
-    // 2. 再查数值范围
-    const num = parseFloat(val);
-    if (isNaN(num) || num < 0 || num > 100) {
-      errObj[key] = 'range'; // ★★★ 关键修改：标记为 'range' (范围错误)
-      return false;
-    }
-    return true;
+    return vPercent(val, key, errObj);
   },
 
   clearError(key) {
