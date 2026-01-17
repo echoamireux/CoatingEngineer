@@ -1,4 +1,5 @@
 const app = getApp()
+const { initTheme, toggleTheme: commonToggleTheme } = require('../../utils/common')
 
 // ★★★ 团队访问口令 ★★★
 const ACCESS_CODE = '2300';
@@ -8,16 +9,16 @@ const ACCESS_CODE = '2300';
 const SHOW_REWARD = false;
 
 // ★★★ 赞赏码路径 ★★★
-const REWARD_IMAGE_PATH = '/images/reward.jpg'; 
+const REWARD_IMAGE_PATH = '/images/reward.jpg';
 
 Page({
   data: {
-    theme: 'dark', 
-    showReward: SHOW_REWARD, // 注入到页面数据中
+    theme: 'dark',
+    showReward: SHOW_REWARD,
 
     // --- 弹窗控制状态 ---
     showModal: false,
-    modalType: '', 
+    modalType: '',
     modalTitle: '',
     modalDesc: '',
     pendingPath: '',
@@ -31,7 +32,7 @@ Page({
         path: '/pages/cost/index',
         icon: '💰',
         color: '#10b981',
-        isDev: false // 标记为开发中
+        isDev: false
       },
       {
         id: 'coating',
@@ -69,23 +70,11 @@ Page({
   },
 
   onLoad() {
-    const savedTheme = wx.getStorageSync('theme') || 'dark';
-    this.setData({ theme: savedTheme });
-    this.updateStatusBar(savedTheme);
+    initTheme(this);
   },
 
   toggleTheme() {
-    const newTheme = this.data.theme === 'dark' ? 'light' : 'dark';
-    this.setData({ theme: newTheme });
-    wx.setStorageSync('theme', newTheme);
-    this.updateStatusBar(newTheme);
-  },
-
-  updateStatusBar(theme) {
-    wx.setNavigationBarColor({
-      frontColor: theme === 'dark' ? '#ffffff' : '#000000',
-      backgroundColor: theme === 'dark' ? '#111827' : '#f3f4f6'
-    });
+    commonToggleTheme(this);
   },
 
   openAbout() {
