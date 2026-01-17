@@ -302,16 +302,8 @@
     </view>
   </view>
 
-  <view class="modal-mask center-modal" wx:if="{{showResetModal}}">
-    <view class="modal-card small dark-theme-fix">
-      <view class="mc-head">确认操作</view>
-      <view style="text-align:center;color:var(--text-sub);margin:30rpx 0;">是否清空所有输入？</view>
-      <view class="mc-foot">
-        <button bindtap="cancelReset">取消</button>
-        <button class="blue" bindtap="execReset">确定清空</button>
-      </view>
-    </view>
-  </view>
+  <confirm-modal show="{{showResetModal}}" title="确认操作" content="是否清空所有输入？" confirmText="确定清空" bind:cancel="cancelReset"
+    bind:confirm="execReset" />
 
   <view class="modal-mask center-modal" wx:if="{{showHistoryModal}}">
     <view class="modal-card small dark-theme-fix" style="max-height:60vh; display:flex; flex-direction:column;">

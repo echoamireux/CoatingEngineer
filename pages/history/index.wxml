@@ -3,19 +3,27 @@
   <view class="nav-bar">
     <view class="nav-title">历史记录</view>
     <view class="actions">
-      <view class="icon-btn danger" bindtap="clearAll" wx:if="{{historyList.length > 0}}">🗑️</view>
+      <view class="icon-btn danger" bindtap="clearAll" wx:if="{{filteredList.length > 0}}">🗑️</view>
     </view>
   </view>
 
-  <scroll-view scroll-y class="history-list">
+  <!-- 模块筛选标签 -->
+  <scroll-view scroll-x class="filter-bar">
+    <view class="filter-item {{currentModule === item.id ? 'active' : ''}}" wx:for="{{moduleOptions}}" wx:key="id"
+      bindtap="switchModule" data-module="{{item.id}}">
+      <text class="filter-icon">{{item.icon}}</text>
+      <text>{{item.name}}</text>
+    </view>
+  </scroll-view>
 
-    <block wx:if="{{historyList.length > 0}}">
-      <view class="h-card" wx:for="{{historyList}}" wx:key="time">
+  <scroll-view scroll-y class="history-list">
+    <block wx:if="{{filteredList.length > 0}}">
+      <view class="h-card" wx:for="{{filteredList}}" wx:key="id" bindtap="onItemTap" data-item="{{item}}">
 
         <view class="hc-head">
           <view class="hc-tag {{item.module}}">{{item.moduleName}}</view>
           <view class="hc-time">{{item.time}}</view>
-          <view class="hc-del" catchtap="deleteItem" data-index="{{index}}">×</view>
+          <view class="hc-del" catchtap="deleteItem" data-id="{{item.id}}">×</view>
         </view>
 
         <view class="hc-body">
@@ -25,16 +33,18 @@
           </view>
         </view>
 
+        <view class="hc-hint">点击可回填到{{item.moduleName}}</view>
       </view>
     </block>
 
     <view class="empty-state" wx:else>
-      <text>暂无计算记录</text>
+      <text>暂无{{currentModule === 'all' ? '' : moduleOptions[currentModule] ? moduleOptions[currentModule].name :
+        ''}}计算记录</text>
     </view>
-
   </scroll-view>
 
   <!-- 使用通用确认弹窗组件 -->
-  <confirm-modal show="{{showResetModal}}" title="清空确认" content="确定要删除所有历史记录吗？" confirmText="确定删除"
-    confirmDanger="{{true}}" bind:cancel="cancelReset" bind:confirm="execReset" />
+  <confirm-modal show="{{showResetModal}}" title="清空确认"
+    content="确定要删除{{currentModule === 'all' ? '所有' : '当前筛选的'}}历史记录吗？" confirmText="确定删除" confirmDanger="{{true}}"
+    bind:cancel="cancelReset" bind:confirm="execReset" />
 </view>

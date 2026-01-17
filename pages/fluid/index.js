@@ -1,4 +1,5 @@
 const { initTheme, formatNumberObj, formatTime } = require('../../utils/common')
+const { saveHistory } = require('../../utils/history')
 
 Page({
   data: {
@@ -148,21 +149,13 @@ Page({
       resultCache: d.result
     };
 
-    const record = {
-      module: 'fluid',
-      moduleName: '流体力学',
-      time: formatTime(),
-      data: displayData,
-      rawData: rawData
-    };
-
-    let history = wx.getStorageSync('calc_history') || [];
-    history.push(record);
-    wx.setStorageSync('calc_history', history);
+    // 使用统一历史管理
+    saveHistory('fluid', 'pressure', displayData, rawData);
 
     this.loadLocalHistory();
     wx.showToast({ title: '已保存', icon: 'success' });
   },
+
 
   handleCalc(e) {
     const mode = e.currentTarget.dataset.mode;
