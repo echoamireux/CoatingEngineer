@@ -94,7 +94,6 @@
   <view class="card result-card" wx:if="{{result.hasResult}}">
     <view class="res-action-bar">
       <view class="res-title">计算结果</view>
-      <view class="save-btn" bindtap="saveHistory">💾 保存</view>
     </view>
 
     <view class="warn-bar" wx:if="{{result.p_turb || result.s_turb}}">⚠️ 检测到湍流 (Re>2300)，压降参考价值较低</view>

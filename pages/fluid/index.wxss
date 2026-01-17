@@ -330,7 +330,7 @@ page {
 
 .result-card {
   border: 1px solid var(--accent);
-  background: #16202e;
+  background: var(--card);
 }
 
 .warn-bar {
