@@ -305,23 +305,28 @@
   <confirm-modal show="{{showResetModal}}" title="确认操作" content="是否清空所有输入？" confirmText="确定清空" bind:cancel="cancelReset"
     bind:confirm="execReset" />
 
-  <view class="modal-mask center-modal" wx:if="{{showHistoryModal}}">
-    <view class="modal-card small dark-theme-fix" style="max-height:60vh; display:flex; flex-direction:column;">
-      <view class="mc-head highlight">历史记录 (点击回填)</view>
-      <scroll-view scroll-y style="flex:1; overflow-y:auto; margin-bottom:20rpx;">
+  <!-- 历史记录弹窗 -->
+  <view class="modal-mask" wx:if="{{showHistoryModal}}" bindtap="closeHistoryModal">
+    <view class="modal-card history-card" catchtap="preventBubble">
+      <view class="mc-head">历史记录</view>
+      <scroll-view scroll-y class="history-scroll">
         <block wx:if="{{localHistory.length > 0}}">
-          <view class="hist-item" wx:for="{{localHistory}}" wx:key="time" bindtap="restoreHistory"
+          <view class="history-item" wx:for="{{localHistory}}" wx:key="id" bindtap="restoreHistory"
             data-index="{{index}}">
-            <view class="hist-preview">
-              <text>Q:{{item.rawData.pipe_Q}}</text>
-              <text>P:{{item.rawData.resultCache.total_dp.b}}</text>
+            <view class="hi-time">{{item.time}}</view>
+            <view class="hi-data">
+              <view class="hi-row" wx:for="{{item.data}}" wx:key="k" wx:for-item="sub">
+                <text class="hi-k">{{sub.k}}</text>
+                <text class="hi-v">{{sub.v}}</text>
+              </view>
             </view>
-            <view class="hist-time">{{item.time}}</view>
           </view>
         </block>
-        <view wx:else style="text-align:center;color:#666;font-size:24rpx;margin-top:40rpx;">暂无记录</view>
+        <view class="empty-hint" wx:else>暂无历史记录</view>
       </scroll-view>
-      <view class="text-close-btn" bindtap="closeHistoryModal">关闭</view>
+      <view class="mc-foot">
+        <button class="btn-ghost" bindtap="closeHistoryModal">关闭</button>
+      </view>
     </view>
   </view>
 
