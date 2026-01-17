@@ -33,14 +33,8 @@
     </view>
 
   </scroll-view>
-  <view class="modal-mask center-modal" wx:if="{{showResetModal}}">
-    <view class="modal-card small dark-theme-fix">
-      <view class="mc-head">清空确认</view>
-      <view style="text-align:center;color:var(--text-sub);margin:30rpx 0;">确定要删除所有历史记录吗？</view>
-      <view class="mc-foot">
-        <button bindtap="cancelReset">取消</button>
-        <button class="red" bindtap="execReset">确定删除</button>
-      </view>
-    </view>
-  </view>
+
+  <!-- 使用通用确认弹窗组件 -->
+  <confirm-modal show="{{showResetModal}}" title="清空确认" content="确定要删除所有历史记录吗？" confirmText="确定删除"
+    confirmDanger="{{true}}" bind:cancel="cancelReset" bind:confirm="execReset" />
 </view>

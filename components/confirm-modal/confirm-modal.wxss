@@ -1,0 +1,66 @@
+/* 通用确认弹窗样式 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-card {
+  background: var(--card-bg, #1f2937);
+  border-radius: 24rpx;
+  width: 600rpx;
+  padding: 40rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.3);
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: var(--text-main, #fff);
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.modal-content {
+  font-size: 28rpx;
+  color: var(--text-sub, #9ca3af);
+  text-align: center;
+  margin: 30rpx 0;
+  line-height: 1.6;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 30rpx;
+}
+
+.modal-footer button {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  border: none;
+}
+
+.btn-cancel {
+  background: var(--btn-ghost-bg, rgba(255, 255, 255, 0.1)) !important;
+  color: var(--text-main, #fff) !important;
+}
+
+.btn-confirm {
+  background: var(--primary, #3b82f6) !important;
+  color: #fff !important;
+}
+
+.btn-confirm.danger {
+  background: #ef4444 !important;
+}
