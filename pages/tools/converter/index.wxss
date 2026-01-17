@@ -87,6 +87,7 @@ page {
   flex: 1;
   display: flex;
   overflow: hidden;
+  margin-top: 20rpx;
 }
 
 /* 左侧侧栏 */

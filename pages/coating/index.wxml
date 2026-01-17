@@ -8,6 +8,7 @@
         wx:if="{{currentTab=='composite' && (result_diameter !== '-' || result_weight !== '-')}}">💾</view>
       <view class="icon-btn" bindtap="saveGlueHistory"
         wx:if="{{currentTab=='glue' && (result_pump_speed !== '-' || result_wet_weight !== '-')}}">💾</view>
+      <view class="icon-btn" bindtap="openHistory">📜</view>
       <view class="icon-btn" bindtap="resetComposite" wx:if="{{currentTab=='composite'}}">🧹</view>
       <view class="icon-btn" bindtap="resetGlue" wx:if="{{currentTab=='glue'}}">🧹</view>
     </view>
@@ -252,15 +253,13 @@
   </view>
 
 
-  <view class="modal-mask {{showHistoryModal?'show':''}}" bindtap="closeHistory">
-    <view class="modal-panel" catchtap="true">
-      <view class="modal-head">
-        <text>{{currentTab=='composite'?'复合卷材计算历史':'涂布工艺计算历史'}}</text>
-        <view class="close-icon" bindtap="closeHistory">✕</view>
-      </view>
-      <scroll-view scroll-y class="modal-scroll">
+  <view class="modal-mask" wx:if="{{showHistoryModal}}" bindtap="closeHistory">
+    <view class="modal-card history-card" catchtap="true">
+      <view class="mc-head">{{currentTab=='composite'?'复合卷材历史':'涂布工艺历史'}}</view>
+      <scroll-view scroll-y class="history-scroll">
         <block wx:if="{{currentTab=='composite'}}">
-          <view class="h-item" wx:for="{{historyList}}" wx:key="ts" bindtap="loadHistoryItem" data-item="{{item}}">
+          <view class="history-item" wx:for="{{historyList}}" wx:key="ts" bindtap="loadHistoryItem"
+            data-item="{{item}}">
             <view class="h-info">
               <text class="h-desc">{{item.desc}}</text>
               <text class="h-time">{{item.dateStr}}</text>
@@ -269,7 +268,8 @@
           </view>
         </block>
         <block wx:else>
-          <view class="h-item" wx:for="{{historyList}}" wx:key="ts" bindtap="loadHistoryItem" data-item="{{item}}">
+          <view class="history-item" wx:for="{{historyList}}" wx:key="ts" bindtap="loadHistoryItem"
+            data-item="{{item}}">
             <view class="h-info">
               <text class="h-desc">{{item.desc}}</text>
               <text class="h-time">{{item.dateStr}}</text>
@@ -277,8 +277,11 @@
             <view class="h-del" catchtap="deleteHistoryItem" data-ts="{{item.ts}}">删除</view>
           </view>
         </block>
-        <view class="empty-tip" wx:if="{{historyList.length==0}}">暂无记录</view>
+        <view class="empty-hint" wx:if="{{historyList.length==0}}">暂无记录</view>
       </scroll-view>
+      <view class="mc-foot">
+        <button class="btn-ghost" bindtap="closeHistory">关闭</button>
+      </view>
     </view>
   </view>
 
