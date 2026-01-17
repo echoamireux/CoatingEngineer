@@ -8,6 +8,7 @@
         wx:if="{{currentTab=='composite' && (result_diameter !== '-' || result_weight !== '-')}}">💾</view>
       <view class="icon-btn" bindtap="saveGlueHistory"
         wx:if="{{currentTab=='glue' && (result_pump_speed !== '-' || result_wet_weight !== '-')}}">💾</view>
+      <view class="icon-btn" bindtap="toggleFormula">📐</view>
       <view class="icon-btn" bindtap="openHistory">📜</view>
       <view class="icon-btn" bindtap="resetComposite" wx:if="{{currentTab=='composite'}}">🧹</view>
       <view class="icon-btn" bindtap="resetGlue" wx:if="{{currentTab=='glue'}}">🧹</view>
@@ -114,7 +115,6 @@
             <text class="result-label">收卷卷径 D</text>
             <text class="result-unit-sub">(mm)</text>
           </view>
-          <view class="formula-box" catchtap="showFormula" data-target="diameter">公式</view>
         </view>
         <text class="result-val">{{result_diameter}}</text>
       </view>
@@ -124,7 +124,6 @@
             <text class="result-label">材料总重 M</text>
             <text class="result-unit-sub">(kg)</text>
           </view>
-          <view class="formula-box" catchtap="showFormula" data-target="c_weight">公式</view>
         </view>
         <text class="result-val">{{result_weight}}</text>
       </view>
@@ -234,7 +233,6 @@
             <text class="result-label">供液泵转速 N</text>
             <text class="result-unit-sub">(rpm)</text>
           </view>
-          <view class="formula-box" catchtap="showFormula" data-target="pump">公式</view>
         </view>
         <text class="result-val">{{result_pump_speed}}</text>
       </view>
@@ -245,7 +243,6 @@
             <text class="result-label">所需湿胶重量 Mw</text>
             <text class="result-unit-sub">(kg)</text>
           </view>
-          <view class="formula-box" catchtap="showFormula" data-target="weight">公式</view>
         </view>
         <text class="result-val">{{result_wet_weight}}</text>
       </view>
@@ -275,24 +272,63 @@
     </view>
   </view>
 
-  <view class="formula-float-bar {{showFormulaBar?'show':''}}">
-    <view class="ff-content">
-      <view class="ff-text" wx:if="{{currentFormula.type=='text'}}">
-        {{currentFormula.val}}
-      </view>
-      <view class="ff-frac-group" wx:if="{{currentFormula.type=='frac'}}">
-        <view class="ff-col">
-          <text class="ff-title">{{currentFormula.title}}</text>
-          <view class="ff-frac">
-            <text class="ff-up">{{currentFormula.up}}</text>
-            <view class="ff-line"></view>
-            <text class="ff-down">{{currentFormula.down}}</text>
+  <view class="modal-mask center-modal" wx:if="{{showFormulaModal}}" bindtap="toggleFormula">
+    <view class="fm-card" catchtap="true">
+      <view class="fm-head highlight">计算原理 <text class="close-icon" bindtap="toggleFormula">×</text></view>
+      <scroll-view scroll-y class="fm-scroll">
+
+        <block wx:if="{{currentTab=='composite'}}">
+          <view class="f-box">
+            <view class="ft highlight">1. 收卷卷径 (Diameter)</view>
+            <view class="fm-row"><text>D = </text>
+              <view class="frac">
+                <view class="n" style="border-top:1px solid">√</view>
+                <view class="d" style="margin-top:-10rpx">(i+2c)² + <view class="frac">
+                    <view class="n">4·L·Σt</view>
+                    <view class="d">π</view>
+                  </view>
+                </view>
+              </view>
+            </view>
           </view>
-        </view>
-      </view>
-      <view class="ff-close" bindtap="closeFormulaBar">
-        <view class="ff-close-icon">✕</view>
-      </view>
+          <view class="f-box">
+            <view class="ft highlight">2. 材料总重 (Weight)</view>
+            <view class="fm-row"><text>M = </text>
+              <view class="frac">
+                <view class="n">L · Σ(W·t·ρ)</view>
+                <view class="d">10⁶</view>
+              </view>
+            </view>
+          </view>
+        </block>
+
+        <block wx:if="{{currentTab=='glue'}}">
+          <view class="f-box">
+            <view class="ft highlight">1. 供液泵转速 (Pump Speed)</view>
+            <view class="fm-row"><text>N = </text>
+              <view class="frac">
+                <view class="n">m_dry · W · v</view>
+                <view class="d">10 · S · ρ_wet · Dp</view>
+              </view>
+            </view>
+            <view class="legend-grid">
+              <view><text>m_dry</text>干涂量 (g/m²)</view>
+              <view><text>t_dry</text>干厚 (µm)</view>
+              <view><text>ρ_dry</text>干胶密度</view>
+            </view>
+          </view>
+          <view class="f-box">
+            <view class="ft highlight">2. 湿胶重量 (Wet Weight)</view>
+            <view class="fm-row"><text>Mw = </text>
+              <view class="frac">
+                <view class="n">m_dry · W · L</view>
+                <view class="d">10000 · S</view>
+              </view>
+            </view>
+          </view>
+        </block>
+
+      </scroll-view>
     </view>
   </view>
 

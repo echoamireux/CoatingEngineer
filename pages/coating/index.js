@@ -7,9 +7,7 @@ Page({
     currentTab: 'composite',
 
     // --- 悬浮公式条 ---
-    showFormulaBar: false,
-    currentFormula: null,
-    currentFormulaTarget: '',
+    showFormulaModal: false,
 
     // --- 历史弹窗 ---
     showHistoryModal: false,
@@ -31,14 +29,7 @@ Page({
 
     errors: {},
 
-    formulas: {
-      comp_diameter: { type: 'text', val: '卷径 D = √[ (i+2c)² + (4·L·Σt)/π ]' },
-      comp_weight: { type: 'frac', title: '重量 M =', up: 'L · Σ(W·t·ρ)', down: '10⁶' },
-      pump_t: { type: 'frac', title: '泵速 N =', up: 't_dry · ρ_dry · W · v', down: '10 · S · ρ_wet · Dp' },
-      pump_m: { type: 'frac', title: '泵速 N =', up: 'm_dry · W · v', down: '10 · S · ρ_wet · Dp' },
-      weight_t: { type: 'frac', title: '湿重 Mw =', up: 't_dry · ρ_dry · W · L', down: '10000 · S' },
-      weight_m: { type: 'frac', title: '湿重 Mw =', up: 'm_dry · W · L', down: '10000 · S' }
-    }
+
   },
 
   onLoad() { initTheme(this); },
@@ -106,29 +97,11 @@ Page({
   },
 
   // === 公式条 ===
-  showFormula(e) {
-    const target = e.currentTarget.dataset.target;
-    this.setData({ currentFormulaTarget: target });
-    this.updateFormulaBarDisplay();
-    this.setData({ showFormulaBar: true });
-    vibrateSuccess();
+  toggleFormula() {
+    this.setData({
+      showFormulaModal: !this.data.showFormulaModal
+    });
   },
-
-  updateFormulaBarDisplay() {
-    const target = this.data.currentFormulaTarget;
-    const type = this.data.glueCalcType;
-    const f = this.data.formulas;
-    let data = null;
-
-    if (target === 'diameter') data = f.comp_diameter;
-    else if (target === 'c_weight') data = f.comp_weight;
-    else if (target === 'pump') data = (type === 'thickness') ? f.pump_t : f.pump_m;
-    else if (target === 'weight') data = (type === 'thickness') ? f.weight_t : f.weight_m;
-
-    this.setData({ currentFormula: data });
-  },
-
-  closeFormulaBar() { this.setData({ showFormulaBar: false }); },
 
   // === 历史记录 ===
   // === 历史记录 ===

@@ -733,3 +733,114 @@ button.btn-ghost {
   font-size: 24rpx;
   padding: 10rpx;
 }
+
+/* --- Formula Modal Styles (Adapted from Fluid) --- */
+.fm-card {
+  background: var(--card);
+  width: 90%;
+  max-height: 80vh;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.fm-head {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  color: var(--text);
+  font-size: 30rpx;
+  align-items: center;
+}
+
+.close-icon {
+  font-size: 44rpx;
+  color: var(--text-sub);
+  padding: 0 10rpx;
+  line-height: 1;
+}
+
+.fm-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.f-box {
+  background: var(--input);
+  padding: 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  border: 1px solid var(--border);
+}
+
+.ft {
+  color: var(--accent);
+  font-size: 26rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+}
+
+.fm-row {
+  font-family: "Times New Roman";
+  color: var(--text);
+  text-align: center;
+  margin: 12rpx 0;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.fm-row-split {
+  display: flex;
+  justify-content: space-around;
+  margin: 16rpx 0;
+}
+
+.fm-item {
+  display: flex;
+  align-items: center;
+  font-family: "Times New Roman";
+  font-weight: bold;
+  font-size: 28rpx;
+  color: var(--text);
+}
+
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 6rpx;
+  vertical-align: middle;
+}
+
+.n {
+  border-bottom: 1px solid var(--text);
+  padding: 0 4rpx;
+}
+
+.d {
+  padding-top: 2rpx;
+}
+
+.legend-grid {
+  margin-top: 20rpx;
+  border-top: 1px dashed var(--border);
+  padding-top: 20rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10rpx;
+}
+
+.legend-grid view {
+  font-size: 22rpx;
+  color: var(--text-sub);
+}
+
+.legend-grid text {
+  font-weight: bold;
+  color: var(--accent);
+  margin-right: 8rpx;
+}
