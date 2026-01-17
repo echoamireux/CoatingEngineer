@@ -1,5 +1,6 @@
 const app = getApp()
 const { initTheme, toggleTheme: commonToggleTheme, round } = require('../../utils/common')
+const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor, validateField: vField, validatePercentage: vPercent } = require('../../utils/cost-calc')
 
 Page({
   data: {
@@ -120,8 +121,7 @@ Page({
     const { stage, index } = e.currentTarget.dataset;
     const list = this.data.stages;
     const item = list[stage].materials[index];
-    const vat = parseFloat(this.data.vatRate) / 100 || 0.13;
-    const toExFactor = this.data.taxMode === 'inc' ? (1 / (1 + vat)) : 1;
+    const toExFactor = getTaxFactor(this.data.taxMode, this.data.vatRate);
 
     let currentErrors = {};
     let isValid = true;
@@ -131,24 +131,20 @@ Page({
     if (!this.validateField(item.price, `s${stage}_m${index}_price`, currentErrors)) isValid = false;
 
     if (item.type === 'glue') {
-      // 2. 胶水参数校验 (使用 validatePercentage 检查范围)
+      // 2. 胶水参数校验
       if (!this.validatePercentage(item.solid, `s${stage}_m${index}_solid`, currentErrors)) isValid = false;
       if (!this.validateField(item.gsm, `s${stage}_m${index}_gsm`, currentErrors)) isValid = false;
       if (!this.validatePercentage(item.eff, `s${stage}_m${index}_eff`, currentErrors)) isValid = false;
 
       if (isValid) {
-        const P = parseFloat(item.price); const S = parseFloat(item.solid); const G = parseFloat(item.gsm);
-        const E = parseFloat(item.eff) / 100;
-        if (S > 0 && E > 0) cost = (G / (S / 100) / 1000 / E) * P * toExFactor;
+        cost = calcGlueCost({ price: item.price, solid: item.solid, gsm: item.gsm, eff: item.eff, toExFactor });
       }
     } else {
       // 3. 膜材参数校验
       if (!this.validateField(item.widthRaw, `s${stage}_m${index}_widthRaw`, currentErrors)) isValid = false;
       if (!this.validateField(item.widthValid, `s${stage}_m${index}_widthValid`, currentErrors)) isValid = false;
       if (isValid) {
-        const P_area = parseFloat(item.price) * toExFactor;
-        const W_film = parseFloat(item.widthRaw); const W_coat = parseFloat(item.widthValid);
-        if (W_film > 0 && W_coat > 0) cost = P_area / (W_coat / W_film);
+        cost = calcFilmCost({ price: item.price, widthRaw: item.widthRaw, widthValid: item.widthValid, toExFactor });
       }
     }
 
