@@ -22,16 +22,16 @@ Page({
         desc: '多层级成本流 / 智能报价模拟',
         path: '/pages/cost/index',
         icon: '💰',
-        color: '#10b981',
+        color: '#10b981', // Emerald
         isDev: false
       },
       {
         id: 'coating',
-        title: '涂布与卷材计算',
+        title: '涂布生产计算', /* Professional Functional Title */
         desc: '卷径 / 重量 / 泵速 / 湿胶重',
         path: '/pages/coating/index',
-        icon: '⚙️',
-        color: '#6366f1'
+        icon: '🏭', /* Factory Icon */
+        color: '#f59e0b', // Amber
       },
       {
         id: 'fluid',
@@ -39,7 +39,7 @@ Page({
         desc: '供液管路压降 / 狭缝模头压降',
         path: '/pages/fluid/index',
         icon: '💧',
-        color: '#3b82f6'
+        color: '#3b82f6' // Ocean
       },
       {
         id: 'converter',
@@ -47,7 +47,7 @@ Page({
         desc: '粘度 / 压力 / 涂布干重',
         path: '/pages/tools/converter/index',
         icon: '🔄',
-        color: '#8b5cf6'
+        color: '#8b5cf6' // Violet
       },
       {
         id: 'history',
@@ -55,7 +55,7 @@ Page({
         desc: '查看过往计算数据',
         path: '/pages/history/index',
         icon: '📜',
-        color: '#10b981'
+        color: '#64748b' // Slate Blue
       },
     ]
   },

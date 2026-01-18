@@ -1,4 +1,4 @@
-<view class="page-container {{theme}}">
+<view class="page-container {{theme}} theme-cost">
    <view class="nav-bar">
       <view class="nav-title">成本工序流</view>
       <view class="actions">
@@ -361,8 +361,8 @@
       </view>
    </view>
 
-   <confirm-modal show="{{showClearModal}}" title="确认清空" content="此操作将重置所有输入数据，不可恢复。" confirmText="确认清空"
-      confirmDanger="{{true}}" bind:cancel="closeClearModal" bind:confirm="doClearAll" />
+   <confirm-modal show="{{showClearModal}}" title="清空确认" content="确定要清空当前页面的所有输入数据吗？此操作无法撤销。" confirmDanger="{{true}}"
+      bind:cancel="closeClearModal" bind:confirm="doClearAll" />
 
    <view class="modal-mask" wx:if="{{showLoadModal}}" bindtap="closeLoadModal">
       <view class="modal-card clear-card" catchtap="preventBubble">
@@ -410,11 +410,17 @@
 
    <view class="modal-mask" wx:if="{{showFormulaModal}}" bindtap="closeFormula">
       <view class="modal-card formula-card" catchtap="preventBubble">
-         <view class="fc-head">{{formulaTitle}}</view>
+         <view class="fc-head">
+            <view style="flex:1"></view> <!-- Spacer -->
+            <view class="fc-title-main">{{formulaTitle}}</view>
+            <view style="flex:1; display:flex; justify-content:flex-end;">
+               <view class="close-icon" bindtap="closeFormula">×</view>
+            </view>
+         </view>
          <scroll-view scroll-y class="fc-body">
             <block wx:for="{{formulaContent}}" wx:key="index">
                <view class="fc-block">
-                  <view class="fc-title">{{item.title}}</view>
+                  <view class="fc-subtitle gradient-text">{{item.title}}</view>
                   <view class="formula-inline" wx:if="{{item.inlineMath}}">
                      <block wx:for="{{item.inlineMath}}" wx:for-item="x" wx:key="idx">
                         <text>{{x.v}}</text><text class="sub" wx:if="{{x.s}}">{{x.s}}</text>
@@ -469,7 +475,6 @@
                </view>
             </view>
          </scroll-view>
-         <view class="fc-foot" bindtap="closeFormula">关闭</view>
       </view>
    </view>
 
@@ -645,4 +650,6 @@
          </view>
       </view>
    </view>
+   <confirm-modal show="{{showDeleteModal}}" title="删除确认" content="确定要删除这条记录吗？" confirmDanger="{{true}}"
+      bind:confirm="confirmDelete" bind:cancel="cancelDelete" />
 </view>

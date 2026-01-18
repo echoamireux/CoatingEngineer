@@ -13,7 +13,6 @@
   --text: #e5e7eb;
   --text-sub: #9ca3af;
   --border: #374151;
-  --primary: #10b981;
   --warn: #f59e0b;
   --card-res: #2d3748;
   --input-bg: rgba(255, 255, 255, 0.08);
@@ -27,7 +26,6 @@
   --text: #1f2937;
   --text-sub: #6b7280;
   --border: #e5e7eb;
-  --primary: #059669;
   --warn: #d97706;
   --card-res: #f9fafb;
   --input-bg: rgba(0, 0, 0, 0.05);
@@ -76,7 +74,8 @@
      而是用 var(--input-bg) 这种半透明色。
      效果：暗黑模式是微透的亮色，白天模式是微透的灰色。
   */
-  background: var(--input-bg);
+  /* 2. 颜色优化：适配绿色主题 (Green/Emerald) */
+  background: rgba(16, 185, 129, 0.1);
 
   border: 1px solid var(--border);
   border-radius: 16rpx;
@@ -91,6 +90,7 @@
 .icon-btn:active {
   transform: scale(0.9);
   opacity: 0.8;
+  background: rgba(16, 185, 129, 0.2);
 }
 
 .icon-btn:active {
@@ -928,59 +928,66 @@
 }
 
 .fc-head {
-  background: var(--card);
-  padding: 25rpx;
-  text-align: center;
-  font-weight: bold;
-  color: #60a5fa;
-  font-size: 30rpx;
+  padding: 24rpx;
   border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.fc-title-main {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: var(--text);
+  text-align: center;
+}
+
+/* Close icon styled in global or needs local override if missing */
+.fc-head .close-icon {
+  font-size: 44rpx;
+  color: var(--text-sub);
+  padding: 10rpx;
+  line-height: 1;
 }
 
 .fc-body {
-  /* 上 | 右(调小) | 下 | 左 */
-  padding: 30rpx 10rpx 30rpx 30rpx;
-
-  /* ★★★ 核心修改：弹性伸缩 ★★★ */
+  padding: 30rpx;
+  /* Removed max-height: 60vh to allow auto-grow and avoid double scrollbars */
   flex: 1;
-  min-height: 0;
-  /* 防止子元素撑开 Flex 容器 */
   overflow-y: auto;
-  /* ★★★ 把滚动条加回来，且只加在这里 ★★★ */
-
-  box-sizing: border-box;
-  color: var(--text);
-}
-
-.fc-foot {
-  text-align: center;
-  padding: 25rpx;
-  color: var(--text-sub);
-  font-size: 28rpx;
-  border-top: 1px solid var(--border);
-  background: var(--card);
-
-  /* ★★★ 核心修改：防止被挤压 ★★★ */
-  flex-shrink: 0;
-  z-index: 10;
 }
 
 .fc-block {
-  margin-bottom: 20rpx;
+  margin-bottom: 40rpx;
 }
 
-.fc-title {
-  color: #60a5fa;
+/* Renamed to subtitle to match wxml update or map .fc-subtitle to .fc-title style */
+.fc-subtitle {
   font-size: 28rpx;
   font-weight: bold;
+  color: var(--primary);
+  /* Theme Color (Green) */
+  border-left: none;
+  /* Remove vertical bar */
+  padding-left: 0;
   margin-bottom: 20rpx;
+  line-height: 1.2;
+  text-align: left;
+  /* Explicit Left Align */
 }
 
 .formula-display {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20rpx 0 35rpx;
+  margin: 20rpx 0;
+  padding: 20rpx 0;
+  background: transparent;
+  /* Remove background */
+  border: none;
+  /* Remove border */
+  border-radius: 0;
 }
 
 .formula-inline {
@@ -988,19 +995,20 @@
   font-family: "Times New Roman", serif;
   font-style: italic;
   font-size: 38rpx;
-  color: var(--primary);
+  color: var(--text);
+  /* Neutral Color */
   margin-bottom: 20rpx;
   letter-spacing: 2rpx;
 }
 
 .eqn-lhs {
+  font-family: "Times New Roman", serif;
+  font-size: 36rpx;
+  margin-right: 15rpx;
+  color: var(--text);
+  /* Neutral Color */
   display: flex;
   align-items: center;
-  font-family: "Times New Roman", serif;
-  font-style: italic;
-  font-size: 34rpx;
-  color: var(--primary);
-  margin-right: 15rpx;
 }
 
 .eqn-eq {
@@ -1009,55 +1017,40 @@
 }
 
 .fraction {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  vertical-align: middle;
-  margin: 0 10rpx;
+  font-family: "Times New Roman", serif;
+  color: var(--text);
+  /* Neutral Color */
 }
 
 .num {
   border-bottom: 1px solid var(--text);
-  padding: 0 10rpx 4rpx 10rpx;
-  font-family: "Times New Roman", serif;
-  font-style: italic;
-  font-size: 38rpx;
-  color: var(--primary);
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  width: 100%;
+  /* Neutral Line */
+  padding: 0 10rpx;
+  margin-bottom: 4rpx;
+  font-size: 32rpx;
 }
 
 .den {
-  padding: 4rpx 10rpx 0 10rpx;
-  font-family: "Times New Roman", serif;
-  font-style: italic;
-  font-size: 38rpx;
-  color: var(--primary);
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  width: 100%;
+  font-size: 32rpx;
 }
 
 .line {
   display: none;
 }
 
-/* 修改变量容器，启用 Grid 网格布局 */
+/* 变量容器样式 - 彻底去背景 */
 .fc-vars {
-  background: rgba(128, 128, 128, 0.1);
-  padding: 20rpx;
-  border-radius: 12rpx;
+  background: transparent;
+  /* No Background */
+  padding: 0;
+  border-radius: 0;
   margin-bottom: 25rpx;
-
-  /* ★★★ 新增：双列布局 ★★★ */
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* 左右等分 */
   gap: 10rpx 20rpx;
-  /* 行间距10，列间距20 */
 }
 
 /* 修改单行样式 */
@@ -1066,22 +1059,24 @@
   align-items: center;
   font-size: 24rpx;
   margin-bottom: 0;
-  /*去掉底部边距，交给 grid gap 控制 */
 }
 
 .fv-k {
   font-weight: bold;
   color: var(--primary);
+  /* Theme Color (Green) */
   font-family: "Times New Roman", serif;
   font-style: italic;
   display: flex;
   align-items: center;
   font-size: 28rpx;
+  margin-right: 15rpx;
+  /* Add spacing since colon is gone */
 }
 
 .fv-colon {
-  margin: 0 10rpx;
-  color: var(--text-sub);
+  display: none;
+  /* Remove colon */
 }
 
 .fv-desc {
@@ -1105,32 +1100,55 @@
   margin-top: 20rpx;
   padding-top: 20rpx;
   border-top: 1px dashed var(--border);
+  display: block;
+  /* Standard Block */
+  text-align: left;
+  /* Ensure Left Align */
 }
 
 .logic-title {
   font-size: 26rpx;
-  color: var(--text);
+  color: var(--primary);
+  /* Theme Color (Green) */
   font-weight: bold;
   margin-bottom: 15rpx;
+  width: auto;
+  /* Reset width */
+  margin-left: 0;
+  /* Reset margin */
+  margin-right: 0;
+  /* Reset margin */
+  text-align: left;
 }
 
 .logic-list {
   display: flex;
   flex-direction: column;
   gap: 12rpx;
+  width: auto;
+  /* Reset width */
+  margin-left: 0;
+  /* Reset margin */
+  margin-right: 0;
+  /* Reset margin */
+  align-items: flex-start;
 }
 
 .logic-item {
   display: flex;
+  /* Flex layout for index + text */
   font-size: 24rpx;
   color: var(--text-sub);
   line-height: 1.5;
+  text-align: left;
+  /* Text Left Aligned */
 }
 
 .li-idx {
-  width: 30rpx;
+  display: inline-block;
   font-weight: bold;
   color: var(--text-sub);
+  margin-right: 8rpx;
   flex-shrink: 0;
 }
 

@@ -1,4 +1,4 @@
-<view class="page-container {{theme}}">
+<view class="page-container {{theme}} theme-fluid">
   <view class="nav-bar">
     <view class="nav-title">流体力学计算</view>
     <view class="actions">
@@ -199,25 +199,73 @@
     </view>
   </view>
 
-  <view class="modal-mask center-modal" wx:if="{{showKModal}}">
-    <view class="modal-card small dark-theme-fix">
-      <view class="mc-head highlight">常用损耗系数 K</view>
-      <view class="k-grid-btn">
-        <button class="k-btn" bindtap="addKFactor" data-k="0.75">弯头 (0.75)</button>
-        <button class="k-btn" bindtap="addKFactor" data-k="1.5">三通 (1.5)</button>
-        <button class="k-btn" bindtap="addKFactor" data-k="0.1">全开球阀 (0.1)</button>
-        <button class="k-btn" bindtap="addKFactor" data-k="5.0">过滤器 (5.0)</button>
+  <view class="modal-mask center-modal" wx:if="{{showKModal}}" bindtap="closeKModal">
+    <view class="modal-card k-card dark-theme-fix" catchtap="preventBubble">
+      <view class="mc-head highlight">
+        <text>常用损耗系数 K</text>
+        <view class="close-icon" bindtap="closeKModal">×</view>
       </view>
-      <view class="text-close-btn" bindtap="closeKModal">关闭</view>
+      <scroll-view scroll-y class="k-list">
+        <view class="k-item" bindtap="addKFactor" data-k="0.75">
+          <view class="ki-icon">⤵️</view>
+          <view class="ki-info">
+            <text class="ki-name">90° 弯头</text>
+            <text class="ki-sub">Standard Elbow</text>
+          </view>
+          <view class="ki-right">
+            <text class="ki-val">0.75</text>
+            <view class="ki-add">+</view>
+          </view>
+        </view>
+
+        <view class="k-item" bindtap="addKFactor" data-k="1.5">
+          <view class="ki-icon">🔀</view>
+          <view class="ki-info">
+            <text class="ki-name">标准三通</text>
+            <text class="ki-sub">Standard Tee</text>
+          </view>
+          <view class="ki-right">
+            <text class="ki-val">1.50</text>
+            <view class="ki-add">+</view>
+          </view>
+        </view>
+
+        <view class="k-item" bindtap="addKFactor" data-k="0.1">
+          <view class="ki-icon">⚪</view>
+          <view class="ki-info">
+            <text class="ki-name">全开球阀</text>
+            <text class="ki-sub">Ball Valve (Full)</text>
+          </view>
+          <view class="ki-right">
+            <text class="ki-val">0.10</text>
+            <view class="ki-add">+</view>
+          </view>
+        </view>
+
+        <view class="k-item" bindtap="addKFactor" data-k="5.0">
+          <view class="ki-icon">🕸️</view>
+          <view class="ki-info">
+            <text class="ki-name">过滤器</text>
+            <text class="ki-sub">Strainer / Filter</text>
+          </view>
+          <view class="ki-right">
+            <text class="ki-val">5.00</text>
+            <view class="ki-add">+</view>
+          </view>
+        </view>
+      </scroll-view>
     </view>
   </view>
 
   <view class="modal-mask center-modal" wx:if="{{showFormula}}">
     <view class="fm-card dark-theme-fix">
-      <view class="fm-head highlight">计算原理 <text class="close-icon" bindtap="toggleFormula">×</text></view>
+      <view class="fm-head">
+        <view class="fm-title highlight">计算原理</view>
+        <view class="close-icon" bindtap="toggleFormula">×</view>
+      </view>
       <scroll-view scroll-y class="fm-scroll">
         <view class="f-box">
-          <view class="ft highlight">1. 幂律模型 (有效粘度)</view>
+          <view class="ft">1. 幂律模型 (Power Law)</view>
           <view class="fm-row">η_eff = K·(γ_wall)<text class="sup">n-1</text></view>
           <view class="legend-grid">
             <view><text>K</text> 稠度系数 (Pa·sⁿ)</view>
@@ -226,7 +274,7 @@
           </view>
         </view>
         <view class="f-box">
-          <view class="ft highlight">2. 圆管压降 (Pipe ΔP)</view>
+          <view class="ft">2. 圆管压降 (Pipe ΔP)</view>
           <view class="fm-row"><text>ΔP = </text>
             <view class="frac">
               <view class="n">128·η_eff·L·Q</view>
@@ -265,7 +313,7 @@
           </view>
         </view>
         <view class="f-box">
-          <view class="ft highlight">3. 狭缝压降 (Slot ΔP)</view>
+          <view class="ft">3. 狭缝压降 (Slot ΔP)</view>
           <view class="fm-row"><text>ΔP = </text>
             <view class="frac">
               <view class="n">12·η_eff·Ls·Q</view>
@@ -298,12 +346,12 @@
           </view>
         </view>
       </scroll-view>
-      <view class="text-close-btn" bindtap="toggleFormula">关闭</view>
+      <!-- Removed bottom close button -->
     </view>
   </view>
 
-  <confirm-modal show="{{showResetModal}}" title="确认操作" content="是否清空所有输入？" confirmText="确定清空" bind:cancel="cancelReset"
-    bind:confirm="execReset" />
+  <confirm-modal show="{{showResetModal}}" title="清空确认" content="确定要清空当前页面的所有输入数据吗？此操作无法撤销。" confirmDanger="{{true}}"
+    bind:cancel="cancelReset" bind:confirm="execReset" />
 
   <!-- 历史记录弹窗 -->
   <view class="modal-mask" wx:if="{{showHistoryModal}}" bindtap="closeHistoryModal">
@@ -331,4 +379,6 @@
     </view>
   </view>
 
+  <confirm-modal show="{{showDeleteModal}}" title="删除确认" content="确定要删除这条记录吗？" confirmDanger="{{true}}"
+    bind:confirm="confirmDelete" bind:cancel="cancelDelete" />
 </view>

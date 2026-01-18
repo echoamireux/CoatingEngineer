@@ -4,12 +4,15 @@ page {
   --card: #1f2937;
   --text: #f3f4f6;
   --text-sub: #9ca3af;
-  --accent: #3b82f6;
-  --highlight: #38bdf8;
   --border: #374151;
   --input: #111827;
   --btn-sub: #374151;
   --error: #ef4444;
+
+  /* Map legacy variables to new theme system */
+  --highlight: var(--accent);
+  /* Map Highlight to Theme Accent */
+  /* --accent is already provided by .theme-fluid */
 }
 
 .page-container.light {
@@ -17,8 +20,6 @@ page {
   --card: #ffffff;
   --text: #333;
   --text-sub: #666;
-  --accent: #1989fa;
-  --highlight: #1989fa;
   --input: #f7f8fa;
   --border: #e0e0e0;
 }
@@ -309,14 +310,14 @@ page {
 }
 
 .main-btn {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: var(--btn-gradient);
   color: #fff;
   font-weight: bold;
   font-size: 30rpx;
   border-radius: 40rpx;
   height: 80rpx;
   line-height: 80rpx;
-  box-shadow: 0 4rpx 16rpx rgba(37, 99, 235, 0.4);
+  box-shadow: 0 4rpx 16rpx var(--accent-dim);
 }
 
 .reset-link {
@@ -615,7 +616,8 @@ page {
 .fm-card {
   background: var(--card);
   width: 90%;
-  max-height: 80vh;
+  max-height: 90vh;
+  /* Increased height */
   border-radius: 24rpx;
   padding: 30rpx;
   display: flex;
@@ -623,15 +625,26 @@ page {
   position: relative;
 }
 
+/* Formula Modal Text Fix */
 .fm-head {
   text-align: center;
   font-weight: bold;
   margin-bottom: 30rpx;
   display: flex;
-  justify-content: space-between;
-  color: var(--text);
-  font-size: 30rpx;
+  justify-content: center;
+  /* Center Title */
+  color: var(--text) !important;
+  font-size: 32rpx;
   align-items: center;
+  position: relative;
+}
+
+.fm-head .close-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10rpx;
 }
 
 .close-icon {
@@ -644,29 +657,37 @@ page {
 .fm-scroll {
   flex: 1;
   overflow-y: auto;
+  /* Ensure scrolling if content is still long */
 }
 
+/* Boxed Style with Transparent Background */
 .f-box {
-  background: var(--input);
-  padding: 20rpx;
-  border-radius: 12rpx;
-  margin-bottom: 20rpx;
+  background: transparent;
+  /* Explicitly Transparent */
+  padding: 24rpx;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
   border: 1px solid var(--border);
+  /* Keep Border */
 }
 
 .ft {
-  color: var(--accent);
-  font-size: 26rpx;
+  color: #3b82f6 !important;
+  /* Explicit Ocean Blue */
+  font-size: 28rpx;
   font-weight: bold;
-  margin-bottom: 12rpx;
+  margin-bottom: 15rpx;
+  text-align: left;
+  /* Ensure Left Align */
 }
 
 .fm-row {
-  font-family: "Times New Roman";
+  font-family: "Times New Roman", serif;
   color: var(--text);
+  /* Neutral Formula */
   text-align: center;
   margin: 12rpx 0;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: bold;
 }
 
@@ -679,21 +700,23 @@ page {
 .fm-item {
   display: flex;
   align-items: center;
-  font-family: "Times New Roman";
+  font-family: "Times New Roman", serif;
   font-weight: bold;
   font-size: 28rpx;
   color: var(--text);
+  /* Neutral Formula */
 }
 
 .math-flex {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Times New Roman";
+  font-family: "Times New Roman", serif;
   font-weight: bold;
   font-size: 28rpx;
   margin: 16rpx 0;
   color: var(--text);
+  /* Neutral Formula */
 }
 
 .frac {
@@ -706,6 +729,7 @@ page {
 
 .n {
   border-bottom: 1px solid var(--text);
+  /* Neutral Line */
   padding: 0 4rpx;
 }
 
@@ -723,14 +747,22 @@ page {
 }
 
 .legend-grid view {
-  font-size: 22rpx;
+  font-size: 24rpx;
+  /* Slightly larger */
   color: var(--text-sub);
+  display: flex;
+  align-items: center;
 }
 
 .legend-grid text {
   font-weight: bold;
-  color: var(--accent);
-  margin-right: 8rpx;
+  color: #3b82f6;
+  /* Explicit Ocean Blue */
+  margin-right: 20rpx;
+  /* Increased Spacing */
+  font-family: "Times New Roman", serif;
+  font-style: italic;
+  font-size: 28rpx;
 }
 
 .close-btn-bottom {
@@ -909,4 +941,114 @@ page {
 .hi-del-btn:active {
   opacity: 1;
   color: #ef4444;
+}
+
+/* --- K Modal Redesign --- */
+.k-card {
+  width: 500rpx;
+  background: var(--card-bg, #1f2937);
+  border-radius: 24rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.k-card .mc-head {
+  padding: 24rpx 16rpx;
+  /* background removed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.k-card .mc-head text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: var(--text-main, #fff);
+}
+
+.k-card .mc-head .close-icon {
+  position: absolute;
+  right: 16rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 16rpx;
+  /* Increase hit area */
+}
+
+.k-list {
+  max-height: 600rpx;
+  padding: 10rpx 16rpx 24rpx 16rpx;
+  box-sizing: border-box;
+}
+
+.k-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  margin-bottom: 16rpx;
+  padding: 20rpx 20rpx;
+  border-radius: 16rpx;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.k-item:active {
+  background: rgba(255, 255, 255, 0.08);
+  transform: scale(0.98);
+}
+
+.ki-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+  width: 50rpx;
+  text-align: center;
+}
+
+.ki-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ki-name {
+  font-size: 26rpx;
+  color: var(--text-main, #fff);
+  font-weight: 500;
+  margin-bottom: 2rpx;
+}
+
+.ki-sub {
+  font-size: 18rpx;
+  color: var(--text-sub, #9ca3af);
+}
+
+.ki-right {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.ki-val {
+  font-size: 30rpx;
+  font-family: monospace;
+  font-weight: bold;
+  color: var(--accent, #60a5fa);
+}
+
+.ki-add {
+  /* margin-top removed for better centering */
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: rgba(96, 165, 250, 0.2);
+  color: var(--accent, #60a5fa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: 300;
+  padding-bottom: 4rpx;
+  /* Slight visual correction for symbol baseline */
 }

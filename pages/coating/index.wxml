@@ -1,4 +1,4 @@
-<view class="page-container {{theme}}">
+<view class="page-container {{theme}} theme-coating">
 
   <!-- 统一的导航栏 -->
   <view class="nav-bar">
@@ -17,9 +17,9 @@
 
   <!-- Tabs 移动到导航栏下方 -->
   <view class="tabs">
-    <view class="tab-item {{currentTab=='composite' ? 'active' : ''}}" bindtap="switchTab" data-tab="composite">复合卷材
+    <view class="tab-item {{currentTab=='composite' ? 'active' : ''}}" bindtap="switchTab" data-tab="composite">卷材规格
     </view>
-    <view class="tab-item {{currentTab=='glue' ? 'active' : ''}}" bindtap="switchTab" data-tab="glue">涂布工艺</view>
+    <view class="tab-item {{currentTab=='glue' ? 'active' : ''}}" bindtap="switchTab" data-tab="glue">涂布参数</view>
   </view>
 
   <view class="panel" wx:if="{{currentTab=='composite'}}">
@@ -227,7 +227,6 @@
 
   <view class="modal-mask" wx:if="{{showHistoryModal}}" bindtap="closeHistory">
     <view class="modal-card history-card" catchtap="true">
-      <view class="mc-head">{{currentTab=='composite'?'复合卷材历史':'涂布工艺历史'}}</view>
       <scroll-view scroll-y class="history-scroll">
         <view class="history-item" wx:for="{{historyList}}" wx:key="id" bindtap="loadHistoryItem" data-item="{{item}}">
           <view class="hi-del-btn" catchtap="deleteHistoryItem" data-id="{{item.id}}">×</view>
@@ -328,8 +327,8 @@
     </view>
   </view>
 
-  <confirm-modal show="{{showResetModal}}" title="重置确认" content="确定要清空当前页面的所有输入数据吗？" bind:confirm="confirmClear"
-    bind:cancel="cancelClear" />
+  <confirm-modal show="{{showResetModal}}" title="清空确认" content="确定要清空当前页面的所有输入数据吗？此操作无法撤销。" confirmDanger="{{true}}"
+    bind:confirm="confirmClear" bind:cancel="cancelClear" />
 
   <!-- 干涂量→干厚转换工具弹窗 -->
   <view class="modal-mask center-modal" wx:if="{{showConvertModal}}" bindtap="closeConvertModal">
@@ -363,4 +362,6 @@
       </view>
     </view>
   </view>
+  <confirm-modal show="{{showDeleteModal}}" title="删除确认" content="确定要删除这条记录吗？" confirmDanger="{{true}}"
+    bind:confirm="confirmDelete" bind:cancel="cancelDelete" />
 </view>

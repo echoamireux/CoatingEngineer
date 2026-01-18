@@ -15,6 +15,8 @@ Page({
     historyType: '',
     // --- 确认弹窗 ---
     showResetModal: false,
+    showDeleteModal: false,
+    pendingDeleteId: null,
 
     // --- 复合卷材 ---
     comp_i: '', comp_c: '', comp_L: '',
@@ -112,14 +114,8 @@ Page({
   // === 历史记录 ===
   // === 历史记录 ===
   openHistory() {
-    const tab = this.data.currentTab;
-    const all = getHistory('coating') || [];
-    const list = all.filter(item => item.type === tab);
-
-    this.setData({
-      historyType: tab,
-      historyList: list,
-      showHistoryModal: true
+    wx.navigateTo({
+      url: '/pages/history/index?type=coating'
     });
   },
 
@@ -157,13 +153,29 @@ Page({
 
   deleteHistoryItem(e) {
     const id = e.currentTarget.dataset.id;
-    deleteHistory(id);
+    this.setData({
+      showDeleteModal: true,
+      pendingDeleteId: id
+    });
+  },
 
-    // Refresh list
-    const tab = this.data.currentTab;
-    const all = getHistory('coating') || [];
-    const list = all.filter(item => item.type === tab);
-    this.setData({ historyList: list });
+  confirmDelete() {
+    const id = this.data.pendingDeleteId;
+    if (id) {
+      deleteHistory(id);
+
+      // Refresh list
+      const tab = this.data.currentTab;
+      const all = getHistory('coating') || [];
+      const list = all.filter(item => item.type === tab);
+      this.setData({ historyList: list });
+      wx.showToast({ title: '已删除', icon: 'success', duration: 800 });
+    }
+    this.setData({ showDeleteModal: false, pendingDeleteId: null });
+  },
+
+  cancelDelete() {
+    this.setData({ showDeleteModal: false, pendingDeleteId: null });
   },
 
   // ================= 1. 复合卷材 =================
@@ -286,13 +298,14 @@ Page({
     if (!hasR && hasM) tag = '[仅重量]';
 
     const d = this.data;
+    const core = d.comp_i == '76.2' ? '3"' : (d.comp_i == '152.4' ? '6"' : `${d.comp_i}mm`);
+
     const displayData = [
-      { k: '计算类型', v: tag },
-      { k: '卷材长度', v: `${d.comp_L}m` },
-      { k: '层数', v: `${d.layers.length}层` }
+      { k: '卷径', v: hasR ? `${this.data.result_diameter}mm` : '-' },
+      { k: '重量', v: hasM ? `${this.data.result_weight}kg` : '-' },
+      { k: '规格', v: `L:${d.comp_L}m | 芯:${core}` },
+      { k: '结构', v: `${d.layers.length}层复合` }
     ];
-    if (hasR) displayData.push({ k: '卷径', v: `${this.data.result_diameter}mm` });
-    if (hasM) displayData.push({ k: '重量', v: `${this.data.result_weight}kg` });
 
     const rawData = {
       comp_i: d.comp_i,
@@ -303,7 +316,7 @@ Page({
       result_weight: this.data.result_weight
     };
 
-    saveHistory('coating', 'composite', displayData, rawData);
+    saveHistory('coating', 'composite', displayData, rawData, '卷材规格');
     wx.showToast({ title: '已保存', icon: 'success' });
   },
 
@@ -389,17 +402,14 @@ Page({
     if (!hasN && hasM) tag = '[仅湿重]';
 
     const d = this.data;
+    const target = d.glueCalcType === 'thickness' ? `${d.glue_t_dry}μm(干厚)` : `${d.glue_m_dry}g/m²(干涂)`;
+
     const displayData = [
-      { k: '计算类型', v: tag },
-      { k: '计算基准', v: d.glueCalcType === 'thickness' ? '干厚' : '干涂量' }
+      { k: '泵速', v: hasN ? `${this.data.result_pump_speed}rpm` : '-' },
+      { k: '湿重', v: hasM ? `${this.data.result_wet_weight}kg` : '-' },
+      { k: '工艺', v: `Speed:${d.glue_v} | Width:${d.glue_W}` },
+      { k: '目标', v: target }
     ];
-    if (d.glueCalcType === 'thickness') {
-      displayData.push({ k: '干厚', v: `${d.glue_t_dry}μm` });
-    } else {
-      displayData.push({ k: '干涂量', v: `${d.glue_m_dry}g/m²` });
-    }
-    if (hasN) displayData.push({ k: '泵速', v: `${this.data.result_pump_speed}rpm` });
-    if (hasM) displayData.push({ k: '湿重', v: `${this.data.result_wet_weight}kg` });
 
     const rawData = {
       glueCalcType: d.glueCalcType,
@@ -416,7 +426,7 @@ Page({
       result_wet_weight: this.data.result_wet_weight
     };
 
-    saveHistory('coating', 'glue', displayData, rawData);
+    saveHistory('coating', 'glue', displayData, rawData, '涂布参数');
     wx.showToast({ title: '已保存', icon: 'success' });
   },
 

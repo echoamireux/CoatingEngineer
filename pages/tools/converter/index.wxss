@@ -4,13 +4,14 @@ page {
   --card: #1f2937;
   --text: #f3f4f6;
   --text-sub: #9ca3af;
-  --accent: #3b82f6;
-  --highlight: #38bdf8;
   --border: #374151;
   --input: #111827;
   --nav-bg: #161e2a;
-  /* 侧栏背景 */
-  --nav-active: rgba(59, 130, 246, 0.15);
+
+  /* Map theme variables */
+  --highlight: var(--accent);
+  --nav-active: var(--accent-dim);
+  /* --accent is provided by .theme-tools */
 }
 
 .page-container.light {
@@ -18,8 +19,6 @@ page {
   --card: #ffffff;
   --text: #333;
   --text-sub: #666;
-  --accent: #1989fa;
-  --highlight: #1989fa;
   --input: #f7f8fa;
   --border: #e0e0e0;
   --nav-bg: #eef2f6;

@@ -1,4 +1,4 @@
-<view class="page-container {{theme}}">
+<view class="page-container {{theme}} theme-tools">
 
   <view class="nav-bar">
     <view class="nav-title">单位换算器</view>

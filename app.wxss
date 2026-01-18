@@ -1,10 +1,8 @@
-/**app.wxss**/
+/* Default Theme (Dark) Variables */
 page {
-  /* Default Theme (Dark) Variables */
   --bg: #111827;
   --card: #1f2937;
   --card-bg: #1f2937;
-  /* Alias for confirm-modal */
   --text: #e5e7eb;
   --text-main: #e5e7eb;
   --text-sub: #9ca3af;
@@ -23,20 +21,6 @@ page {
   transition: all 0.3s;
 }
 
-.page-container.light {
-  --bg: #f3f4f6;
-  --card: #ffffff;
-  --card-bg: #ffffff;
-  --text: #1f2937;
-  --text-main: #1f2937;
-  --text-sub: #6b7280;
-  --primary: #059669;
-  --border: rgba(0, 0, 0, 0.05);
-  --modal-shadow: 0 24rpx 48rpx rgba(0, 0, 0, 0.1);
-  --input-bg: rgba(0, 0, 0, 0.03);
-  --btn-ghost-bg: rgba(0, 0, 0, 0.05);
-}
-
 .container {
   height: 100%;
   display: flex;
@@ -45,4 +29,58 @@ page {
   justify-content: space-between;
   padding: 200rpx 0;
   box-sizing: border-box;
+}
+
+/* Light Theme Defaults */
+.page-container.light {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --text-main: #1f2937;
+  --text-sub: #6b7280;
+  --primary: #059669;
+  /* Default green, will be overridden by themes */
+  --border: rgba(0, 0, 0, 0.05);
+  --modal-shadow: 0 24rpx 48rpx rgba(0, 0, 0, 0.1);
+  --input-bg: rgba(0, 0, 0, 0.03);
+  --btn-ghost-bg: rgba(0, 0, 0, 0.05);
+}
+
+/* --- Module Themes (Elemental Coding) - DEFINED LAST TO OVERRIDE --- */
+
+/* Cost: Emerald (Green) */
+.page-container.theme-cost {
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --accent: #34d399;
+  --accent-dim: rgba(16, 185, 129, 0.15);
+  --btn-gradient: linear-gradient(135deg, #10b981, #34d399);
+}
+
+/* Fluid: Ocean (Blue) */
+.page-container.theme-fluid {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --accent: #60a5fa;
+  --accent-dim: rgba(59, 130, 246, 0.15);
+  --btn-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+}
+
+/* Coating: Amber (Orange) */
+.page-container.theme-coating {
+  --primary: #f59e0b;
+  --primary-hover: #d97706;
+  --accent: #fbbf24;
+  --accent-dim: rgba(245, 158, 11, 0.15);
+  --btn-gradient: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+/* Tools: Violet (Purple) */
+.page-container.theme-tools {
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --accent: #a78bfa;
+  --accent-dim: rgba(139, 92, 246, 0.15);
+  --btn-gradient: linear-gradient(135deg, #8b5cf6, #a78bfa);
 }

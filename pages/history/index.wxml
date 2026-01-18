@@ -1,4 +1,4 @@
-<view class="page-container {{theme}}">
+<view class="page-container {{theme}} {{themeClass}}">
 
   <!-- 固定头部区域 -->
   <view class="sticky-header">
@@ -47,6 +47,9 @@
   </scroll-view>
 
   <!-- 使用通用确认弹窗组件 -->
-  <confirm-modal show="{{showResetModal}}" title="确认清空？" content="此操作将清空当前筛选下的所有历史记录，且无法恢复。" bind:confirm="execReset"
-    bind:cancel="cancelReset" />
+  <!-- 使用通用确认弹窗组件 -->
+  <confirm-modal show="{{showResetModal}}" title="清空确认" content="确定要清空当前筛选下的所有历史记录吗？此操作无法撤销。" confirmDanger="{{true}}"
+    bind:confirm="execReset" bind:cancel="cancelReset" />
+  <confirm-modal show="{{showDeleteModal}}" title="删除确认" content="确定要删除这条记录吗？" confirmDanger="{{true}}"
+    bind:confirm="confirmDelete" bind:cancel="cancelDelete" />
 </view>

@@ -62,8 +62,9 @@ Page({
   },
 
   openHistoryModal() {
-    this.loadLocalHistory();
-    this.setData({ showHistoryModal: true });
+    wx.navigateTo({
+      url: '/pages/history/index?type=cost'
+    });
   },
 
   closeHistoryModal() {
@@ -73,10 +74,26 @@ Page({
   deleteHistoryItem(e) {
     const id = e.currentTarget.dataset.id;
     if (id) {
+      this.setData({
+        showDeleteModal: true,
+        pendingDeleteId: id
+      });
+    }
+  },
+
+  confirmDelete() {
+    const id = this.data.pendingDeleteId;
+    if (id) {
       deleteHistory(id);
       this.loadLocalHistory();
       if (wx.vibrateShort) wx.vibrateShort();
+      wx.showToast({ title: '已删除', icon: 'success' });
     }
+    this.setData({ showDeleteModal: false, pendingDeleteId: null });
+  },
+
+  cancelDelete() {
+    this.setData({ showDeleteModal: false, pendingDeleteId: null });
   },
 
   restoreHistory(e) {

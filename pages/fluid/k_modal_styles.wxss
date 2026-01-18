@@ -1,0 +1,101 @@
+/* --- K Modal Redesign --- */
+.k-card {
+    width: 600rpx;
+    background: #1f2937;
+    /* Ensure dark background */
+    border-radius: 24rpx;
+    padding: 0;
+    /* Reset default padding for cleaner header */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.k-card .mc-head {
+    padding: 30rpx 40rpx;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.k-card .mc-head text {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #fff;
+}
+
+.k-list {
+    max-height: 600rpx;
+    padding: 20rpx;
+    box-sizing: border-box;
+}
+
+.k-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    margin-bottom: 20rpx;
+    padding: 24rpx 30rpx;
+    border-radius: 20rpx;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.k-item:active {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(0.98);
+}
+
+.ki-icon {
+    font-size: 40rpx;
+    margin-right: 24rpx;
+    width: 50rpx;
+    text-align: center;
+}
+
+.ki-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ki-name {
+    font-size: 28rpx;
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 4rpx;
+}
+
+.ki-sub {
+    font-size: 20rpx;
+    color: #9ca3af;
+}
+
+.ki-right {
+    display: flex;
+    align-items: center;
+    gap: 20rpx;
+}
+
+.ki-val {
+    font-size: 32rpx;
+    font-family: monospace;
+    font-weight: bold;
+    color: #60a5fa;
+    /* Blue accent */
+}
+
+.ki-add {
+    margin-top: 5rpx;
+    width: 44rpx;
+    height: 44rpx;
+    border-radius: 50%;
+    background: rgba(96, 165, 250, 0.2);
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32rpx;
+    font-weight: 300;
+}

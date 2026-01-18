@@ -5,13 +5,25 @@ const { getHistory, getModuleOptions, deleteHistory, clearHistory, migrateOldHis
 Page({
   data: {
     theme: 'dark',
+    themeClass: '', // 智能主题跟随
     historyList: [],
     filteredList: [],
     showResetModal: false,
 
     // 模块筛选
     moduleOptions: [],
-    currentModule: 'all'  // 'all' 表示全部
+    currentModule: 'cost' /* Default to Cost (first in list) */
+  },
+
+  onLoad(options) {
+    if (options && options.type) {
+      this.setData({
+        themeClass: `theme-${options.type}`,
+        currentModule: options.type
+      });
+      // 动态设置标题 - 设为空以避免显式冗余
+      wx.setNavigationBarTitle({ title: '' });
+    }
   },
 
   onShow() {
@@ -23,7 +35,8 @@ Page({
   },
 
   initModules() {
-    let options = [{ id: 'all', name: '全部', icon: '📋' }, ...getModuleOptions()];
+    /* Remove 'All' option */
+    let options = [...getModuleOptions()];
     // 移除 工程单位换算(converter)
     options = options.filter(o => o.id !== 'converter');
     this.setData({ moduleOptions: options });
@@ -89,8 +102,23 @@ Page({
 
   deleteItem(e) {
     const id = e.currentTarget.dataset.id;
-    deleteHistory(id);
-    this.loadHistory();
-    wx.showToast({ title: '已删除', icon: 'success', duration: 800 });
+    this.setData({
+      showDeleteModal: true,
+      pendingDeleteId: id
+    });
+  },
+
+  confirmDelete() {
+    const id = this.data.pendingDeleteId;
+    if (id) {
+      deleteHistory(id);
+      this.loadHistory();
+      wx.showToast({ title: '已删除', icon: 'success', duration: 800 });
+    }
+    this.setData({ showDeleteModal: false, pendingDeleteId: null });
+  },
+
+  cancelDelete() {
+    this.setData({ showDeleteModal: false, pendingDeleteId: null });
   }
 })
