@@ -313,6 +313,7 @@
         <block wx:if="{{localHistory.length > 0}}">
           <view class="history-item" wx:for="{{localHistory}}" wx:key="id" bindtap="restoreHistory"
             data-index="{{index}}">
+            <view class="hi-del-btn" catchtap="deleteHistoryItem" data-id="{{item.id}}">×</view>
             <view class="hi-time">{{item.time}}</view>
             <view class="hi-data">
               <view class="hi-row" wx:for="{{item.data}}" wx:key="k" wx:for-item="sub">

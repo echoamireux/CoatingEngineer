@@ -29,6 +29,12 @@ Page({
 
     errors: {},
 
+    // --- 转换工具 ---
+    showConvertModal: false,
+    convert_m_dry: '',
+    convert_rho_dry: '',
+    convertResult: '',
+
 
   },
 
@@ -412,5 +418,49 @@ Page({
 
     saveHistory('coating', 'glue', displayData, rawData);
     wx.showToast({ title: '已保存', icon: 'success' });
+  },
+
+  // ================= 3. 转换工具弹窗 =================
+  openConvertModal() {
+    this.setData({
+      showConvertModal: true,
+      convert_m_dry: '',
+      convert_rho_dry: '',
+      convertResult: ''
+    });
+  },
+
+  closeConvertModal() {
+    this.setData({ showConvertModal: false });
+  },
+
+  bindConvertInput(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = e.detail.value;
+    this.setData({ [field]: value });
+    // 实时计算
+    this.calcConversion();
+  },
+
+  calcConversion() {
+    const m_dry = parseFloat(this.data.convert_m_dry);
+    const rho_dry = parseFloat(this.data.convert_rho_dry);
+    if (!isNaN(m_dry) && !isNaN(rho_dry) && rho_dry > 0) {
+      const t_dry = m_dry / rho_dry;
+      this.setData({ convertResult: t_dry.toFixed(2) });
+    } else {
+      this.setData({ convertResult: '' });
+    }
+  },
+
+  applyConvertResult() {
+    if (this.data.convertResult) {
+      this.setData({
+        glue_t_dry: this.data.convertResult,
+        glue_rho_dry: this.data.convert_rho_dry,
+        showConvertModal: false
+      });
+      wx.showToast({ title: '已应用', icon: 'success' });
+    }
   }
 })

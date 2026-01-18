@@ -118,8 +118,8 @@ page {
   background-color: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 24rpx;
-  padding: 32rpx;
-  margin-bottom: 32rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
   position: relative;
   overflow: hidden;
   transition: background-color 0.3s, border-color 0.3s;
@@ -136,9 +136,9 @@ page {
 }
 
 .section-title {
-  font-size: 30rpx;
+  font-size: 28rpx;
   font-weight: 700;
-  margin-bottom: 30rpx;
+  margin-bottom: 20rpx;
   color: var(--accent);
   display: flex;
   align-items: center;
@@ -171,13 +171,13 @@ page {
 .divider {
   height: 1px;
   background-color: var(--border);
-  margin: 32rpx 0;
+  margin: 20rpx 0;
   opacity: 0.5;
 }
 
 /* Inputs */
 .input-row {
-  margin-bottom: 28rpx;
+  margin-bottom: 20rpx;
 }
 
 .label-row {
@@ -237,8 +237,8 @@ page {
 .flex-row {
   display: flex;
   justify-content: space-between;
-  gap: 20rpx;
-  margin-bottom: 28rpx;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
 }
 
 .flex-item {
@@ -268,9 +268,9 @@ page {
 .layer-item {
   background: var(--input-bg);
   border: 1px dashed var(--border);
-  padding: 24rpx;
+  padding: 16rpx;
   border-radius: 16rpx;
-  margin-bottom: 24rpx;
+  margin-bottom: 16rpx;
 }
 
 .layer-header {
@@ -336,15 +336,15 @@ page {
 .btn-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24rpx;
-  margin-top: 50rpx;
+  gap: 12rpx;
+  margin-top: 24rpx;
 }
 
 .btn-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12rpx;
+  gap: 6rpx;
 }
 
 .full-width {
@@ -354,9 +354,9 @@ page {
 .btn {
   width: 100% !important;
   font-weight: 600;
-  border-radius: 16rpx;
-  font-size: 30rpx;
-  padding: 28rpx 0;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  padding: 16rpx 0;
   margin: 0 !important;
   display: flex;
   align-items: center;
@@ -372,30 +372,31 @@ page {
 .btn-primary {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: white;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 .btn-secondary {
-  background-color: rgba(59, 130, 246, 0.15);
+  background-color: rgba(59, 130, 246, 0.1);
   color: var(--accent);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  padding: 12rpx 0;
+  font-size: 22rpx;
 }
 
 .btn-outline {
   background-color: transparent;
   border: none;
   color: var(--text-sub);
-  font-size: 24rpx;
+  font-size: 22rpx;
   opacity: 0.6;
-  height: 60rpx;
+  height: 50rpx;
 }
 
 /* 新增：提示小字样式 */
 .hint-text {
-  font-size: 20rpx;
+  font-size: 18rpx;
   color: var(--text-sub);
-  opacity: 0.8;
-  margin-top: 8rpx;
+  opacity: 0.6;
   text-align: center;
 }
 
@@ -607,21 +608,21 @@ page {
   flex: 1;
   overflow-y: auto;
   margin-bottom: 20rpx;
-  min-height: 300rpx;
+  min-height: 0;
 }
 
 .mc-head {
   text-align: center;
   font-weight: bold;
   color: var(--text-main);
-  margin-bottom: 26rpx;
+  margin-bottom: 30rpx;
   font-size: 32rpx;
 }
 
 .mc-foot {
   display: flex;
   justify-content: center;
-  margin-top: 10rpx;
+  margin-top: 20rpx;
 }
 
 /* 修复按钮样式，确保不被 global button 覆盖 */
@@ -630,115 +631,106 @@ button.btn-ghost {
   border: 1px solid var(--border) !important;
   color: var(--text-sub) !important;
   font-size: 26rpx;
-  padding: 10rpx 40rpx;
-  border-radius: 30rpx;
+  padding: 0 40rpx;
+  border-radius: 16rpx;
+  height: 76rpx;
+  line-height: 76rpx;
   width: auto;
   margin: 0;
 }
 
+/* 历史弹窗样式 - 统一Cost风格 */
 .history-item {
-  background: var(--input-bg);
+  background: var(--bg);
   border-radius: 12rpx;
-  padding: 24rpx;
-  margin-bottom: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 15rpx;
   border: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.history-item:active {
-  opacity: 0.8;
-}
-
-.h-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-}
-
-.h-desc {
-  font-size: 28rpx;
-  color: var(--text-main);
-  font-weight: bold;
-}
-
-.h-time {
-  font-size: 22rpx;
-  color: var(--text-sub);
-}
-
-.h-del {
-  color: #ef4444;
-  font-size: 24rpx;
-  padding: 10rpx;
-}
-
-.empty-hint {
-  text-align: center;
-  color: var(--text-sub);
-  padding: 80rpx 0;
-  font-size: 26rpx;
-  opacity: 0.6;
-}
-
-.history-item {
-  background: var(--input-bg);
-  border-radius: 12rpx;
-  padding: 24rpx;
-  margin-bottom: 16rpx;
-  border: 1px solid var(--border);
+  transition: all 0.2s;
   position: relative;
 }
 
 .history-item:active {
-  opacity: 0.8;
+  transform: scale(0.98);
+  opacity: 0.9;
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.hi-del-btn {
+  position: absolute;
+  right: 16rpx;
+  top: 16rpx;
+  color: var(--text-sub);
+  font-size: 36rpx;
+  line-height: 1;
+  padding: 8rpx;
+  opacity: 0.5;
+}
+
+.hi-del-btn:active {
+  opacity: 1;
+  color: #ef4444;
 }
 
 .hi-time {
-  font-size: 22rpx;
+  font-size: 20rpx;
   color: var(--text-sub);
   margin-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.hi-time::before {
+  content: '🕒';
+  font-size: 18rpx;
 }
 
 .hi-data {
   display: flex;
   flex-direction: column;
-  gap: 6rpx;
+  gap: 8rpx;
 }
 
 .hi-row {
   display: flex;
-  font-size: 26rpx;
-  line-height: 1.4;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8rpx 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.hi-row:last-child {
+  border-bottom: none;
 }
 
 .hi-k {
+  font-size: 22rpx;
   color: var(--text-sub);
-  margin-right: 12rpx;
-  min-width: 130rpx;
+  flex-shrink: 0;
 }
 
 .hi-v {
-  color: var(--text-main);
+  font-size: 24rpx;
+  color: var(--accent);
   font-weight: bold;
-  flex: 1;
+  text-align: right;
+  font-family: "DIN Alternate", sans-serif;
 }
 
-.hi-del {
-  position: absolute;
-  right: 20rpx;
-  top: 20rpx;
-  color: #ef4444;
-  font-size: 24rpx;
-  padding: 10rpx;
+.empty-hint {
+  text-align: center;
+  color: var(--text-sub);
+  padding: 60rpx 0;
+  font-size: 26rpx;
+  opacity: 0.6;
 }
 
 /* --- Formula Modal Styles (Adapted from Fluid) --- */
 .fm-card {
   background: var(--card);
   width: 90%;
-  max-height: 80vh;
+  max-height: 90vh;
   border-radius: 24rpx;
   padding: 30rpx;
   display: flex;
@@ -747,14 +739,19 @@ button.btn-ghost {
 }
 
 .fm-head {
-  text-align: center;
   font-weight: bold;
-  margin-bottom: 30rpx;
+  margin-bottom: 24rpx;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   color: var(--text);
   font-size: 30rpx;
   align-items: center;
+  position: relative;
+}
+
+.fm-head .close-icon {
+  position: absolute;
+  right: 0;
 }
 
 .close-icon {
@@ -785,12 +782,21 @@ button.btn-ghost {
 }
 
 .fm-row {
-  font-family: "Times New Roman";
+  font-family: monospace;
   color: var(--text);
   text-align: center;
-  margin: 12rpx 0;
-  font-size: 28rpx;
-  font-weight: bold;
+  margin: 8rpx 0;
+  font-size: 24rpx;
+}
+
+.formula-text {
+  font-family: "Courier New", monospace;
+  font-size: 24rpx;
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 12rpx 16rpx;
+  border-radius: 8rpx;
+  display: inline-block;
 }
 
 .fm-row-split {
@@ -843,4 +849,298 @@ button.btn-ghost {
   font-weight: bold;
   color: var(--accent);
   margin-right: 8rpx;
+}
+
+/* --- 历史记录弹窗样式（统一风格） --- */
+.hi-head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+  padding-bottom: 8rpx;
+  border-bottom: 1px dashed var(--border);
+}
+
+.hi-time {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  flex: 1;
+}
+
+.hi-del-btn {
+  color: var(--text-sub);
+  font-size: 40rpx;
+  line-height: 0.8;
+  padding: 0 10rpx;
+  opacity: 0.6;
+}
+
+.hi-del-btn:active {
+  opacity: 1;
+  color: #ef4444;
+}
+
+/* 公式弹窗分区标题 */
+.f-section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: var(--accent);
+  margin: 30rpx 0 16rpx 0;
+  padding-bottom: 10rpx;
+  border-bottom: 1px solid var(--border);
+}
+
+.f-section-title:first-child {
+  margin-top: 0;
+}
+
+/* 转换工具按钮 */
+.convert-btn {
+  font-size: 22rpx;
+  font-weight: normal;
+  color: var(--accent);
+  margin-left: 16rpx;
+  padding: 4rpx 12rpx;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 8rpx;
+}
+
+/* 转换工具弹窗 */
+.convert-card {
+  width: 90%;
+}
+
+/* 根号样式 - 简洁稳定版 */
+.sqrt-wrap {
+  display: inline-flex;
+  align-items: flex-start;
+  margin: 0 4rpx;
+}
+
+.sqrt-sign {
+  font-family: inherit;
+  /* 恢复默认字体 */
+  font-size: 32rpx;
+  line-height: 1;
+  margin-right: 2rpx;
+  transform: translateY(10%);
+  /* 基础微调 */
+  font-weight: normal;
+}
+
+.sqrt-content {
+  border-top: 1px solid var(--text);
+  padding: 4rpx 6rpx 0 6rpx;
+  margin-top: 0;
+  /* 移除额外偏移 */
+  display: inline-flex;
+  align-items: center;
+}
+
+.legend-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding-top: 8rpx;
+  border-top: 1px dashed var(--border);
+}
+
+.legend-inline text {
+  font-size: 20rpx;
+  color: var(--text-sub);
+}
+
+.legend-inline .b {
+  font-weight: bold;
+  color: var(--accent);
+  margin-right: 4rpx;
+}
+
+.frac.small .n,
+.frac.small .d {
+  font-size: 22rpx;
+  padding: 0 4rpx;
+}
+
+/* 核心输入框优化 */
+.input-row-split {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.input-half {
+  flex: 1;
+}
+
+.quick-btn-group {
+  display: flex;
+  gap: 12rpx;
+}
+
+.q-btn {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  font-size: 26rpx;
+  font-family: monospace;
+  font-weight: bold;
+  height: 64rpx;
+  /* 与输入框等高 */
+  padding: 0 24rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.q-btn.icon {
+  padding: 0 20rpx;
+  font-size: 28rpx;
+}
+
+.q-btn:active {
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+
+.convert-formula {
+  text-align: center;
+  font-family: "Courier New", monospace;
+  font-size: 26rpx;
+  color: var(--accent);
+  padding: 12rpx 16rpx;
+  background: rgba(99, 102, 241, 0.05);
+  /* 更淡的背景 */
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  /* 细微边框 */
+  border-radius: 8rpx;
+  margin: 16rpx 0 20rpx 0;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.convert-inputs {
+  margin-bottom: 16rpx;
+}
+
+.input-row-inline {
+  display: flex;
+  gap: 16rpx;
+}
+
+.input-col {
+  flex: 1;
+}
+
+.input-col .label {
+  font-size: 22rpx;
+  margin-bottom: 6rpx;
+}
+
+.input-col .input {
+  height: 60rpx;
+  font-size: 26rpx;
+}
+
+.convert-result {
+  text-align: center;
+  padding: 20rpx;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.result-label {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.result-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #10b981;
+  font-family: "DIN Alternate", monospace;
+}
+
+.convert-card .mc-foot {
+  display: flex;
+  gap: 20rpx;
+}
+
+.convert-card .btn-primary {
+  flex: 1;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 16rpx;
+  height: 76rpx;
+  line-height: 76rpx;
+  font-size: 26rpx;
+}
+
+/* 结果网格布局 */
+.result-card {
+  padding: 16rpx;
+  background: linear-gradient(135deg, var(--card-bg) 0%, rgba(37, 99, 235, 0.03) 100%);
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12rpx;
+}
+
+.result-box {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+  border-radius: 16rpx;
+  padding: 24rpx 16rpx;
+  text-align: center;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.result-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rpx;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.result-box .result-label {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  display: block;
+  margin-bottom: 8rpx;
+  text-transform: uppercase;
+  letter-spacing: 1rpx;
+}
+
+.result-value-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+.result-box .result-val {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: var(--accent);
+  font-family: "DIN Alternate", sans-serif;
+  text-shadow: 0 2rpx 8rpx rgba(37, 99, 235, 0.3);
+}
+
+.result-unit {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  font-weight: 500;
 }

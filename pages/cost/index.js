@@ -2,7 +2,7 @@ const app = getApp()
 const { initTheme, round, formatTime } = require('../../utils/common')
 const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('../../utils/cost-calc')
 const { validateRequired, validatePercentage: vPercent, hasRangeError } = require('../../utils/validator')
-const { saveHistory, getHistory } = require('../../utils/history')
+const { saveHistory, getHistory, deleteHistory } = require('../../utils/history')
 
 Page({
   data: {
@@ -68,6 +68,15 @@ Page({
 
   closeHistoryModal() {
     this.setData({ showHistoryModal: false });
+  },
+
+  deleteHistoryItem(e) {
+    const id = e.currentTarget.dataset.id;
+    if (id) {
+      deleteHistory(id);
+      this.loadLocalHistory();
+      if (wx.vibrateShort) wx.vibrateShort();
+    }
   },
 
   restoreHistory(e) {

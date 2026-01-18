@@ -1324,13 +1324,37 @@
 /* 历史弹窗样式优化 */
 .history-card {
   width: 90%;
-  max-height: 75vh;
+}
+
+.history-card .mc-head {
+  display: block;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+}
+
+.history-card .mc-foot {
+  justify-content: center;
+}
+
+.hi-close-btn {
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-sub) !important;
+  font-size: 26rpx !important;
+  padding: 0 40rpx !important;
+  border-radius: 16rpx !important;
+  height: 76rpx !important;
+  line-height: 76rpx !important;
+  width: auto !important;
 }
 
 .history-scroll {
-  max-height: 55vh;
+  flex: 1;
   overflow-y: auto;
   margin-bottom: 20rpx;
+  min-height: 0;
 }
 
 .history-item {
@@ -1340,6 +1364,7 @@
   margin-bottom: 15rpx;
   border: 1px solid var(--border);
   transition: all 0.2s;
+  position: relative;
 }
 
 .history-item:active {
@@ -1400,4 +1425,32 @@
   padding: 80rpx 0;
   font-size: 26rpx;
   opacity: 0.6;
+}
+
+/* --- History Delete Style --- */
+.history-item {
+  padding-right: 24rpx;
+  position: relative;
+}
+
+.hi-del {
+  display: none;
+  /* 旧样式隐藏 */
+}
+
+/* --- 历史记录删除按钮样式 --- */
+.hi-del-btn {
+  position: absolute;
+  right: 16rpx;
+  top: 16rpx;
+  color: var(--text-sub);
+  font-size: 36rpx;
+  line-height: 1;
+  padding: 8rpx;
+  opacity: 0.5;
+}
+
+.hi-del-btn:active {
+  opacity: 1;
+  color: #ef4444;
 }

@@ -1,5 +1,5 @@
 const { initTheme, formatNumberObj, formatTime } = require('../../utils/common')
-const { saveHistory } = require('../../utils/history')
+const { saveHistory, deleteHistory } = require('../../utils/history')
 
 Page({
   data: {
@@ -133,6 +133,15 @@ Page({
     const all = wx.getStorageSync('calc_history') || [];
     const myHist = all.filter(i => i.module === 'fluid').reverse();
     this.setData({ localHistory: myHist });
+  },
+
+  deleteHistoryItem(e) {
+    const id = e.currentTarget.dataset.id;
+    if (id) {
+      deleteHistory(id);
+      this.loadLocalHistory();
+      if (wx.vibrateShort) wx.vibrateShort();
+    }
   },
 
   restoreHistory(e) {

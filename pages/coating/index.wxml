@@ -27,16 +27,16 @@
       <view class="section-title">基础参数输入</view>
 
       <view class="input-row">
-        <view class="label-row">
-          <text class="label">管芯内径 i (mm)</text>
-          <view class="tags">
-            <view class="tag" bindtap="setCoreSize" data-size="76.2">3英寸</view>
-            <view class="tag" bindtap="setCoreSize" data-size="152.4">6英寸</view>
-            <view class="tag" bindtap="setCoreSize" data-size="0">清空</view>
+        <text class="label">管芯内径 i (mm)</text>
+        <view class="input-row-split">
+          <input class="input input-half" type="digit" bindinput="bindInput" data-field="comp_i" value="{{comp_i}}"
+            placeholder="请输入" placeholder-class="input-placeholder" />
+          <view class="quick-btn-group">
+            <view class="q-btn" bindtap="setCoreSize" data-size="76.2">3"</view>
+            <view class="q-btn" bindtap="setCoreSize" data-size="152.4">6"</view>
+            <view class="q-btn icon" bindtap="setCoreSize" data-size="0">🧹</view>
           </view>
         </view>
-        <input class="input {{errors.comp_i?'error-border':''}}" type="digit" bindinput="bindInput" data-field="comp_i"
-          value="{{comp_i}}" placeholder="请输入" placeholder-class="input-placeholder" />
       </view>
 
       <view class="flex-row">
@@ -106,65 +106,44 @@
       </view>
     </view>
 
-    <view class="card">
+    <view class="card result-card">
       <view class="section-title">计算结果</view>
-
-      <view class="result-row">
-        <view class="result-header">
-          <view class="label-group">
-            <text class="result-label">收卷卷径 D</text>
-            <text class="result-unit-sub">(mm)</text>
+      <view class="result-grid">
+        <view class="result-box">
+          <text class="result-label">收卷卷径 D</text>
+          <view class="result-value-row">
+            <text class="result-val">{{result_diameter}}</text>
+            <text class="result-unit">mm</text>
           </view>
         </view>
-        <text class="result-val">{{result_diameter}}</text>
-      </view>
-      <view class="result-row">
-        <view class="result-header">
-          <view class="label-group">
-            <text class="result-label">材料总重 M</text>
-            <text class="result-unit-sub">(kg)</text>
+        <view class="result-box">
+          <text class="result-label">材料总重 M</text>
+          <view class="result-value-row">
+            <text class="result-val">{{result_weight}}</text>
+            <text class="result-unit">kg</text>
           </view>
         </view>
-        <text class="result-val">{{result_weight}}</text>
       </view>
     </view>
   </view>
 
   <view class="panel" wx:if="{{currentTab=='glue'}}">
     <view class="card">
-      <view class="section-title">计算基准</view>
-      <view class="radio-group">
-        <view class="radio-item {{glueCalcType=='thickness' ? 'checked' : ''}}" bindtap="switchGlueType"
-          data-type="thickness">干厚 (t_dry)</view>
-        <view class="radio-item {{glueCalcType=='weight' ? 'checked' : ''}}" bindtap="switchGlueType"
-          data-type="weight">干涂量 (m_dry)</view>
+      <view class="section-title">核心参数 <text class="convert-btn" bindtap="openConvertModal">🔄 转换工具</text></view>
+
+      <view class="flex-row">
+        <view class="input-row flex-item">
+          <text class="label">干厚 t_dry (µm)</text>
+          <input class="input {{errors.glue_t_dry?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_t_dry" value="{{glue_t_dry}}" placeholder="请输入" placeholder-class="input-placeholder" />
+        </view>
+        <view class="input-row flex-item">
+          <text class="label">干胶密度 <text class="sym">ρ_dry</text> (g/cm³)</text>
+          <input class="input {{errors.glue_rho_dry?'error-border':''}}" type="digit" bindinput="bindInput"
+            data-field="glue_rho_dry" value="{{glue_rho_dry}}" placeholder="请输入"
+            placeholder-class="input-placeholder" />
+        </view>
       </view>
-
-      <view class="divider"></view>
-      <view class="section-title">核心参数</view>
-
-      <block wx:if="{{glueCalcType=='thickness'}}">
-        <view class="flex-row">
-          <view class="input-row flex-item">
-            <text class="label">干厚 t_dry (µm)</text>
-            <input class="input {{errors.glue_t_dry?'error-border':''}}" type="digit" bindinput="bindInput"
-              data-field="glue_t_dry" value="{{glue_t_dry}}" placeholder="请输入" placeholder-class="input-placeholder" />
-          </view>
-          <view class="input-row flex-item">
-            <text class="label">干胶密度 <text class="sym">ρ_dry</text> (g/cm³)</text>
-            <input class="input {{errors.glue_rho_dry?'error-border':''}}" type="digit" bindinput="bindInput"
-              data-field="glue_rho_dry" value="{{glue_rho_dry}}" placeholder="请输入"
-              placeholder-class="input-placeholder" />
-          </view>
-        </view>
-      </block>
-      <block wx:else>
-        <view class="input-row">
-          <text class="label">干涂量 m_dry (g/m²)</text>
-          <input class="input {{errors.glue_m_dry?'error-border':''}}" type="digit" bindinput="bindInput"
-            data-field="glue_m_dry" value="{{glue_m_dry}}" placeholder="请输入" placeholder-class="input-placeholder" />
-        </view>
-      </block>
 
       <view class="divider"></view>
       <view class="section-title">胶液与工艺参数</view>
@@ -224,27 +203,23 @@
       </view>
     </view>
 
-    <view class="card">
+    <view class="card result-card">
       <view class="section-title">计算结果</view>
-
-      <view class="result-row">
-        <view class="result-header">
-          <view class="label-group">
-            <text class="result-label">供液泵转速 N</text>
-            <text class="result-unit-sub">(rpm)</text>
+      <view class="result-grid">
+        <view class="result-box">
+          <text class="result-label">供液泵转速 N</text>
+          <view class="result-value-row">
+            <text class="result-val">{{result_pump_speed}}</text>
+            <text class="result-unit">rpm</text>
           </view>
         </view>
-        <text class="result-val">{{result_pump_speed}}</text>
-      </view>
-
-      <view class="result-row">
-        <view class="result-header">
-          <view class="label-group">
-            <text class="result-label">所需湿胶重量 Mw</text>
-            <text class="result-unit-sub">(kg)</text>
+        <view class="result-box">
+          <text class="result-label">湿胶重量 Mw</text>
+          <view class="result-value-row">
+            <text class="result-val">{{result_wet_weight}}</text>
+            <text class="result-unit">kg</text>
           </view>
         </view>
-        <text class="result-val">{{result_wet_weight}}</text>
       </view>
     </view>
   </view>
@@ -255,14 +230,14 @@
       <view class="mc-head">{{currentTab=='composite'?'复合卷材历史':'涂布工艺历史'}}</view>
       <scroll-view scroll-y class="history-scroll">
         <view class="history-item" wx:for="{{historyList}}" wx:key="id" bindtap="loadHistoryItem" data-item="{{item}}">
+          <view class="hi-del-btn" catchtap="deleteHistoryItem" data-id="{{item.id}}">×</view>
           <view class="hi-time">{{item.time}}</view>
           <view class="hi-data">
             <view class="hi-row" wx:for="{{item.data}}" wx:for-item="d" wx:key="k">
-              <text class="hi-k">{{d.k}}:</text>
+              <text class="hi-k">{{d.k}}</text>
               <text class="hi-v">{{d.v}}</text>
             </view>
           </view>
-          <view class="hi-del" catchtap="deleteHistoryItem" data-id="{{item.id}}">删除</view>
         </view>
         <view class="empty-hint" wx:if="{{historyList.length==0}}">暂无记录</view>
       </scroll-view>
@@ -277,56 +252,77 @@
       <view class="fm-head highlight">计算原理 <text class="close-icon" bindtap="toggleFormula">×</text></view>
       <scroll-view scroll-y class="fm-scroll">
 
-        <block wx:if="{{currentTab=='composite'}}">
-          <view class="f-box">
-            <view class="ft highlight">1. 收卷卷径 (Diameter)</view>
-            <view class="fm-row"><text>D = </text>
-              <view class="frac">
-                <view class="n" style="border-top:1px solid">√</view>
-                <view class="d" style="margin-top:-10rpx">(i+2c)² + <view class="frac">
-                    <view class="n">4·L·Σt</view>
-                    <view class="d">π</view>
-                  </view>
-                </view>
+        <!-- 公式1: 卷径 -->
+        <view class="f-box">
+          <view class="ft highlight">1. 收卷卷径 D (mm)</view>
+          <view class="fm-row"><text>D = </text>
+            <view class="sqrt-wrap">
+              <text class="sqrt-sign">√</text>
+              <view class="sqrt-content">
+                (i+2c)² + 4·L·Σt / π
               </view>
             </view>
           </view>
-          <view class="f-box">
-            <view class="ft highlight">2. 材料总重 (Weight)</view>
-            <view class="fm-row"><text>M = </text>
-              <view class="frac">
-                <view class="n">L · Σ(W·t·ρ)</view>
-                <view class="d">10⁶</view>
-              </view>
-            </view>
+          <view class="legend-grid">
+            <view><text>i</text>管芯内径 (mm)</view>
+            <view><text>c</text>管芯壁厚 (mm)</view>
+            <view><text>L</text>卷材长度 (m)</view>
+            <view><text>Σt</text>总厚度 (µm)</view>
           </view>
-        </block>
+        </view>
 
-        <block wx:if="{{currentTab=='glue'}}">
-          <view class="f-box">
-            <view class="ft highlight">1. 供液泵转速 (Pump Speed)</view>
-            <view class="fm-row"><text>N = </text>
-              <view class="frac">
-                <view class="n">m_dry · W · v</view>
-                <view class="d">10 · S · ρ_wet · Dp</view>
-              </view>
-            </view>
-            <view class="legend-grid">
-              <view><text>m_dry</text>干涂量 (g/m²)</view>
-              <view><text>t_dry</text>干厚 (µm)</view>
-              <view><text>ρ_dry</text>干胶密度</view>
+        <!-- 公式2: 材料重量 -->
+        <view class="f-box">
+          <view class="ft highlight">2. 材料总重 M (kg)</view>
+          <view class="fm-row"><text>M = </text>
+            <view class="frac">
+              <view class="n">L · Σ(W·t·ρ)</view>
+              <view class="d">10⁶</view>
             </view>
           </view>
-          <view class="f-box">
-            <view class="ft highlight">2. 湿胶重量 (Wet Weight)</view>
-            <view class="fm-row"><text>Mw = </text>
-              <view class="frac">
-                <view class="n">m_dry · W · L</view>
-                <view class="d">10000 · S</view>
-              </view>
+          <view class="legend-grid">
+            <view><text>W</text>幅宽 (mm)</view>
+            <view><text>t</text>厚度 (µm)</view>
+            <view><text>ρ</text>密度 (g/cm³)</view>
+            <view><text>L</text>长度 (m)</view>
+          </view>
+        </view>
+
+        <!-- 公式3: 供液泵转速 -->
+        <view class="f-box">
+          <view class="ft highlight">3. 供液泵转速 N (rpm)</view>
+          <view class="fm-row"><text>N = </text>
+            <view class="frac">
+              <view class="n">t_dry · ρ_dry · W · v</view>
+              <view class="d">10 · S · ρ_wet · Dp</view>
             </view>
           </view>
-        </block>
+          <view class="legend-grid">
+            <view><text>t_dry</text>干厚 (µm)</view>
+            <view><text>ρ_dry</text>干胶密度 (g/cm³)</view>
+            <view><text>W</text>幅宽 (mm)</view>
+            <view><text>v</text>线速 (m/min)</view>
+            <view><text>Dp</text>泵排量 (cc/rev)</view>
+            <view><text>S</text>固含量 (%)</view>
+          </view>
+        </view>
+        <!-- 公式4: 湿胶重量 -->
+        <view class="f-box">
+          <view class="ft highlight">4. 湿胶重量 Mw (kg)</view>
+          <view class="fm-row"><text>Mw = </text>
+            <view class="frac">
+              <view class="n">t_dry · ρ_dry · W · L</view>
+              <view class="d">10000 · S</view>
+            </view>
+          </view>
+          <view class="legend-grid">
+            <view><text>t_dry</text>干厚 (µm)</view>
+            <view><text>ρ_dry</text>干胶密度 (g/cm³)</view>
+            <view><text>L</text>长度 (m)</view>
+            <view><text>W</text>幅宽 (mm)</view>
+            <view><text>S</text>固含量 (%)</view>
+          </view>
+        </view>
 
       </scroll-view>
     </view>
@@ -334,4 +330,37 @@
 
   <confirm-modal show="{{showResetModal}}" title="重置确认" content="确定要清空当前页面的所有输入数据吗？" bind:confirm="confirmClear"
     bind:cancel="cancelClear" />
+
+  <!-- 干涂量→干厚转换工具弹窗 -->
+  <view class="modal-mask center-modal" wx:if="{{showConvertModal}}" bindtap="closeConvertModal">
+    <view class="modal-card convert-card" catchtap="true">
+      <view class="mc-head">干涂量 → 干厚 转换</view>
+      <view class="convert-formula">t_dry = m_dry / ρ_dry</view>
+
+      <view class="convert-inputs">
+        <view class="input-row-inline">
+          <view class="input-col">
+            <text class="label">m_dry (g/m²)</text>
+            <input class="input" type="digit" bindinput="bindConvertInput" data-field="convert_m_dry"
+              value="{{convert_m_dry}}" placeholder="干涂量" placeholder-class="input-placeholder" />
+          </view>
+          <view class="input-col">
+            <text class="label">ρ_dry (g/cm³)</text>
+            <input class="input" type="digit" bindinput="bindConvertInput" data-field="convert_rho_dry"
+              value="{{convert_rho_dry}}" placeholder="干胶密度" placeholder-class="input-placeholder" />
+          </view>
+        </view>
+      </view>
+
+      <view class="convert-result" wx:if="{{convertResult}}">
+        <text class="result-label">计算结果：</text>
+        <text class="result-value">t_dry = {{convertResult}} µm</text>
+      </view>
+
+      <view class="mc-foot">
+        <button class="btn-ghost" bindtap="closeConvertModal">关闭</button>
+        <button class="btn-primary" bindtap="applyConvertResult" wx:if="{{convertResult}}">应用到表单</button>
+      </view>
+    </view>
+  </view>
 </view>

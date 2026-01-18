@@ -513,6 +513,8 @@ page {
   background: rgba(0, 0, 0, 0.85);
   z-index: 1000;
   display: flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity 0.3s;
 }
 
@@ -528,10 +530,13 @@ page {
 
 .modal-card {
   background: var(--card);
-  width: 80%;
+  width: 85%;
   padding: 30rpx;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   border: 1px solid var(--border);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-card.small {
@@ -542,21 +547,30 @@ page {
   text-align: center;
   font-weight: bold;
   color: var(--text);
-  margin-bottom: 20rpx;
-  font-size: 30rpx;
+  margin-bottom: 30rpx;
+  font-size: 32rpx;
 }
 
 .mc-foot {
   display: flex;
+  justify-content: center;
   gap: 20rpx;
-  margin-top: 30rpx;
+  margin-top: 20rpx;
 }
 
 .mc-foot button {
-  flex: 1;
   font-size: 26rpx;
-  background: var(--border);
-  color: var(--text-sub);
+}
+
+.mc-foot button.btn-ghost {
+  background: transparent !important;
+  color: var(--text-sub) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 16rpx;
+  height: 76rpx;
+  line-height: 76rpx;
+  padding: 0 40rpx;
+  width: auto;
 }
 
 .mc-foot button.blue {
@@ -761,13 +775,13 @@ page {
 /* 历史弹窗样式优化 - 统一所有模块 */
 .history-card {
   width: 90%;
-  max-height: 75vh;
 }
 
 .history-scroll {
-  max-height: 55vh;
+  flex: 1;
   overflow-y: auto;
   margin-bottom: 20rpx;
+  min-height: 0;
 }
 
 .history-item {
@@ -777,12 +791,29 @@ page {
   margin-bottom: 15rpx;
   border: 1px solid var(--border);
   transition: all 0.2s;
+  position: relative;
 }
 
 .history-item:active {
   transform: scale(0.98);
   opacity: 0.9;
   background: rgba(16, 185, 129, 0.05);
+}
+
+.hi-del-btn {
+  position: absolute;
+  right: 16rpx;
+  top: 16rpx;
+  color: var(--text-sub);
+  font-size: 36rpx;
+  line-height: 1;
+  padding: 8rpx;
+  opacity: 0.5;
+}
+
+.hi-del-btn:active {
+  opacity: 1;
+  color: #ef4444;
 }
 
 .hi-time {
@@ -837,4 +868,45 @@ page {
   padding: 80rpx 0;
   font-size: 26rpx;
   opacity: 0.6;
+}
+
+/* --- History Delete Style --- */
+.history-item {
+  padding-right: 90rpx !important;
+  position: relative;
+}
+
+.hi-del {
+  display: none;
+  /* 旧样式隐藏 */
+}
+
+/* --- 历史记录弹窗样式（统一风格） --- */
+.hi-head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+  padding-bottom: 8rpx;
+  border-bottom: 1px dashed var(--border);
+}
+
+.hi-time {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  flex: 1;
+  margin-bottom: 0 !important;
+}
+
+.hi-del-btn {
+  color: var(--text-sub);
+  font-size: 40rpx;
+  line-height: 0.8;
+  padding: 0 10rpx;
+  opacity: 0.6;
+}
+
+.hi-del-btn:active {
+  opacity: 1;
+  color: #ef4444;
 }

@@ -23,7 +23,9 @@ Page({
   },
 
   initModules() {
-    const options = [{ id: 'all', name: '全部', icon: '📋' }, ...getModuleOptions()];
+    let options = [{ id: 'all', name: '全部', icon: '📋' }, ...getModuleOptions()];
+    // 移除 工程单位换算(converter)
+    options = options.filter(o => o.id !== 'converter');
     this.setData({ moduleOptions: options });
   },
 

@@ -628,6 +628,7 @@
             <block wx:if="{{localHistory.length > 0}}">
                <view class="history-item" wx:for="{{localHistory}}" wx:key="id" bindtap="restoreHistory"
                   data-index="{{index}}">
+                  <view class="hi-del-btn" catchtap="deleteHistoryItem" data-id="{{item.id}}">×</view>
                   <view class="hi-time">{{item.time}}</view>
                   <view class="hi-data">
                      <view class="hi-row" wx:for="{{item.data}}" wx:key="k" wx:for-item="sub">
@@ -640,7 +641,7 @@
             <view class="empty-hint" wx:else>暂无历史记录</view>
          </scroll-view>
          <view class="mc-foot">
-            <button class="btn-ghost" bindtap="closeHistoryModal">关闭</button>
+            <button class="hi-close-btn" bindtap="closeHistoryModal">关闭</button>
          </view>
       </view>
    </view>
