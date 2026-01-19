@@ -67,7 +67,8 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(59, 130, 246, 0.1);
+  /* 适配紫色主题 (Violet) - Tools 模块专属主题色 */
+  background: rgba(139, 92, 246, 0.15);
   border: 1px solid var(--border);
   border-radius: 16rpx;
   font-size: 28rpx;
@@ -78,7 +79,7 @@ page {
 .icon-btn:active {
   transform: scale(0.9);
   opacity: 0.8;
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(139, 92, 246, 0.25);
 }
 
 /* 主布局：左右分栏 */
