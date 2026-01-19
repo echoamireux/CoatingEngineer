@@ -282,14 +282,17 @@
                         <view class="rc-refresh">🔄</view>
                      </view>
                   </view>
-                  <view class="accum-row">
-                     <view class="ar-left" style="display:flex; flex-direction:column; align-items:flex-start; gap:0;">
-                        <text>当前累计单位成本</text>
-                        <text style="font-size:20rpx; color:#10b981; margin-top:2rpx;">(含良率)</text>
+                  <view class="res-card-block accum" bindtap="calcAccumCost" data-stage="{{sIdx}}">
+                     <view class="rc-left">
+                        <text class="rc-title">当前累计单位成本 C<text class="sub">accum</text></text>
+                        <text
+                           style="font-size:20rpx; color:#10b981; margin-left:10rpx; font-weight:normal;">(含良率)</text>
                      </view>
-
-                     <text class="ar-val" style="color:#10b981">¥ {{ (stage.accumCost && stage.accumCost!=0) ?
-                        stage.accumCost : '-' }}<text class="unit">/m²</text></text>
+                     <view class="rc-right">
+                        <text class="rc-val" style="color:#10b981">¥ {{ (stage.accumCost && stage.accumCost!=0) ?
+                           stage.accumCost : '-' }}<text class="unit">/m²</text></text>
+                        <view class="rc-refresh">🔄</view>
+                     </view>
                   </view>
                </view>
             </view>
@@ -469,8 +472,7 @@
                <view class="logic-title">逻辑推导：</view>
                <view class="logic-list">
                   <view class="logic-item" wx:for="{{formulaContent[0].logic}}" wx:key="*this">
-                     <text class="li-idx">{{index+1}}.</text>
-                     <text class="li-txt">{{item}}</text>
+                     <text user-select="true" decode="true">{{index+1}}. {{item}}</text>
                   </view>
                </view>
             </view>

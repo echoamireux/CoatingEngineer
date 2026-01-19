@@ -952,10 +952,12 @@
 }
 
 .fc-body {
-  padding: 30rpx;
-  /* Removed max-height: 60vh to allow auto-grow and avoid double scrollbars */
+  padding: 30rpx 25rpx;
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .fc-block {
@@ -1028,13 +1030,18 @@
 .num {
   border-bottom: 1px solid var(--text);
   /* Neutral Line */
-  padding: 0 10rpx;
+  padding: 0 15rpx;
   margin-bottom: 4rpx;
   font-size: 32rpx;
+  min-width: 100%;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .den {
   font-size: 32rpx;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .line {
@@ -1101,9 +1108,9 @@
   padding-top: 20rpx;
   border-top: 1px dashed var(--border);
   display: block;
-  /* Standard Block */
   text-align: left;
-  /* Ensure Left Align */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .logic-title {
@@ -1122,39 +1129,28 @@
 }
 
 .logic-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12rpx;
-  width: auto;
-  /* Reset width */
-  margin-left: 0;
-  /* Reset margin */
-  margin-right: 0;
-  /* Reset margin */
-  align-items: flex-start;
+  display: block;
+  width: 100%;
+  overflow: hidden;
 }
 
 .logic-item {
-  display: flex;
-  /* Flex layout for index + text */
+  display: block;
   font-size: 24rpx;
   color: var(--text-sub);
-  line-height: 1.5;
-  text-align: left;
-  /* Text Left Aligned */
+  line-height: 1.6;
+  margin-bottom: 12rpx;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .li-idx {
-  display: inline-block;
   font-weight: bold;
   color: var(--text-sub);
-  margin-right: 8rpx;
-  flex-shrink: 0;
 }
 
 .li-txt {
-  flex: 1;
-  padding-bottom: 5rpx;
+  /* 无需特殊样式，跟随父元素布局 */
 }
 
 .clear-card {

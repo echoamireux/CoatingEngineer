@@ -222,7 +222,15 @@ Page({
 
     // 4. ★★★ 核心修复：更精准的报错提示
     if (!isValid) {
-      // 检查是否有范围错误标记 'range'
+      // ★ 级联重置：材料失败时，本工序总成本和累计都需要重置
+      this.setData({
+        [`stages[${stage}].materials[${index}].cost`]: '-',
+        [`stages[${stage}].stageTotalCost`]: '-',
+        [`stages[${stage}].accumCost`]: '-'
+      }, () => {
+        this._updateStageMatSum(stage);
+      });
+
       const errorValues = Object.values(currentErrors);
       if (errorValues.includes('range')) {
         return wx.showToast({ title: '数值需在0-100之间', icon: 'none' });
@@ -264,8 +272,12 @@ Page({
     // 错误弹窗提示
     const errorValues = Object.values(currentErrors);
     if (errorValues.includes('range')) {
+      // ★ 重置结果为'-'
+      this.setData({ [`stages[${stage}].stageProcCost`]: '-' });
       return wx.showToast({ title: '数值需在0-100之间', icon: 'none' });
     } else if (!isValid) {
+      // ★ 重置结果为'-'
+      this.setData({ [`stages[${stage}].stageProcCost`]: '-' });
       return wx.showToast({ title: '红色项必填', icon: 'none' });
     }
 
@@ -280,6 +292,8 @@ Page({
     }
 
     if (refWidth === 0) {
+      // ★ 重置结果为'-'
+      this.setData({ [`stages[${stage}].stageProcCost`]: '-' });
       return wx.showToast({ title: '未找到有效涂宽(膜宽)', icon: 'none' });
     }
 
@@ -300,10 +314,15 @@ Page({
       cost = baseCost * scale;
 
       const costStr = cost.toFixed(2);
-      const key = `stages[${stage}].stageProcCost`;
-      this.setData({ [key]: costStr });
+      this.setData({ [`stages[${stage}].stageProcCost`]: costStr });
       wx.showToast({ title: '已更新', icon: 'success', duration: 800 });
     } else {
+      // ★ 级联重置
+      this.setData({
+        [`stages[${stage}].stageProcCost`]: '-',
+        [`stages[${stage}].stageTotalCost`]: '-',
+        [`stages[${stage}].accumCost`]: '-'
+      });
       wx.showToast({ title: '参数无效(速度/长度需>0)', icon: 'none' });
     }
   },
@@ -347,10 +366,15 @@ Page({
         }
       }
 
-      if (!valid) hasError = true;
-      // 更新单项显示
-      m.cost = c.toFixed(2);
-      totalMatCost += c;
+      if (!valid) {
+        hasError = true;
+        // ★ 级联重置：校验失败的材料，成本重置为'-'
+        m.cost = '-';
+      } else {
+        // 更新单项显示
+        m.cost = c.toFixed(2);
+        totalMatCost += c;
+      }
     });
 
     // 2. 重新计算工艺成本
@@ -374,25 +398,39 @@ Page({
       if (foundMat) { refWidth = parseFloat(foundMat.widthValid); break; }
     }
 
-    if (procValid && refWidth > 0) {
+    // ★ 级联重置：工艺校验失败时，工艺成本重置为'-'
+    if (!procValid || refWidth === 0) {
+      sData.stageProcCost = '-';
+    } else {
       const output = parseFloat(p.speed) * 60 * (refWidth / 1000);
       const scale = (parseFloat(p.orderLen) + parseFloat(p.wasteLen)) / parseFloat(p.orderLen);
       if (output > 0) {
         procCost = ((parseFloat(p.machRate) + parseFloat(p.laborRate)) / output) * scale;
+        sData.stageProcCost = procCost.toFixed(2);
+      } else {
+        sData.stageProcCost = '-';
       }
-    } else if (procValid && refWidth === 0) {
-      // 如果工艺参数填了，但是找不到膜宽，仅仅给个提示，不阻断材料费的计算
-      wx.showToast({ title: '前序无涂宽，工艺费无法算', icon: 'none' });
     }
 
-    // 更新界面上的单项结果
-    sData.stageMatCost = totalMatCost.toFixed(2);
-    sData.stageProcCost = procCost.toFixed(2);
+    // 更新材料小计（考虑失败的材料）
+    sData.stageMatCost = hasError ? '-' : totalMatCost.toFixed(2);
 
-    // 3. 处理报错
-    this.setData({ errors: currentErrors });
+    // 3. 计算本工序总和
+    const stageTotal = hasError ? 0 : totalMatCost + procCost;
+    sData.stageTotalCost = hasError ? '-' : stageTotal.toFixed(2);
 
-    // ★★★ 核心修改：这里只拦截材料和工艺的错误，完全不看良率 ★★★
+    // ★★★ 关键修复：无论是否有错误，都先更新所有数据 ★★★
+    const key = `stages[${stage}]`;
+    this.setData({
+      errors: currentErrors,
+      [`${key}.materials`]: sData.materials, // 更新材料单价显示（含'-'）
+      [`${key}.stageMatCost`]: sData.stageMatCost,
+      [`${key}.stageProcCost`]: sData.stageProcCost,
+      [`${key}.stageTotalCost`]: sData.stageTotalCost,
+      [`${key}.accumCost`]: '-' // 因为 Cstage 变了，累计也需要重新计算
+    });
+
+    // 4. 错误处理
     const errorValues = Object.values(currentErrors);
     if (errorValues.includes('range')) {
       return wx.showToast({ title: '数值需在0-100之间', icon: 'none' });
@@ -400,19 +438,133 @@ Page({
       return wx.showToast({ title: '红色项必填', icon: 'none' });
     }
 
-    // 4. 计算本工序总和 (Input Total)
-    const stageTotal = totalMatCost + procCost;
+    wx.showToast({ title: '已更新 Cstage', icon: 'success', duration: 800 });
+  },
 
-    // 更新数据
-    const key = `stages[${stage}]`;
-    this.setData({
-      [`${key}.materials`]: sData.materials, // 更新材料单价显示
-      [`${key}.stageMatCost`]: totalMatCost.toFixed(2),
-      [`${key}.stageProcCost`]: procCost.toFixed(2),
-      [`${key}.stageTotalCost`]: stageTotal.toFixed(2) // ★ 结果更新
-    });
+  // ★★★ 计算累计成本（一键计算：自动计算所有前序Cstage + 累计） ★★★
+  calcAccumCost(e) {
+    const targetStage = parseInt(e.currentTarget.dataset.stage);
+    const stages = JSON.parse(JSON.stringify(this.data.stages)); // 深拷贝
+    const vat = parseFloat(this.data.vatRate) / 100 || 0.13;
+    const toExFactor = this.data.taxMode === 'inc' ? (1 / (1 + vat)) : 1;
 
-    wx.showToast({ title: '已更新本道投入', icon: 'success', duration: 800 });
+    let runningAccum = 0;
+    let hasError = false;
+    let firstErrorMsg = '';
+
+    // 1. 遍历从第0道到当前道，自动计算每道的Cstage和Caccum
+    for (let i = 0; i <= targetStage; i++) {
+      const stage = stages[i];
+      let stageMatSum = 0;
+      let matHasError = false;
+      let procHasError = false;
+
+      // 1.1 计算材料成本
+      stage.materials.forEach((m) => {
+        let c = 0;
+        let valid = true;
+
+        if (!m.price || m.price === '') valid = false;
+
+        if (m.type === 'glue') {
+          if (!m.solid || !m.gsm || !m.eff) valid = false;
+          const solidVal = parseFloat(m.solid);
+          const effVal = parseFloat(m.eff);
+          if (valid && (solidVal <= 0 || solidVal > 100 || effVal <= 0 || effVal > 100)) valid = false;
+
+          if (valid) {
+            const E = effVal / 100;
+            c = (parseFloat(m.gsm) / (solidVal / 100) / 1000 / E) * parseFloat(m.price) * toExFactor;
+          }
+        } else {
+          if (!m.widthRaw || !m.widthValid) valid = false;
+          if (valid) {
+            c = (parseFloat(m.price) * toExFactor) / (parseFloat(m.widthValid) / parseFloat(m.widthRaw));
+          }
+        }
+
+        if (!valid) {
+          matHasError = true;
+          m.cost = '-';
+        } else {
+          m.cost = c.toFixed(2);
+          stageMatSum += c;
+        }
+      });
+
+      // 1.2 计算工艺成本
+      const p = stage.process;
+      let procCost = 0;
+
+      if (!p.machRate || !p.laborRate || !p.speed || !p.orderLen || p.wasteLen === undefined || p.wasteLen === '') {
+        procHasError = true;
+      }
+
+      // 寻找膜宽
+      let refW = 0;
+      for (let k = i; k >= 0; k--) {
+        const found = stages[k].materials.find(m => m.type === 'film' && m.widthValid && parseFloat(m.widthValid) > 0);
+        if (found) { refW = parseFloat(found.widthValid); break; }
+      }
+
+      if (!procHasError && refW > 0) {
+        const output = parseFloat(p.speed) * 60 * (refW / 1000);
+        const scale = (parseFloat(p.orderLen) + parseFloat(p.wasteLen)) / parseFloat(p.orderLen);
+        if (output > 0) {
+          procCost = ((parseFloat(p.machRate) + parseFloat(p.laborRate)) / output) * scale;
+          stage.stageProcCost = procCost.toFixed(2);
+        } else {
+          procHasError = true;
+          stage.stageProcCost = '-';
+        }
+      } else {
+        procHasError = true;
+        stage.stageProcCost = '-';
+      }
+
+      // 1.3 更新材料小计和本工序总成本
+      stage.stageMatCost = matHasError ? '-' : stageMatSum.toFixed(2);
+      const stageTotal = (matHasError || procHasError) ? 0 : stageMatSum + procCost;
+      stage.stageTotalCost = (matHasError || procHasError) ? '-' : stageTotal.toFixed(2);
+
+      // 1.4 检查良率
+      const yieldVal = parseFloat(stage.yield);
+      const yieldValid = !isNaN(yieldVal) && yieldVal > 0 && yieldVal <= 100;
+
+      // 1.5 计算累计成本
+      if (matHasError || procHasError || !yieldValid) {
+        stage.accumCost = '-';
+        if (!hasError) {
+          hasError = true;
+          if (matHasError) firstErrorMsg = `工序${i + 1}材料数据不完整`;
+          else if (procHasError) firstErrorMsg = `工序${i + 1}工艺数据不完整`;
+          else firstErrorMsg = `工序${i + 1}良率无效(1-100)`;
+        }
+      } else {
+        const y = yieldVal / 100;
+        runningAccum = (runningAccum + stageTotal) / y;
+        stage.accumCost = runningAccum.toFixed(2);
+      }
+    }
+
+    // 2. 更新所有数据到界面
+    const updates = {};
+    for (let i = 0; i <= targetStage; i++) {
+      const s = stages[i];
+      updates[`stages[${i}].materials`] = s.materials;
+      updates[`stages[${i}].stageMatCost`] = s.stageMatCost;
+      updates[`stages[${i}].stageProcCost`] = s.stageProcCost;
+      updates[`stages[${i}].stageTotalCost`] = s.stageTotalCost;
+      updates[`stages[${i}].accumCost`] = s.accumCost;
+    }
+    this.setData(updates);
+
+    // 3. 显示结果
+    if (hasError) {
+      wx.showToast({ title: firstErrorMsg, icon: 'none', duration: 2000 });
+    } else {
+      wx.showToast({ title: '已更新累计成本', icon: 'success', duration: 800 });
+    }
   },
 
   calculateAll() {
@@ -428,9 +580,14 @@ Page({
     const newStages = JSON.parse(JSON.stringify(d.stages));
 
     newStages.forEach((stage, sIdx) => {
-      if (!this.validatePercentage(stage.yield, `s${sIdx}_yield`, errs)) hasError = true;
+      let stageHasError = false;
+      if (!this.validatePercentage(stage.yield, `s${sIdx}_yield`, errs)) {
+        hasError = true;
+        stageHasError = true;
+      }
 
       let stageMatSum = 0;
+      let matHasError = false;
 
       stage.materials.forEach((m, mIdx) => {
         let c = 0; let valid = true;
@@ -444,17 +601,25 @@ Page({
           if (valid) {
             const E = parseFloat(m.eff) / 100;
             c = (parseFloat(m.gsm) / (parseFloat(m.solid) / 100) / 1000 / E) * parseFloat(m.price) * toExFactor;
-          } else { hasError = true; }
+          }
         } else {
           if (!this.validateField(m.widthRaw, `s${sIdx}_m${mIdx}_widthRaw`, errs)) valid = false;
           if (!this.validateField(m.widthValid, `s${sIdx}_m${mIdx}_widthValid`, errs)) valid = false;
 
           if (valid) {
             c = (parseFloat(m.price) * toExFactor) / (parseFloat(m.widthValid) / parseFloat(m.widthRaw));
-          } else { hasError = true; }
+          }
         }
-        m.cost = c.toFixed(2);
-        stageMatSum += c;
+
+        if (!valid) {
+          hasError = true;
+          matHasError = true;
+          // ★ 级联重置：校验失败的材料显示'-'
+          m.cost = '-';
+        } else {
+          m.cost = c.toFixed(2);
+          stageMatSum += c;
+        }
       });
 
       const p = stage.process;
@@ -475,32 +640,49 @@ Page({
         if (found) { refW = parseFloat(found.widthValid); break; }
       }
 
-      if (procValid && refW > 0) {
+      // ★ 级联重置：工艺校验失败或无膜宽时显示'-'
+      if (!procValid || refW === 0) {
+        stage.stageProcCost = '-';
+      } else {
         const output = parseFloat(p.speed) * 60 * (refW / 1000);
         const scale = (parseFloat(p.orderLen) + parseFloat(p.wasteLen)) / parseFloat(p.orderLen);
         if (output > 0) {
           pCost = ((parseFloat(p.machRate) + parseFloat(p.laborRate)) / output) * scale;
+          stage.stageProcCost = pCost.toFixed(2);
+        } else {
+          stage.stageProcCost = '-';
         }
       }
 
-      let currentStageTotal = stageMatSum + pCost;
+      // ★ 级联重置：材料有错误时小计显示'-'
+      stage.stageMatCost = matHasError ? '-' : stageMatSum.toFixed(2);
 
-      stage.stageMatCost = stageMatSum.toFixed(2);
-      stage.stageProcCost = pCost.toFixed(2);
-      stage.stageTotalCost = currentStageTotal.toFixed(2);
+      // 本工序总成本
+      let currentStageTotal = matHasError || !procValid ? 0 : stageMatSum + pCost;
 
-      const y = parseFloat(stage.yield) / 100 || 1;
-      if (y > 0) {
-        totalYield *= y;
-        runningTotal = (runningTotal + currentStageTotal) / y;
+      stage.stageTotalCost = (matHasError || !procValid || refW === 0) ? '-' : currentStageTotal.toFixed(2);
+
+      // ★ 级联重置：如果本工序有任何错误，accumCost也显示'-'
+      if (matHasError || !procValid || refW === 0 || stageHasError) {
+        stage.accumCost = '-';
+        // 后续工序的累计也无法计算，但继续循环以显示各工序的错误
+      } else {
+        const y = parseFloat(stage.yield) / 100 || 1;
+        if (y > 0) {
+          totalYield *= y;
+          runningTotal = (runningTotal + currentStageTotal) / y;
+        }
+        stage.accumCost = runningTotal.toFixed(2);
       }
-      stage.accumCost = runningTotal.toFixed(2);
     });
 
-    this.setData({ errors: errs });
+    // ★★★ 关键修复：无论是否有错误，都先更新 stages 数据（显示 '-' 的部分）
+    this.setData({ errors: errs, stages: newStages });
 
     if (hasError) {
-      // ★★★ 新增逻辑：检查 error 对象里有没有 'range' 这个标记
+      // 有错误时，重置最终结果为 '-'
+      this.setData({ res_final_cost: '-', final_yield: '-' });
+
       const errorValues = Object.values(errs);
       if (errorValues.includes('range')) {
         return wx.showToast({ title: '存在数值超出0-100范围，请检查', icon: 'none', duration: 2500 });
@@ -516,7 +698,6 @@ Page({
     const finalYieldStr = (totalYield * 100).toFixed(2);
 
     this.setData({
-      stages: newStages,
       res_final_cost: final.toFixed(2),
       final_yield: finalYieldStr
     });
