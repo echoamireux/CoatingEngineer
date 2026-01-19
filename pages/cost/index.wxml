@@ -51,7 +51,7 @@
 
                <view class="sh-right">
                   <view class="fold-summary" wx:if="{{stage.folded}}" bindtap="toggleStageFold" data-index="{{sIdx}}">
-                     <text class="fs-cost">¥ {{stage.stageTotalCost || 0}}</text>
+                     <text class="fs-cost">¥ {{stage.accumCost || '-'}}</text>
                      <view class="fs-yield">良率 {{stage.yield || '-'}}%</view>
                   </view>
 
