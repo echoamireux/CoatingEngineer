@@ -37,6 +37,7 @@ opencode.json     # OpenCode 项目配置 (无点号)
 
 # --- 共享资源 ---
 .shared/          # Skills 共享资源 (如 ui-ux-pro-max)
+.spec-workflow/   # Spec Workflow 模板
 
 # --- 通用 IDE 配置 ---
 .vscode/          # VS Code 本地设置
