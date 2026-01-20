@@ -133,8 +133,8 @@ Page({
 
   // ★★★ 优化后的赞赏逻辑 (为以后开启做准备) ★★★
   previewReward() {
-    // 如果是审核模式，直接拦截（双重保险）
-    if (!SHOW_REWARD) return;
+    // 依赖云端配置的状态
+    if (!this.data.showReward) return;
 
     wx.previewImage({
       urls: [REWARD_IMAGE_PATH],
