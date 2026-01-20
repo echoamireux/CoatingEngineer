@@ -4,3 +4,62 @@ unpackage/
 dist/
 project.private.config.json
 sitemap.json
+
+# ============================================
+# AI 编码助手配置 (本地工具，不提交到远程仓库)
+# ============================================
+
+# --- Google 系 ---
+# Antigravity (Google Deepmind)
+.agent/
+# Gemini CLI
+.gemini/
+
+# --- Anthropic 系 ---
+# Claude Code
+.claude/
+
+# --- OpenAI 系 ---
+# OpenAI Codex CLI
+.codex/
+# GitHub Copilot
+.github/copilot/
+
+# --- 独立 AI IDE ---
+# Cursor
+.cursor/
+# Windsurf (原 Codeium)
+.windsurf/
+# Kiro (AWS)
+.kiro/
+# Trae (字节跳动)
+.trae/
+
+# --- 其他 AI 助手 ---
+# Roo Code
+.roo/
+# Qoder
+.qoder/
+
+# --- OpenCode (配置较特殊) ---
+# OpenCode 项目目录
+.opencode/
+# OpenCode 项目配置 (带点号)
+.opencode.json
+# OpenCode 项目配置 (无点号)
+opencode.json
+
+# --- 共享资源 ---
+# Skills 共享资源 (如 ui-ux-pro-max)
+.shared/
+# Spec Workflow 模板
+.spec-workflow/
+
+# --- 通用 IDE 配置 ---
+.vscode/          # VS Code 本地设置
+
+# ============================================
+# 敏感配置 (包含口令等，不提交到远程仓库)
+# ============================================
+utils/config.local.js
+cloudfunctions/updateSettings/secret.js

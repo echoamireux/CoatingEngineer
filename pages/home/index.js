@@ -1,11 +1,22 @@
 const app = getApp()
 const { initTheme, toggleTheme: commonToggleTheme } = require('../../utils/common')
-const { ACCESS_CODE, SHOW_REWARD, REWARD_IMAGE_PATH } = require('../../utils/config')
+const { SHOW_REWARD, REWARD_IMAGE_PATH } = require('../../utils/config')
+
+// 尝试加载本地私有配置（不提交到远程仓库）
+let FALLBACK_CODE = null
+try {
+  const localConfig = require('../../utils/config.local')
+  FALLBACK_CODE = localConfig.FALLBACK_CODE
+} catch (e) {
+  console.warn('未找到 config.local.js，本地备用验证已禁用')
+}
 
 Page({
   data: {
     theme: 'dark',
     showReward: SHOW_REWARD,
+    requirePasscode: true,    // 是否需要口令验证（从云端读取）
+    passcodeHint: '流体力学临界雷诺数 (Re)',  // 口令提示词（从云端读取）
 
     // --- 弹窗控制状态 ---
     showModal: false,
@@ -14,6 +25,7 @@ Page({
     modalDesc: '',
     pendingPath: '',
     inputCode: '',
+    adminTapCount: 0, // 管理员入口点击计数
 
     menuList: [
       {
@@ -64,6 +76,49 @@ Page({
     initTheme(this);
   },
 
+  onShow() {
+    // 每次页面显示时刷新应用设置（支持云端即时生效）
+    this.loadAppSettings();
+  },
+
+  // 从云端加载应用设置
+  async loadAppSettings() {
+    try {
+      const db = wx.cloud.database()
+      // 一次性获取所有应用设置
+      const res = await db.collection('app_settings').get()
+
+      // 遍历设置并应用
+      const settings = {}
+      res.data.forEach(item => {
+        if (item.key === 'require_passcode') {
+          settings.requirePasscode = item.value
+        } else if (item.key === 'show_reward') {
+          settings.showReward = item.value
+        } else if (item.key === 'passcode_hint') {
+          settings.passcodeHint = item.value
+        }
+      })
+
+      // 应用设置（未配置的使用默认值）
+      // passcodeHint: 空字符串 = 隐藏提示, undefined = 使用默认值
+      const hintValue = settings.passcodeHint !== undefined
+        ? settings.passcodeHint
+        : '流体力学临界雷诺数 (Re)'
+
+      this.setData({
+        requirePasscode: settings.requirePasscode !== undefined ? settings.requirePasscode : true,
+        showReward: settings.showReward !== undefined ? settings.showReward : false,
+        passcodeHint: hintValue
+      })
+
+      console.log('✅ 应用设置加载成功:', settings)
+    } catch (err) {
+      console.warn('获取应用设置失败，使用默认值:', err)
+      this.setData({ requirePasscode: true, showReward: false, passcodeHint: '流体力学临界雷诺数 (Re)' })
+    }
+  },
+
   toggleTheme() {
     commonToggleTheme(this);
   },
@@ -79,8 +134,8 @@ Page({
 
   // ★★★ 优化后的赞赏逻辑 (为以后开启做准备) ★★★
   previewReward() {
-    // 如果是审核模式，直接拦截（双重保险）
-    if (!SHOW_REWARD) return;
+    // 依赖云端配置的状态
+    if (!this.data.showReward) return;
 
     wx.previewImage({
       urls: [REWARD_IMAGE_PATH],
@@ -115,9 +170,9 @@ Page({
       return;
     }
 
-    // 2. 登录拦截
+    // 2. 登录拦截（可通过云端开关控制）
     const isLogin = wx.getStorageSync('isLogin');
-    if (!isLogin) {
+    if (this.data.requirePasscode && !isLogin) {
       this.setData({
         showModal: true,
         modalType: 'login',
@@ -145,22 +200,83 @@ Page({
     this.setData({ inputCode: e.detail.value });
   },
 
-  handleModalConfirm() {
+  async handleModalConfirm() {
     if (this.data.modalType === 'login') {
-      if (this.data.inputCode === ACCESS_CODE) {
-        wx.setStorageSync('isLogin', true);
-        wx.showToast({ title: '验证通过', icon: 'success' });
-        this.setData({ showModal: false });
-        if (this.data.pendingPath) {
-          setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }); }, 500);
+      // 显示加载提示
+      wx.showLoading({ title: '验证中...' })
+
+      try {
+        // 优先使用云端验证
+        const res = await wx.cloud.callFunction({
+          name: 'verifyPasscode',
+          data: { code: this.data.inputCode }
+        })
+
+        wx.hideLoading()
+
+        if (res.result.success) {
+          wx.setStorageSync('isLogin', true)
+          wx.showToast({ title: '验证通过', icon: 'success' })
+          this.setData({ showModal: false })
+          if (this.data.pendingPath) {
+            setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
+          }
+        } else {
+          wx.vibrateShort()
+          wx.showToast({ title: res.result.message || '口令错误', icon: 'error' })
+          this.setData({ inputCode: '' })
         }
-      } else {
-        wx.vibrateShort();
-        wx.showToast({ title: '口令错误', icon: 'error' });
-        this.setData({ inputCode: '' });
+      } catch (err) {
+        wx.hideLoading()
+        console.warn('云函数调用失败:', err)
+
+        // 本地备用口令（仅在云端不可用且配置了备用口令时使用）
+        if (FALLBACK_CODE && this.data.inputCode === FALLBACK_CODE) {
+          console.log('使用本地备用验证')
+          wx.setStorageSync('isLogin', true)
+          wx.showToast({ title: '验证通过', icon: 'success' })
+          this.setData({ showModal: false })
+          if (this.data.pendingPath) {
+            setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
+          }
+        } else if (FALLBACK_CODE) {
+          // 有备用口令但输入错误
+          wx.vibrateShort()
+          wx.showToast({ title: '口令错误', icon: 'error' })
+          this.setData({ inputCode: '' })
+        } else {
+          // 没有配置备用口令，直接提示网络异常
+          wx.showToast({ title: '网络异常', icon: 'error' })
+        }
       }
     } else {
-      this.setData({ showModal: false });
+      this.setData({ showModal: false })
+    }
+  },
+
+  // 隐蔽入口：5秒内点击5次
+  onAdminTitleTap() {
+    const now = Date.now()
+    if (this.lastTapTime && (now - this.lastTapTime > 5000)) {
+      this.setData({ adminTapCount: 0 }) // 超时重置
+    }
+
+    this.lastTapTime = now
+    let count = this.data.adminTapCount + 1
+    this.setData({ adminTapCount: count })
+
+    if (count >= 5) {
+      this.setData({ showModal: false, adminTapCount: 0 }) // 关闭弹窗并重置
+      wx.vibrateLong()
+      wx.navigateTo({
+        url: '/pages/admin/index',
+        fail: (err) => {
+          console.error('跳转管理员页面失败:', err)
+          wx.showToast({ title: '无法打开后台', icon: 'none' })
+        }
+      })
+    } else if (count >= 3) {
+      wx.vibrateShort() // 3次后开始震动反馈
     }
   }
 })
