@@ -10,34 +10,50 @@ sitemap.json
 # ============================================
 
 # --- Google 系 ---
-.agent/           # Antigravity (Google Deepmind)
-.gemini/          # Gemini CLI
+# Antigravity (Google Deepmind)
+.agent/
+# Gemini CLI
+.gemini/
 
 # --- Anthropic 系 ---
-.claude/          # Claude Code
+# Claude Code
+.claude/
 
 # --- OpenAI 系 ---
-.codex/           # OpenAI Codex CLI
-.github/copilot/  # GitHub Copilot
+# OpenAI Codex CLI
+.codex/
+# GitHub Copilot
+.github/copilot/
 
 # --- 独立 AI IDE ---
-.cursor/          # Cursor
-.windsurf/        # Windsurf (原 Codeium)
-.kiro/            # Kiro (AWS)
-.trae/            # Trae (字节跳动)
+# Cursor
+.cursor/
+# Windsurf (原 Codeium)
+.windsurf/
+# Kiro (AWS)
+.kiro/
+# Trae (字节跳动)
+.trae/
 
 # --- 其他 AI 助手 ---
-.roo/             # Roo Code
-.qoder/           # Qoder
+# Roo Code
+.roo/
+# Qoder
+.qoder/
 
 # --- OpenCode (配置较特殊) ---
-.opencode/        # OpenCode 项目目录
-.opencode.json    # OpenCode 项目配置 (带点号)
-opencode.json     # OpenCode 项目配置 (无点号)
+# OpenCode 项目目录
+.opencode/
+# OpenCode 项目配置 (带点号)
+.opencode.json
+# OpenCode 项目配置 (无点号)
+opencode.json
 
 # --- 共享资源 ---
-.shared/          # Skills 共享资源 (如 ui-ux-pro-max)
-.spec-workflow/   # Spec Workflow 模板
+# Skills 共享资源 (如 ui-ux-pro-max)
+.shared/
+# Spec Workflow 模板
+.spec-workflow/
 
 # --- 通用 IDE 配置 ---
 .vscode/          # VS Code 本地设置
