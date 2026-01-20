@@ -1,0 +1,63 @@
+<view class="container">
+  <view class="header">
+    <text class="title">🔧 控制台</text>
+    <text class="subtitle">Ver 1.0.0 (Admin Only)</text>
+  </view>
+
+  <!-- 登录后的控制面板 -->
+  <view class="dashboard" wx:if="{{isLoggedIn}}">
+
+    <!-- 应用设置区 -->
+    <view class="section">
+      <view class="section-title">应用开关</view>
+      <view class="card">
+        <view class="form-item">
+          <text>强制口令验证</text>
+          <switch checked="{{requirePasscode}}" bindchange="onSwitchChange" data-key="require_passcode" color="#10b981"/>
+        </view>
+        <view class="divider"></view>
+        <view class="form-item">
+          <text>显示赞赏入口</text>
+          <switch checked="{{showReward}}" bindchange="onSwitchChange" data-key="show_reward" color="#10b981"/>
+        </view>
+      </view>
+    </view>
+
+    <!-- 口令管理区 -->
+    <view class="section">
+      <view class="section-title">口令管理</view>
+      <view class="card">
+        <view class="form-item" style="flex-direction: column; align-items: flex-start;">
+          <text style="margin-bottom:12rpx">当前访问口令</text>
+          <view class="input-row">
+            <input class="input-box" value="{{currentAccessCode}}" bindinput="onAccessCodeInput" placeholder="输入新口令" />
+            <view class="btn-mini" bindtap="saveAccessCode">保存</view>
+          </view>
+        </view>
+        <view class="divider"></view>
+        <view class="form-item" style="flex-direction: column; align-items: flex-start;">
+          <text style="margin-bottom:12rpx">口令提示词</text>
+          <view class="input-row">
+            <input class="input-box" value="{{passcodeHint}}" bindinput="onHintInput" placeholder="空字符串=隐藏提示" />
+            <view class="btn-mini" bindtap="saveHint">保存</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="footer-action">
+      <button class="btn-secondary" bindtap="refreshData">🔄 刷新数据</button>
+      <button class="btn-logout" bindtap="logout">退出登录</button>
+    </view>
+
+  </view>
+
+  <!-- 登录前：简单的密码输入框 -->
+  <view class="login-panel" wx:else>
+    <view class="card login-card">
+      <view class="login-title">身份验证</view>
+      <input class="login-input" password="true" placeholder="Admin Password" bindinput="onAdminPassInput" />
+      <button class="btn-primary" bindtap="verifyAdmin" loading="{{loading}}">进入</button>
+    </view>
+  </view>
+</view>

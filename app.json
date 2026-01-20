@@ -5,7 +5,8 @@
     "pages/fluid/index",
     "pages/tools/converter/index",
     "pages/history/index",
-    "pages/cost/index"
+    "pages/cost/index",
+    "pages/admin/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

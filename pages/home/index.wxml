@@ -87,7 +87,7 @@
         <view class="about-content">
           <view class="about-header-group">
              <view class="about-avatar">CE</view>
-             <view class="about-name">涂布智算Pro</view>
+             <view class="about-name" bindtap="onAdminTitleTap">涂布智算Pro</view>
           </view>
 
           <view class="about-desc-group">

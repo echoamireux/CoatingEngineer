@@ -25,6 +25,7 @@ Page({
     modalDesc: '',
     pendingPath: '',
     inputCode: '',
+    adminTapCount: 0, // 管理员入口点击计数
 
     menuList: [
       {
@@ -250,6 +251,32 @@ Page({
       }
     } else {
       this.setData({ showModal: false })
+    }
+  },
+
+  // 隐蔽入口：5秒内点击5次
+  onAdminTitleTap() {
+    const now = Date.now()
+    if (this.lastTapTime && (now - this.lastTapTime > 5000)) {
+      this.setData({ adminTapCount: 0 }) // 超时重置
+    }
+
+    this.lastTapTime = now
+    let count = this.data.adminTapCount + 1
+    this.setData({ adminTapCount: count })
+
+    if (count >= 5) {
+      this.setData({ showModal: false, adminTapCount: 0 }) // 关闭弹窗并重置
+      wx.vibrateLong()
+      wx.navigateTo({
+        url: '/pages/admin/index',
+        fail: (err) => {
+          console.error('跳转管理员页面失败:', err)
+          wx.showToast({ title: '无法打开后台', icon: 'none' })
+        }
+      })
+    } else if (count >= 3) {
+      wx.vibrateShort() // 3次后开始震动反馈
     }
   }
 })
