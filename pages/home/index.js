@@ -39,7 +39,7 @@ Page({
       },
       {
         id: 'coating',
-        title: '涂布与卷材计算',
+        title: '涂布生产计算',
         desc: '卷径 / 重量 / 泵速 / 湿胶重',
         path: '/pages/coating/index',
         icon: '🏭',
