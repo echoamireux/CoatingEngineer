@@ -7,6 +7,7 @@ const { saveHistory, getHistory, deleteHistory } = require('../../utils/history'
 Page({
   data: {
     theme: 'dark',
+    statusBarHeight: 44,
     errors: {},
 
     showFormulaModal: false,
@@ -49,6 +50,13 @@ Page({
     initTheme(this);
     this.loadRecipesFromStorage();
     if (this.data.stages.length === 0) this.addStage('涂布工序');
+    // 获取状态栏高度
+    const systemInfo = wx.getSystemInfoSync();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
   },
 
   onShow() {

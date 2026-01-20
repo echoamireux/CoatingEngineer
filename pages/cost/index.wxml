@@ -1,10 +1,23 @@
 <view class="page-container {{theme}} theme-cost">
-   <view class="nav-bar">
-      <view class="nav-title">成本工序流</view>
-      <view class="actions">
-         <view class="icon-btn" bindtap="saveCostHistory" wx:if="{{res_final_cost !== '-'}}">💾</view>
-         <view class="icon-btn" bindtap="openHistoryModal">📜</view>
-         <view class="icon-btn" bindtap="openClearModal">🧹</view>
+   <!-- 双排导航栏 -->
+   <!-- 单排导航栏：紧凑设计 -->
+   <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
+      <!-- Row 1: 导航行 -->
+      <view class="nav-row">
+         <view class="back-btn" bindtap="goBack">←</view>
+         <text class="page-title">成本工序流</text>
+      </view>
+      <!-- Row 2: 工具行 (紧凑/纯图标) -->
+      <view class="toolbar-row">
+         <view class="tool-btn" bindtap="openHistoryModal" hover-class="tool-hover">
+            <text class="icon">📜</text>
+         </view>
+         <view class="tool-btn" bindtap="saveCostHistory" wx:if="{{res_final_cost !== '-'}}" hover-class="tool-hover">
+            <text class="icon" style="color:var(--primary)">💾</text>
+         </view>
+         <view class="tool-btn" bindtap="openClearModal" hover-class="tool-hover">
+            <text class="icon">🧹</text>
+         </view>
       </view>
    </view>
 

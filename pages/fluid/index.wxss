@@ -1,27 +1,15 @@
-/* V25 午夜蓝主题变量 */
+/* Fluid 页面样式 - 继承全局主题变量 */
 page {
-  --bg: #10141e;
-  --card: #1f2937;
-  --text: #f3f4f6;
-  --text-sub: #9ca3af;
-  --border: #374151;
-  --input: #111827;
-  --btn-sub: #374151;
+  /* 变量映射：将旧变量名映射到全局变量 */
+  --input: var(--card);
+  --btn-sub: var(--border);
   --error: #ef4444;
-
-  /* Map legacy variables to new theme system */
   --highlight: var(--accent);
-  /* Map Highlight to Theme Accent */
-  /* --accent is already provided by .theme-fluid */
 }
 
+/* 白天模式无需额外定义，全局已处理 */
 .page-container.light {
-  --bg: #f2f4f7;
-  --card: #ffffff;
-  --text: #333;
-  --text-sub: #666;
-  --input: #f7f8fa;
-  --border: #e0e0e0;
+  --input: var(--card);
 }
 
 .page-container {
@@ -34,19 +22,89 @@ page {
   font-family: -apple-system, sans-serif;
 }
 
-/* 统一 Stick 导航栏 */
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 30rpx;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
+/* 导航栏样式 - 沉浸式设计 */
+.page-header {
   position: sticky;
   top: 0;
-  z-index: 50;
-  box-shadow: 0 -1px 0 var(--card);
+  z-index: 100;
+  background: var(--bg); /* 沉浸式：与页面背景一致 */
+  /* 移除border-bottom */
+  box-sizing: border-box;
 }
+
+/* 导航栏 - 第一行 */
+.nav-row {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  gap: 12rpx;
+  width: 100%;
+}
+
+/* 工具栏 - 第二行 (紧凑/无底色) */
+.toolbar-row {
+  height: 32px; /* 极度紧凑 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 左对齐 */
+  padding: 0 24rpx;
+  gap: 40rpx; /* 图标间较宽间距 */
+  background: transparent;
+  margin-bottom: 4rpx;
+}
+
+/* Back Button */
+.back-btn {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: var(--text-sub);
+  font-weight: 300;
+  margin-right: 4rpx;
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* Tool Button - Ghost Style */
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rpx;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 8rpx;
+}
+
+.tool-hover {
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+.tool-btn .icon {
+  font-size: 30rpx; /* 精致小图标 */
+  opacity: 0.7;
+  color: var(--text-sub);
+  line-height: 1;
+}
+
+.tool-btn .icon:active {
+  opacity: 1;
+}
+
 
 .nav-title {
   font-size: 34rpx;

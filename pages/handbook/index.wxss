@@ -1,0 +1,464 @@
+/* 手册首页样式 - 继承全局主题 */
+
+/* 页面容器 - 使用全局变量，不再定义局部主题 */
+/* 页面容器 - 使用全局变量，不再定义局部主题 */
+.page-container {
+  min-height: 100vh;
+  /* 定义手册专属主题色 - Indigo */
+  --primary: #6366f1;
+  background: var(--bg);
+  color: var(--text);
+  /* 移除全局padding，改为各模块单独处理，以便导航栏可以贴边控制间距 */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 头部 - 单行沉浸式设计 */
+.handbook-header {
+  box-sizing: border-box;
+  background: var(--bg); /* 沉浸式：与页面背景一致 */
+  /* 移除border-bottom */
+}
+
+.nav-bar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx; /* 统一标准：24rpx */
+  gap: 12rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 返回按钮：专业轻量级设计（无背景） */
+.header-back {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 移除背景和边框 */
+  flex-shrink: 0;
+}
+
+.back-icon {
+  font-size: 36rpx;
+  color: var(--text-sub);
+  font-weight: 300;
+}
+
+/* 标题区域：包含主标题和副标题 */
+.header-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+  flex: 1;
+}
+
+.header-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-sub {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  opacity: 0.8;
+}
+
+/* 返回首页按钮占位 */
+.header-placeholder {
+  width: 144rpx; /* 胶囊区域占位 */
+  height: 72rpx;
+  flex-shrink: 0;
+  visibility: hidden; /* 仅占位 */
+}
+
+/* 搜索框 - 增加呼吸空间 */
+.search-box {
+  padding: 40rpx 30rpx 24rpx; /* 恢复水平30rpx内边距 */
+  background: var(--bg);
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 36rpx;
+  padding: 0 30rpx;
+  height: 72rpx;
+}
+
+.search-icon {
+  font-size: 28rpx;
+  margin-right: 16rpx;
+  opacity: 0.5;
+}
+
+.search-input {
+  flex: 1;
+  height: 100%;
+  font-size: 28rpx;
+  color: var(--text);
+  background: transparent;
+}
+
+.search-placeholder {
+  color: var(--text-sub);
+}
+
+.clear-icon {
+  font-size: 28rpx;
+  color: var(--text-sub);
+  opacity: 0.5;
+  padding: 10rpx;
+}
+
+/* 菜单网格 - 居中布局 */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30rpx;
+  padding-bottom: 40rpx;
+  width: 100%;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 30rpx; /* 虽然没用到，但以防万一 */
+  padding-right: 30rpx;
+}
+
+/* 分类卡片网格 - 增加呼吸空间 */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32rpx;
+  width: 100%;
+  padding: 24rpx 30rpx 0; /* 恢复水平30rpx内边距 */
+  box-sizing: border-box;
+}
+
+.category-card {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 28rpx;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  transition: transform 0.2s ease;
+}
+
+.category-card:active {
+  transform: scale(0.97);
+}
+
+.category-card.wide {
+  grid-column: span 2;
+  flex-direction: row;
+  align-items: center;
+  padding: 32rpx;
+}
+
+.category-card.wide .card-info {
+  flex: 1;
+  margin-left: 24rpx;
+}
+
+.card-icon-box {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-icon {
+  font-size: 40rpx;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  letter-spacing: 1rpx;
+}
+
+.card-desc {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  opacity: 0.7;
+  line-height: 1.4;
+}
+
+.card-count {
+  display: flex;
+  align-items: baseline;
+  gap: 6rpx;
+  margin-top: auto; /* 关键：自动推到底部，解决因为描述行数不同导致的不对齐 */
+  padding-top: 10rpx;
+}
+
+.count-num {
+  font-size: 36rpx;
+  font-weight: 900;
+  color: var(--primary); /* 强制使用主题色，确保4工艺等卡片颜色一致 */
+}
+
+.count-unit {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  opacity: 0.6;
+}
+
+/* 底部提示 */
+.footer-tips {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  margin-top: 60rpx;
+  padding-bottom: 60rpx;
+  opacity: 0.4;
+}
+
+.tips-icon {
+  font-size: 28rpx;
+}
+
+.tips-text {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+/* 搜索结果列表 */
+.search-results {
+  flex: 1;
+  width: 100%;
+  padding: 24rpx 30rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding-bottom: 40rpx;
+}
+
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.result-card:active {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.result-icon-box {
+  width: 72rpx;
+  height: 72rpx;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.result-icon {
+  font-size: 36rpx;
+}
+
+.result-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  overflow: hidden;
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-desc {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-tag {
+  font-size: 22rpx;
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+  gap: 20rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: var(--text-sub);
+  opacity: 0.6;
+}
+
+/* 词条详情弹窗 (复用 category 样式) */
+.term-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.term-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+  position: relative;
+  width: 100%;
+  background: var(--card);
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 40rpx;
+  max-height: 70vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.term-modal.show .modal-content {
+  transform: translateY(0);
+}
+
+.modal-header {
+  margin-bottom: 30rpx;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.modal-english {
+  font-size: 26rpx;
+  color: var(--primary);
+  margin-top: 8rpx;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+
+.modal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.section-label {
+  font-size: 26rpx;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.section-content {
+  font-size: 28rpx;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.related-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.related-tag {
+  font-size: 24rpx;
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+}
+
+.modal-footer {
+  margin-top: 40rpx;
+}
+
+.btn-close {
+  width: 100%;
+  height: 88rpx;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20rpx;
+  color: var(--text-sub);
+  font-size: 30rpx;
+}
+
+.btn-close::after {
+  border: none;
+}

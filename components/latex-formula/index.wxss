@@ -1,0 +1,26 @@
+.latex-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 80rpx;
+}
+
+.latex-canvas {
+  display: block;
+}
+
+.latex-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20rpx;
+}
+
+.formula-text {
+  font-size: 32rpx;
+  font-family: 'Times New Roman', serif;
+  color: inherit;
+  letter-spacing: 2rpx;
+}

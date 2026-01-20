@@ -2,21 +2,32 @@
 
   <!-- 固定头部区域 -->
   <view class="sticky-header">
-    <view class="nav-bar">
-      <view class="nav-title">历史记录</view>
-      <view class="actions">
-        <view class="icon-btn" bindtap="clearAll" wx:if="{{filteredList.length > 0}}">🧹</view>
+
+    <!-- 双排导航栏：专业紧凑设计 -->
+    <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
+      <!-- Row 1: 标题栏 -->
+      <view class="nav-row">
+        <!-- 左侧：返回 + 标题 -->
+        <view class="nav-left">
+          <view class="back-btn" bindtap="goBack">←</view>
+          <text class="page-title">历史记录</text>
+        </view>
       </view>
-    </view>
 
     <!-- 模块筛选标签 -->
-    <scroll-view scroll-x class="filter-bar">
+    <scroll-view scroll-x class="filter-bar" style="display: flex; align-items: center;">
       <view class="filter-item {{currentModule === item.id ? 'active' : ''}}" wx:for="{{moduleOptions}}" wx:key="id"
         bindtap="switchModule" data-module="{{item.id}}">
         <text class="filter-icon">{{item.icon}}</text>
         <text>{{item.name}}</text>
       </view>
+
+      <!-- 清除按钮：紧跟在最后一个 Filter 后面 -->
+      <view class="clear-btn-inline" bindtap="clearAll" wx:if="{{filteredList.length > 0}}" style="display: inline-flex;">
+        <text class="icon">🧹</text>
+      </view>
     </scroll-view>
+  </view>
   </view>
 
   <scroll-view scroll-y class="history-list">

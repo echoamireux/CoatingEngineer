@@ -1,4 +1,4 @@
-/* ...保留 V22 基础样式... */
+/* Cost 页面样式 - 继承全局主题变量 */
 .page-container {
   min-height: 100vh;
   background: var(--bg);
@@ -7,12 +7,9 @@
   box-sizing: border-box;
 }
 
+/* 暗黑模式：只添加Cost专属变量，不覆盖基础变量 */
 .page-container.dark {
-  --bg: #000000;
-  --card: #1f2937;
-  --text: #e5e7eb;
-  --text-sub: #9ca3af;
-  --border: #374151;
+  /* --bg, --card, --text, --text-sub, --border 继承全局 */
   --warn: #f59e0b;
   --card-res: #2d3748;
   --input-bg: rgba(255, 255, 255, 0.08);
@@ -20,12 +17,8 @@
   --capsule-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.5);
 }
 
+/* 白天模式：只添加Cost专属变量 */
 .page-container.light {
-  --bg: #f3f4f6;
-  --card: #ffffff;
-  --text: #1f2937;
-  --text-sub: #6b7280;
-  --border: #e5e7eb;
   --warn: #d97706;
   --card-res: #f9fafb;
   --input-bg: rgba(0, 0, 0, 0.05);
@@ -33,20 +26,109 @@
   --capsule-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
 }
 
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 30rpx 20rpx;
-  /*稍微调整padding使其更紧凑*/
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
+/* 导航栏样式 - 沉浸式设计 */
+/* 导航栏样式 - 沉浸式设计 */
+.page-header {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 100;
+  background: var(--bg); /* 沉浸式：与页面背景一致 */
+  box-sizing: border-box;
+}
 
-  /* ★★★ 核心修复：向上延伸 1px 的阴影，堵住缝隙 ★★★ */
-  box-shadow: 0 -1px 0 var(--card);
+/* Row 1: Title & Back */
+.nav-row {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  gap: 12rpx;
+  width: 100%;
+}
+
+.back-btn {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: var(--text-sub);
+  font-weight: 300;
+  margin-right: 4rpx;
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* Row 2: Compact Toolbar */
+.toolbar-row {
+  height: 32px; /* 紧凑高度 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 左对齐 */
+  padding: 0 24rpx;
+  gap: 40rpx; /* 图标间宽间距 */
+  background: transparent;
+  margin-bottom: 4rpx;
+}
+
+/* Ghost Button Style */
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rpx;
+  background: transparent !important;
+  border: none !important;
+}
+
+.tool-hover {
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+.tool-btn .icon {
+  font-size: 30rpx; /* 精致小图标 */
+  opacity: 0.7;
+  color: var(--text-sub);
+  line-height: 1;
+}
+
+.tool-btn .icon:active {
+  opacity: 1;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 26rpx;
+  color: var(--text-sub);
+  padding: 8rpx 12rpx;
+  border-radius: 8rpx;
+  transition: all 0.2s;
+}
+
+.tool-btn:active {
+  background: var(--border);
+  transform: scale(0.95);
+}
+
+.tool-btn .icon {
+  font-size: 28rpx;
+}
+
+.tool-btn .label {
+  font-size: 22rpx;
 }
 
 .nav-title {

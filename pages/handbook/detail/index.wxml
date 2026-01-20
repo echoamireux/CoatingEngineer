@@ -1,0 +1,92 @@
+<view class="page-container {{theme}}">
+  <!-- 固定头部 - 统一单行设计 -->
+  <view class="detail-header" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 导航行：按钮 + 标题 -->
+    <view class="nav-bar">
+      <view class="header-left">
+        <view class="header-back" bindtap="goBack">
+          <text class="back-icon">←</text>
+        </view>
+        <view class="header-home" bindtap="goHome">
+          <text class="home-icon">🏠</text>
+        </view>
+      </view>
+      <text class="header-title">{{title}}</text>
+    </view>
+  </view>
+
+  <!-- 内容区域 -->
+  <scroll-view class="content-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 内容段落 -->
+    <block wx:for="{{sections}}" wx:key="index">
+      <view class="content-section">
+        <view class="section-header" wx:if="{{item.title}}">
+          <text class="section-title">{{item.title}}</text>
+        </view>
+
+        <!-- 自定义组件: 涂布窗口图 -->
+        <view class="section-custom" wx:if="{{item.type === 'custom-coating-window'}}">
+          <coating-window-chart />
+        </view>
+
+        <!-- 文本内容 -->
+        <view class="section-text" wx:if="{{item.type === 'text'}}">
+          <text>{{item.content}}</text>
+        </view>
+
+        <!-- 表格内容 -->
+        <view class="section-table" wx:if="{{item.type === 'table'}}">
+          <scroll-view class="table-scroll" scroll-x>
+            <view class="table-inner">
+              <view class="table-header">
+                <text class="table-cell" wx:for="{{item.headers}}" wx:key="*this" wx:for-item="header">{{header}}</text>
+              </view>
+              <view class="table-row" wx:for="{{item.rows}}" wx:key="index" wx:for-item="row">
+                <text class="table-cell" wx:for="{{row}}" wx:key="*this" wx:for-item="cell">{{cell}}</text>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <!-- 公式内容 -->
+        <view class="section-formula" wx:if="{{item.type === 'formula'}}">
+          <view class="formula-box">
+            <text class="formula-text">{{item.formula}}</text>
+          </view>
+          <view class="formula-desc" wx:if="{{item.description}}">
+            <text>{{item.description}}</text>
+          </view>
+          <view class="formula-params" wx:if="{{item.params && item.params.length > 0}}">
+            <view class="param-item" wx:for="{{item.params}}" wx:key="symbol" wx:for-item="param">
+              <text class="param-symbol">{{param.symbol}}</text>
+              <text class="param-desc">{{param.desc}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 列表内容 -->
+        <view class="section-list" wx:if="{{item.type === 'list'}}">
+          <view class="list-item" wx:for="{{item.items}}" wx:key="*this" wx:for-item="listItem">
+            <text class="list-bullet">•</text>
+            <text class="list-text">{{listItem}}</text>
+          </view>
+        </view>
+
+        <!-- 提示框 -->
+        <view class="section-tip {{item.tipType || 'info'}}" wx:if="{{item.type === 'tip'}}">
+          <text class="tip-icon">{{item.tipType === 'warning' ? '⚠️' : '💡'}}</text>
+          <text class="tip-text">{{item.content}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{sections.length === 0}}">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">内容开发中...</text>
+    </view>
+
+    <!-- 底部留白 -->
+    <view class="content-footer"></view>
+  </scroll-view>
+</view>

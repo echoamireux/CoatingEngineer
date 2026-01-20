@@ -4,6 +4,7 @@ const { saveHistory, deleteHistory } = require('../../utils/history')
 Page({
   data: {
     theme: 'dark',
+    statusBarHeight: 44,
     showFormula: false, showRPMModal: false, showKModal: false,
     showResetModal: false,
     showHistoryModal: false,
@@ -28,9 +29,14 @@ Page({
   onShow() {
     initTheme(this);
     this.loadLocalHistory();
-
-    // 检查并回填历史数据
     this.restoreFromHistory();
+    // 获取状态栏高度
+    const systemInfo = wx.getSystemInfoSync();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
   },
 
   restoreFromHistory() {

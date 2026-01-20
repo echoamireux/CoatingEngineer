@@ -14,6 +14,7 @@ try {
 Page({
   data: {
     theme: 'dark',
+    statusBarHeight: 44,
     showReward: SHOW_REWARD,
     requirePasscode: true,    // 是否需要口令验证（从云端读取）
     passcodeHint: '流体力学临界雷诺数 (Re)',  // 口令提示词（从云端读取）
@@ -46,6 +47,14 @@ Page({
         color: '#f59e0b', // Amber
       },
       {
+        id: 'handbook',
+        title: '涂布工程师手册',
+        desc: '术语 / 理论 / 胶系 / 测试 / 诊断',
+        path: '/pages/handbook/index',
+        icon: '📚',
+        color: '#6366f1' // Indigo - 手册专属色
+      },
+      {
         id: 'fluid',
         title: '流体力学计算',
         desc: '供液管路压降 / 狭缝模头压降',
@@ -74,6 +83,9 @@ Page({
 
   onLoad() {
     initTheme(this);
+    // 获取状态栏高度用于沉浸式适配
+    const systemInfo = wx.getSystemInfoSync();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
   },
 
   onShow() {

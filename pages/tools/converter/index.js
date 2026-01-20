@@ -3,6 +3,7 @@ const { initTheme, formatNumberConverter, parseNumber } = require('../../../util
 Page({
   data: {
     theme: 'dark',
+    statusBarHeight: 44,
     currentTab: 0,
 
     tabs: [
@@ -22,6 +23,13 @@ Page({
   onLoad() {
     initTheme(this);
     this.initUnits(0);
+    // 获取状态栏高度
+    const systemInfo = wx.getSystemInfoSync();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
   },
 
   switchTab(e) {

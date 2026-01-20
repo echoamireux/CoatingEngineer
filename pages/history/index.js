@@ -5,6 +5,7 @@ const { getHistory, getModuleOptions, deleteHistory, clearHistory, migrateOldHis
 Page({
   data: {
     theme: 'dark',
+    statusBarHeight: 44,
     themeClass: '', // 智能主题跟随
     historyList: [],
     filteredList: [],
@@ -28,10 +29,17 @@ Page({
 
   onShow() {
     initTheme(this);
+    // 获取状态栏高度
+    const systemInfo = wx.getSystemInfoSync();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
     // 首次加载时迁移旧数据
     migrateOldHistory();
     this.initModules();
     this.loadHistory();
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
   },
 
   initModules() {

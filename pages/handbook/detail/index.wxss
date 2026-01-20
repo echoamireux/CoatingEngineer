@@ -1,0 +1,295 @@
+/* 详情页样式 */
+
+/* 页面容器 */
+/* 页面容器 */
+.page-container {
+  min-height: 100vh;
+  /* 手册专属主题色 */
+  --primary: #6366f1;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 状态栏占位 */
+.status-bar {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* 固定头部 - 单行沉浸式设计 */
+.detail-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg); /* 沉浸式：与页面背景一致 */
+  /* 移除border-bottom */
+  box-sizing: border-box;
+}
+
+.nav-bar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 16rpx; /* 减少左边距 */
+  gap: 12rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+
+/* 返回/首页按钮：专业轻量级设计 */
+.header-back, .header-home {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 移除背景和边框 */
+}
+
+.back-icon {
+  font-size: 36rpx;
+  color: var(--text-sub);
+  font-weight: 300;
+}
+
+.home-icon {
+  font-size: 24rpx;
+  opacity: 0.6;
+}
+
+.header-title {
+  flex: 1;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 内容滚动区 */
+.content-scroll {
+  flex: 1;
+  width: 100%;
+  padding: 30rpx;
+  box-sizing: border-box; /* 确保padding不撑大宽度 */
+}
+
+.content-section {
+  margin-bottom: 40rpx;
+  /* Frontend Design Skill: Controlled Layout */
+  width: 100%;
+  max-width: 640px; /* 限制最大宽度优化大屏体验 */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-header {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+/* 文本内容 */
+.section-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+/* 表格 - 支持横向滚动 */
+.section-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.table-scroll {
+  width: 100%;
+}
+
+.table-inner {
+  min-width: 100%;
+  width: max-content; /* 关键：让容器随内容撑开，保证背景色铺满 */
+}
+
+.table-header {
+  display: flex;
+  background: rgba(99, 102, 241, 0.1); /* Indigo 0.1 */
+  width: 100%; /* 继承 max-content */
+}
+
+.table-header .table-cell {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.table-row {
+  display: flex;
+  border-top: 1px solid var(--border);
+}
+
+.table-cell {
+  flex: 1;
+  min-width: 160rpx;
+  padding: 20rpx 16rpx;
+  font-size: 24rpx;
+  color: var(--text);
+  text-align: center;
+  word-break: break-word;
+}
+
+/* 公式 */
+.section-formula {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16rpx;
+  padding: 28rpx;
+}
+
+.formula-box {
+  background: rgba(99, 102, 241, 0.05); /* Indigo 0.05 */
+  border-radius: 12rpx;
+  padding: 24rpx;
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.formula-text {
+  font-size: 32rpx;
+  font-family: 'Times New Roman', serif;
+  color: var(--text);
+  letter-spacing: 2rpx;
+}
+
+.formula-desc {
+  font-size: 26rpx;
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin-bottom: 16rpx;
+}
+
+.formula-params {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.param-item {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+}
+
+.param-symbol {
+  font-size: 26rpx;
+  font-family: 'Times New Roman', serif;
+  color: var(--primary);
+  min-width: 80rpx;
+}
+
+.param-desc {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  flex: 1;
+}
+
+/* 列表 */
+.section-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+}
+
+.list-bullet {
+  color: var(--primary);
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.list-text {
+  font-size: 28rpx;
+  color: var(--text);
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* 提示框 */
+.section-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+}
+
+.section-tip.info {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.section-tip.warning {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.tip-icon {
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+
+.tip-text {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: var(--text);
+  flex: 1; /* 自适应宽度 */
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+  gap: 20rpx;
+  /* Frontend Design Skill: Layout Control */
+  width: 100%;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: var(--text-sub);
+  opacity: 0.6;
+}
+
+/* 底部留白 */
+.content-footer {
+  height: 100rpx;
+}

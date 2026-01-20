@@ -1,0 +1,114 @@
+<view class="chart-container">
+  <!-- 标题与状态栏 -->
+  <view class="chart-header">
+    <view class="title-group">
+      <text class="chart-title">涂布窗口交互图</text>
+      <text class="chart-subtitle">适用于狭缝涂布 (Slot Die Only)</text>
+    </view>
+    <view class="status-badge {{statusClass}}">
+      <text>{{statusText}}</text>
+    </view>
+  </view>
+
+  <!-- Canvas 绘图区 -->
+  <view class="canvas-box">
+    <canvas
+      type="2d"
+      id="coatingCanvas"
+      class="coating-canvas"
+      bindtouchstart="onTouchStart"
+      bindtouchmove="onTouchMove"
+      bindtouchend="onTouchEnd"
+    ></canvas>
+  </view>
+
+  <!-- 当前坐标显示 -->
+  <view class="coordinates">
+    <view class="coord-item">
+      <text class="coord-label">Ca (毛细数)</text>
+      <text class="coord-value">{{currentCa}}</text>
+    </view>
+    <view class="coord-item">
+      <text class="coord-label">G/H (间隙比)</text>
+      <text class="coord-value">{{currentGH}}</text>
+    </view>
+    <view class="coord-item">
+      <text class="coord-label">H (湿膜μm)</text>
+      <text class="coord-value">{{currentH}}</text>
+    </view>
+  </view>
+
+  <!-- 参数交互区 -->
+  <view class="controls">
+    <view class="control-group">
+      <view class="control-header">
+        <text class="control-label">涂布速度 V (m/min)</text>
+        <text class="control-value">{{params.speed}}</text>
+      </view>
+      <slider
+        min="1" max="100" step="1"
+        value="{{params.speed}}"
+        activeColor="#6366f1"
+        bindchanging="onParamChange"
+        bindchange="onParamChange"
+        data-key="speed"
+      />
+    </view>
+
+    <view class="control-group">
+      <view class="control-header">
+        <text class="control-label">涂布间隙 G (μm)</text>
+        <text class="control-value">{{params.gap}}</text>
+      </view>
+      <slider
+        min="10" max="500" step="5"
+        value="{{params.gap}}"
+        activeColor="#6366f1"
+        bindchanging="onParamChange"
+        bindchange="onParamChange"
+        data-key="gap"
+      />
+    </view>
+
+    <view class="control-group">
+      <view class="control-header">
+        <text class="control-label">供液流量 Q (mL/min)</text>
+        <text class="control-value">{{params.flow}}</text>
+      </view>
+      <slider
+        min="10" max="500" step="5"
+        value="{{params.flow}}"
+        activeColor="#6366f1"
+        bindchanging="onParamChange"
+        bindchange="onParamChange"
+        data-key="flow"
+      />
+    </view>
+
+    <!-- 折叠的高级参数 -->
+    <view class="advanced-toggle" bindtap="toggleAdvanced">
+      <text>{{showAdvanced ? '收起更多参数' : '展开更多参数'}}</text>
+    </view>
+
+    <view class="advanced-controls" wx:if="{{showAdvanced}}">
+      <view class="control-group">
+        <view class="control-header">
+           <text class="control-label">粘度 η (cP)</text>
+           <input class="mini-input" type="digit" value="{{params.viscosity}}" bindinput="onInputParam" data-key="viscosity" />
+        </view>
+      </view>
+      <view class="control-group">
+        <view class="control-header">
+           <text class="control-label">表面张力 σ (mN/m)</text>
+           <input class="mini-input" type="digit" value="{{params.tension}}" bindinput="onInputParam" data-key="tension" />
+        </view>
+      </view>
+       <view class="control-group">
+        <view class="control-header">
+           <text class="control-label">涂布宽度 W (mm)</text>
+           <input class="mini-input" type="digit" value="{{params.width}}" bindinput="onInputParam" data-key="width" />
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

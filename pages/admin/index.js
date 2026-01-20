@@ -2,6 +2,8 @@ const app = getApp()
 
 Page({
   data: {
+    statusBarHeight: 44,
+    theme: 'dark', // Default theme
     isLoggedIn: false,
     inputPass: '',
     loading: false,
@@ -19,6 +21,18 @@ Page({
 
   onLoad() {
     this.setData({ isLoggedIn: false })
+    // 获取状态栏高度
+    const systemInfo = wx.getSystemInfoSync();
+    // 获取主题
+    const theme = wx.getStorageSync('theme') || 'dark';
+    this.setData({
+      statusBarHeight: systemInfo.statusBarHeight || 44,
+      theme: theme
+    });
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
   },
 
   // === 登录逻辑 ===

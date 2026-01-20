@@ -1,10 +1,15 @@
 <view class="page-container {{theme}} theme-tools">
 
-  <view class="nav-bar">
-    <view class="nav-title">单位换算器</view>
-    <view class="actions">
-      <view class="icon-btn" bindtap="handleClear">🧹</view>
+  <!-- 双排导航栏：专业紧凑设计 -->
+  <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
+    <!-- Row 1: 标题栏 -->
+    <view class="nav-row">
+      <view class="back-btn" bindtap="goBack">←</view>
+      <text class="page-title">单位换算器</text>
     </view>
+
+    <!-- Row 2: 工具行 (已移除) -->
+    <!-- <view class="toolbar-row"></view> -->
   </view>
 
   <view class="main-layout">

@@ -3,17 +3,24 @@
     "pages/home/index",
     "pages/coating/index",
     "pages/fluid/index",
+    "pages/cost/index",
+    "pages/admin/index",
     "pages/tools/converter/index",
     "pages/history/index",
-    "pages/cost/index",
-    "pages/admin/index"
+    "pages/handbook/index",
+    "pages/handbook/category/index",
+    "pages/handbook/detail/index"
   ],
+  "usingComponents": {
+    "navigation-bar": "/components/navigation-bar/navigation-bar",
+    "confirm-modal": "/components/confirm-modal/confirm-modal"
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#111827",
     "navigationBarTitleText": "",
     "navigationBarTextStyle": "white",
-    "navigationStyle": "default"
+    "navigationStyle": "custom"
   },
   "sitemapLocation": "sitemap.json"
 }

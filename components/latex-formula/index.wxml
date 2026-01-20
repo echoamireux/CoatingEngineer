@@ -1,0 +1,12 @@
+<view class="latex-container">
+  <canvas
+    type="2d"
+    id="latex-canvas-{{canvasId}}"
+    class="latex-canvas"
+    style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;"
+  ></canvas>
+  <!-- 备用文本显示 -->
+  <view class="latex-fallback" wx:if="{{showFallback}}">
+    <text class="formula-text">{{formula}}</text>
+  </view>
+</view>

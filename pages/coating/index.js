@@ -5,6 +5,7 @@ Page({
   data: {
     theme: 'dark',
     currentTab: 'composite',
+    statusBarHeight: 44, // 状态栏高度
 
     // --- 悬浮公式条 ---
     showFormulaModal: false,
@@ -40,7 +41,16 @@ Page({
 
   },
 
-  onLoad() { initTheme(this); },
+  onLoad() {
+    initTheme(this);
+    // 获取状态栏高度
+    const systemInfo = wx.getSystemInfoSync();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
+  },
 
   onShow() {
     this.restoreFromHistory();

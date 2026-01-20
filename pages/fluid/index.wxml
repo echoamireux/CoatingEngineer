@@ -1,11 +1,26 @@
 <view class="page-container {{theme}} theme-fluid">
-  <view class="nav-bar">
-    <view class="nav-title">流体力学计算</view>
-    <view class="actions">
-      <view class="icon-btn" bindtap="toggleFormula">📐</view>
-      <view class="icon-btn" bindtap="saveHistory" wx:if="{{result.hasResult}}">💾</view>
-      <view class="icon-btn" bindtap="openHistoryModal">📜</view>
-      <view class="icon-btn" bindtap="confirmReset">🧹</view>
+  <!-- 双排导航栏：专业紧凑设计 -->
+  <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 第一行：标题栏 -->
+    <view class="nav-row">
+      <view class="back-btn" bindtap="goBack">←</view>
+      <text class="page-title">流体力学计算</text>
+    </view>
+
+    <!-- 第二行：纯图标工具栏 -->
+    <view class="toolbar-row">
+      <view class="tool-btn" bindtap="toggleFormula" hover-class="tool-hover">
+        <text class="icon">📐</text>
+      </view>
+      <view class="tool-btn" bindtap="openHistoryModal" hover-class="tool-hover">
+        <text class="icon">📜</text>
+      </view>
+      <view class="tool-btn" bindtap="saveHistory" wx:if="{{result.hasResult}}" hover-class="tool-hover">
+        <text class="icon" style="color:var(--primary)">💾</text>
+      </view>
+      <view class="tool-btn" bindtap="confirmReset" hover-class="tool-hover">
+        <text class="icon">🧹</text>
+      </view>
     </view>
   </view>
   <view class="card fluid-card compact">
