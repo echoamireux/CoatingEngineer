@@ -1,8 +1,8 @@
 <view class="page-container {{theme}}">
-  
+
   <view class="home-header">
     <view class="header-placeholder"></view>
-    
+
     <view class="title-box">
       <view class="app-name">涂布工程专家</view>
       <view class="app-sub">COATING ENGINEERING</view>
@@ -37,9 +37,9 @@
         <text class="ft-icon">🐞</text>
         <text>问题反馈</text>
       </button>
-      
+
       <view class="ft-divider"></view>
-      
+
       <view class="footer-btn" bindtap="openAbout">
         <text class="ft-icon">{{showReward ? '☕️' : '👤'}}</text>
         <text>{{showReward ? '支持作者' : '关于作者'}}</text>
@@ -60,7 +60,7 @@
 
   <view class="modal-mask {{showModal ? 'show' : ''}}">
     <view class="modal-card">
-      
+
       <block wx:if="{{modalType !== 'about'}}">
         <view class="mc-header">
           <view class="mc-icon-badge">
@@ -70,15 +70,15 @@
         </view>
         <view class="mc-body">
           <text class="mc-desc">{{modalDesc}}</text>
-          
+
           <view class="login-input-wrapper" wx:if="{{modalType === 'login'}}">
-            <input class="login-inp-pro" type="number" password="true" 
+            <input class="login-inp-pro" type="number" password="true"
                    placeholder="输入4位口令" placeholder-class="ph-style-pro"
                    bindinput="onLoginInput" value="{{inputCode}}" maxlength="4"/>
           </view>
-          
-          <view class="hint-text" wx:if="{{modalType === 'login'}}">
-            <text>💡 提示：流体力学临界雷诺数 (Re)</text>
+
+          <view class="hint-text" wx:if="{{modalType === 'login' && passcodeHint}}">
+            <text>💡 提示：{{passcodeHint}}</text>
           </view>
         </view>
       </block>
@@ -92,12 +92,12 @@
 
           <view class="about-desc-group">
             <text class="desc-text">本工具由 EA Studio (个人工作室) 利用业余时间开发维护，旨在解决现场计算繁琐痛点，提供严谨的工艺数据支持。</text>
-            
+
             <view class="desc-spacer"></view>
 
             <text class="desc-text">{{showReward ? '如果它提升了您的工作效率，欢迎请我喝杯咖啡，这将支持服务器的持续运行与算法更新。' : '如发现计算偏差或有功能建议，诚邀点击下方按钮反馈，共建专业工具。'}}</text>
           </view>
-          
+
           <block wx:if="{{showReward}}">
             <button class="btn-reward-gold" bindtap="previewReward">
               <text class="btn-icon">☕️</text>

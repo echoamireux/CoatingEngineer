@@ -11,10 +11,9 @@
 
 module.exports = {
     /**
-     * 团队访问口令
-     * 用于限制工具访问权限
+     * 本地备用口令已移至 config.local.js（不提交到远程仓库）
+     * 请参考 config.local.template.js 创建该文件
      */
-    ACCESS_CODE: '2300',
 
     /**
      * 审核模式开关
