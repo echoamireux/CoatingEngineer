@@ -42,7 +42,7 @@ Page({
         title: '涂布与卷材计算',
         desc: '卷径 / 重量 / 泵速 / 湿胶重',
         path: '/pages/coating/index',
-        icon: '⚙️',
+        icon: '🏭',
         color: '#6366f1'
       },
       {
