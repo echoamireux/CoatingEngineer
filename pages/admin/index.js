@@ -67,41 +67,44 @@ Page({
 
   // === 数据加载 ===
   // === 数据加载 ===
+  // === 数据加载 ===
   async refreshData() {
+    if (!this.data.isLoggedIn) return
+
     wx.showLoading({ title: '加载配置...' })
     try {
-      // 改为调用云函数获取（避免前端数据库权限问题）
       const res = await wx.cloud.callFunction({
         name: 'updateSettings',
         data: {
-          password: ADMIN_PASSWORD,
+          password: this.data.inputPass, // 保持使用当前输入的密码
           type: 'get_all_settings'
         }
       })
-
       wx.hideLoading()
-
       if (res.result.success) {
         const { settings, currentAccessCode } = res.result.data
-
-        this.setData({
-          requirePasscode: settings.require_passcode,
-          showReward: settings.show_reward,
-          passcodeHint: settings.passcode_hint || '',
-          currentAccessCode: currentAccessCode,
-
-          // 同步输入框初始值
-          newAccessCode: currentAccessCode,
-          newHint: settings.passcode_hint || ''
-        })
+        this.applySettings(settings, currentAccessCode)
+        wx.showToast({ title: '已刷新', icon: 'success' })
       } else {
-        wx.showToast({ title: '加载失败: ' + res.result.message, icon: 'none' })
+         wx.showToast({ title: '刷新失败', icon: 'none' })
       }
     } catch (err) {
       wx.hideLoading()
       console.error(err)
-      wx.showToast({ title: '加载失败', icon: 'none' })
     }
+  },
+
+  applySettings(settings, code) {
+    this.setData({
+      requirePasscode: settings.require_passcode,
+      showReward: settings.show_reward,
+      passcodeHint: settings.passcode_hint || '',
+      currentAccessCode: code,
+
+      // 同步输入框初始值
+      newAccessCode: code,
+      newHint: settings.passcode_hint || ''
+    })
   },
 
   // === 操作逻辑 ===
@@ -141,7 +144,7 @@ Page({
       const res = await wx.cloud.callFunction({
         name: 'updateSettings',
         data: {
-          password: ADMIN_PASSWORD, // 传递密码给云函数做二次校验
+          password: this.data.inputPass, // 修复：使用用户输入的密码
           type,
           payload
         }
