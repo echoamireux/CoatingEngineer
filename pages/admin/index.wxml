@@ -30,7 +30,7 @@
         <view class="form-item" style="flex-direction: column; align-items: flex-start;">
           <text style="margin-bottom:12rpx">当前访问口令</text>
           <view class="input-row">
-            <input class="input-box" value="{{currentAccessCode}}" bindinput="onAccessCodeInput" placeholder="输入新口令" />
+            <input class="input-box" type="number" maxlength="4" value="{{currentAccessCode}}" bindinput="onAccessCodeInput" placeholder="请输入4位数字" />
             <view class="btn-mini" bindtap="saveAccessCode">保存</view>
           </view>
         </view>
