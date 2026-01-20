@@ -1,8 +1,5 @@
 const app = getApp()
 
-// 管理员密码 (⚠️ 这里只是前端第一道校验，真正的修改会调用云函数校验)
-const ADMIN_PASSWORD = 'admin0416'
-
 Page({
   data: {
     isLoggedIn: false,
@@ -29,12 +26,38 @@ Page({
     this.setData({ inputPass: e.detail.value })
   },
 
-  verifyAdmin() {
-    if (this.data.inputPass === ADMIN_PASSWORD) {
-      this.setData({ isLoggedIn: true })
-      this.refreshData()
-    } else {
-      wx.showToast({ title: '密码错误', icon: 'error' })
+  async verifyAdmin() {
+    const password = this.data.inputPass.trim()
+    if (!password) return
+
+    this.setData({ loading: true })
+
+    try {
+      // 调用云函数验证密码并获取数据
+      const res = await wx.cloud.callFunction({
+        name: 'updateSettings',
+        data: {
+          password: password,
+          type: 'get_all_settings' // 直接尝试获取数据作为验证
+        }
+      })
+
+      this.setData({ loading: false })
+
+      if (res.result.success) {
+        this.setData({ isLoggedIn: true })
+        // 填充数据
+        const { settings, currentAccessCode } = res.result.data
+        this.applySettings(settings, currentAccessCode)
+        wx.showToast({ title: '欢迎回来', icon: 'success' })
+      } else {
+        wx.vibrateShort()
+        wx.showToast({ title: '密码错误', icon: 'error' })
+      }
+    } catch (err) {
+      this.setData({ loading: false })
+      console.error(err)
+      wx.showToast({ title: '验证失败', icon: 'none' })
     }
   },
 

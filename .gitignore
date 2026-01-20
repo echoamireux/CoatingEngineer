@@ -62,3 +62,4 @@ opencode.json
 # 敏感配置 (包含口令等，不提交到远程仓库)
 # ============================================
 utils/config.local.js
+cloudfunctions/updateSettings/secret.js

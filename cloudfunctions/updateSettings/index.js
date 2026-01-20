@@ -3,8 +3,8 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
-// 管理员密码 (⚠️ 生产环境建议使用更安全的存储方式，但对于个人工具，硬编码在云函数中是安全的，因为云函数代码不可见)
-const ADMIN_PASSWORD = 'admin0416'
+// 管理员密码 (⚠️ 从本地不提交的 secret.js 读取)
+const { ADMIN_PASSWORD } = require('./secret.js')
 
 exports.main = async (event, context) => {
   const { password, type, payload } = event
