@@ -2,11 +2,17 @@
   <!-- 标题与状态栏 -->
   <view class="chart-header">
     <view class="title-group">
-      <text class="chart-title">涂布窗口交互图</text>
+      <view class="main-title-row">
+        <image class="chart-icon" src="/assets/icons/chart.png" wx:if="{{false}}"></image> <!-- 预留图标 -->
+        <text class="chart-title">涂布窗口交互图</text>
+      </view>
       <text class="chart-subtitle">适用于狭缝涂布 (Slot Die Only)</text>
     </view>
-    <view class="status-badge {{statusClass}}">
-      <text>{{statusText}}</text>
+    <view class="status-column">
+      <view class="status-badge {{statusClass}}">
+        <text>{{statusText}}</text>
+      </view>
+      <text class="sub-status" wx:if="{{currentH}}">Calc Dry: {{targetDryH}}μm</text>
     </view>
   </view>
 
@@ -71,19 +77,47 @@
     </view>
 
     <view class="control-group">
-      <view class="control-header">
-        <text class="control-label">供液流量 Q (mL/min)</text>
-        <text class="control-value">{{params.flow}}</text>
+      <view class="mode-switch">
+        <view class="switch-item {{controlMode === 'flow' ? 'active' : ''}}" bindtap="switchMode" data-mode="flow">流量控制</view>
+        <view class="switch-item {{controlMode === 'thickness' ? 'active' : ''}}" bindtap="switchMode" data-mode="thickness">干厚控制</view>
       </view>
-      <slider
-        min="10" max="500" step="5"
-        value="{{params.flow}}"
-        activeColor="#6366f1"
-        bindchanging="onParamChange"
-        bindchange="onParamChange"
-        data-key="flow"
-      />
     </view>
+
+    <!-- 流量控制模式 -->
+    <block wx:if="{{controlMode === 'flow'}}">
+      <view class="control-group">
+        <view class="control-header">
+          <text class="control-label">供液流量 Q (mL/min)</text>
+          <text class="control-value">{{params.flow}}</text>
+        </view>
+        <slider
+          min="1" max="500" step="1"
+          value="{{params.flow}}"
+          activeColor="#6366f1"
+          bindchanging="onParamChange"
+          bindchange="onParamChange"
+          data-key="flow"
+        />
+      </view>
+    </block>
+
+    <!-- 干厚控制模式 -->
+    <block wx:if="{{controlMode === 'thickness'}}">
+       <view class="control-group">
+        <view class="control-header">
+          <text class="control-label">目标干厚 (μm)</text>
+          <text class="control-value">{{targetDryH}}</text>
+        </view>
+        <slider
+          min="1" max="100" step="0.5"
+          value="{{targetDryH}}"
+          activeColor="#10b981"
+          bindchanging="onThicknessChange"
+          bindchange="onThicknessChange"
+        />
+        <!-- 自动计算流量已通过参数联动实现，此处不再显示文字 -->
+      </view>
+    </block>
 
     <!-- 折叠的高级参数 -->
     <view class="advanced-toggle" bindtap="toggleAdvanced">

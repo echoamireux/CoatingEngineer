@@ -30,8 +30,30 @@
     </view>
   </view>
 
-  <!-- 内容区域 -->
-  <scroll-view class="content-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+  <!-- 搜索结果列表 (Search Active) -->
+  <scroll-view class="search-results" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{ searchKeyword }}">
+    <view class="result-list" wx:if="{{ searchResults.length > 0 }}">
+      <block wx:for="{{ searchResults }}" wx:key="id">
+        <view class="result-card" bindtap="showTermDetail" data-term="{{ item.originalData }}">
+          <view class="result-icon-box">
+             <text class="result-icon">📖</text>
+          </view>
+          <view class="result-info">
+            <view class="result-title">{{ item.title }}</view>
+            <view class="result-desc">{{ item.desc }}</view>
+          </view>
+          <view class="result-tag">{{ title }}</view>
+        </view>
+      </block>
+    </view>
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">未找到相关内容</text>
+    </view>
+  </scroll-view>
+
+  <!-- 内容滚动区 (Search Inactive) -->
+  <scroll-view class="content-scroll" scroll-y enhanced show-scrollbar="{{false}}" wx:else>
     <!-- 子分类列表 -->
     <view class="subcategory-list" wx:if="{{subcategories.length > 0}}">
       <block wx:for="{{subcategories}}" wx:key="id">
@@ -46,14 +68,14 @@
             <block wx:for="{{item.items}}" wx:for-item="subItem" wx:key="id">
               <view
                 class="item-card"
-                bindtap="navigateToDetail"
+                bindtap="{{subItem.term ? 'showTermDetail' : 'navigateToDetail'}}"
                 data-id="{{subItem.id}}"
                 data-title="{{subItem.title}}"
                 data-category="{{categoryId}}"
+                data-term="{{subItem}}"
               >
-                <view class="item-title">{{subItem.title}}</view>
-                <view class="item-brief" wx:if="{{subItem.brief}}">{{subItem.brief}}</view>
-                <text class="item-arrow">→</text>
+                <view class="item-title">{{subItem.title || subItem.term}}</view>
+                <view class="item-brief" wx:if="{{subItem.brief || subItem.definition}}">{{subItem.brief || subItem.definition}}</view>
               </view>
             </block>
           </view>
@@ -64,20 +86,11 @@
     <!-- 词条列表（名词库用） -->
     <view class="term-list" wx:if="{{terms.length > 0}}">
       <block wx:for="{{filteredTerms.length > 0 ? filteredTerms : terms}}" wx:key="id">
-        <view class="term-card" bindtap="showTermDetail" data-term="{{item}}">
-          <view class="term-main">
-            <view class="term-name">{{item.term}}</view>
-            <view class="term-english" wx:if="{{item.english}}">{{item.english}}</view>
-          </view>
-          <view class="term-definition">{{item.definition}}</view>
+        <view class="item-card" bindtap="showTermDetail" data-term="{{item}}">
+            <view class="item-title">{{item.term}} <text wx:if="{{item.english}}" style="font-weight:normal;opacity:0.6;font-size:24rpx;margin-left:10rpx;">{{item.english}}</text></view>
+            <view class="item-brief">{{item.definition}}</view>
         </view>
       </block>
-    </view>
-
-    <!-- 空状态 -->
-    <view class="empty-state" wx:if="{{!loading && subcategories.length === 0 && terms.length === 0}}">
-      <text class="empty-icon">📭</text>
-      <text class="empty-text">暂无内容</text>
     </view>
 
     <!-- 底部留白 -->
@@ -94,13 +107,13 @@
       </view>
       <view class="modal-body">
         <view class="modal-section">
-          <text class="section-label">📖 定义</text>
-          <text class="section-content">{{currentTerm.definition}}</text>
+          <text class="section-label">📖 详细说明</text>
+          <text class="section-content">{{currentTerm.detail || currentTerm.definition || '暂无详细说明'}}</text>
         </view>
         <view class="modal-section" wx:if="{{currentTerm.related && currentTerm.related.length > 0}}">
           <text class="section-label">🔗 相关术语</text>
           <view class="related-tags">
-            <text class="related-tag" wx:for="{{currentTerm.related}}" wx:key="*this">{{item}}</text>
+            <text class="related-tag" wx:for="{{currentTerm.related}}" wx:key="*this" bindtap="onRelatedTap" data-keyword="{{item}}">{{item}}</text>
           </view>
         </view>
       </view>

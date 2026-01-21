@@ -21,7 +21,7 @@ Page({
         desc: '基础术语 / 设备 / 工艺参数',
         icon: '📖',
         color: '#6366f1',
-        count: 128,
+        count: 80,
         unit: '词条'
       },
       {
@@ -110,20 +110,25 @@ Page({
   searchAll(keyword) {
     const results = []
 
-    // 1. 搜索名词库 (Glossary)
-    if (glossaryData.terms) {
-      glossaryData.terms.forEach(item => {
-        if (item.term.toLowerCase().includes(keyword) ||
-            (item.english && item.english.toLowerCase().includes(keyword)) ||
-            item.definition.toLowerCase().includes(keyword)) {
-          results.push({
-            type: 'term',
-            id: item.id,
-            title: item.term,
-            desc: item.definition, // 词条显示定义
-            category: 'glossary',
-            categoryTitle: '涂布名词库',
-            data: item // 完整词条数据用于弹窗
+    // 1. 搜索名词库 (Glossary) - 修正：遍历 Categories 结构
+    if (glossaryData.categories) {
+      glossaryData.categories.forEach(cat => {
+        if (cat.items) {
+          cat.items.forEach(item => {
+             // 匹配：术语名、英文、定义、详情
+             if ((item.term && item.term.toLowerCase().includes(keyword)) ||
+                 (item.english && item.english.toLowerCase().includes(keyword)) ||
+                 (item.definition && item.definition.toLowerCase().includes(keyword))) {
+               results.push({
+                 type: 'term',
+                 id: item.id,
+                 title: item.term,
+                 desc: item.definition, // 首页简介显示定义
+                 category: 'glossary',
+                 categoryTitle: '涂布名词库',
+                 data: item // 完整数据传给弹窗
+               })
+             }
           })
         }
       })

@@ -1,64 +1,138 @@
 /**
- * 涂布基础名词库数据
+ * 涂布工程师名词库 - Comprehensive Edition (80+ Terms)
+ * 包含基础、流体、材料、设备、工艺、缺陷、测试七大分类
  */
 module.exports = {
-  terms: [
-    // 基础术语
-    { id: 'coating-weight', term: '涂布量', english: 'Coating Weight', definition: '单位面积基材上涂布物质的质量，通常以 g/m² 表示', related: ['干涂布量', '湿涂布量'] },
-    { id: 'wet-coating-weight', term: '湿涂布量', english: 'Wet Coating Weight', definition: '涂布后未干燥状态的涂布量 (g/m²)', related: ['涂布量', '固含量'] },
-    { id: 'dry-coating-weight', term: '干涂布量', english: 'Dry Coating Weight', definition: '干燥后的涂布量，等于湿涂布量×固含量', related: ['涂布量', '固含量'] },
-    { id: 'solid-content', term: '固含量', english: 'Solid Content', definition: '涂料中非挥发性物质的质量百分比 (%)', related: ['涂布量', '粘度'] },
-    { id: 'viscosity', term: '粘度', english: 'Viscosity', definition: '流体抵抗流动的内摩擦力，单位 mPa·s 或 cP', related: ['剪切速率', '流变性'] },
-    { id: 'surface-tension', term: '表面张力', english: 'Surface Tension', definition: '液体表面分子间作用力，单位 mN/m (dyne/cm)', related: ['润湿', '接触角'] },
-    { id: 'wetting', term: '润湿', english: 'Wetting', definition: '液体在固体表面铺展的能力', related: ['表面张力', '接触角'] },
-    { id: 'contact-angle', term: '接触角', english: 'Contact Angle', definition: '液滴与固体表面的夹角，<90°亲水，>90°疏水', related: ['润湿', '表面能'] },
-    { id: 'leveling', term: '流平', english: 'Leveling', definition: '涂层自发消除表面不平整的过程', related: ['表面张力', '粘度'] },
-
-    // 设备术语
-    { id: 'slot-die', term: '狭缝模头', english: 'Slot Die', definition: '精密涂布模头，通过狭缝将流体挤出形成涂膜', related: ['涂布间隙', '湿膜厚度'] },
-    { id: 'gravure-roll', term: '凹版辊', english: 'Gravure Roll', definition: '表面雕刻网穴的金属辊，用于定量转移涂料', related: ['网穴', 'LPI'] },
-    { id: 'doctor-blade', term: '刮刀', english: 'Doctor Blade', definition: '用于刮除多余涂料的薄片，控制涂布量', related: ['刮刀角度', '刮刀压力'] },
-    { id: 'backing-roll', term: '背辊', english: 'Backing Roll', definition: '支撑基材运行的辊筒，与涂布辊形成涂布间隙', related: ['涂布间隙'] },
-    { id: 'tension-roller', term: '张力辊', english: 'Tension Roller', definition: '控制基材张力的辊筒系统', related: ['张力', '包角'] },
-    { id: 'unwind-rewind', term: '收放卷', english: 'Unwind/Rewind', definition: '卷材的放料端和收料端', related: ['张力', '卷径'] },
-    { id: 'oven', term: '烘箱', english: 'Oven', definition: '干燥涂层的加热设备，通常多段温区', related: ['干燥温度', '风速'] },
-    { id: 'corona-treatment', term: 'Corona处理', english: 'Corona Treatment', definition: '电晕放电处理，提高基材表面能', related: ['表面能', '达因值'] },
-
-    // 工艺参数术语
-    { id: 'line-speed', term: '线速度', english: 'Line Speed', definition: '基材运行速度，单位 m/min', related: ['涂布量', '干燥时间'] },
-    { id: 'coating-gap', term: '涂布间隙', english: 'Coating Gap', definition: '模头唇口与基材之间的距离 (μm)', related: ['湿膜厚度', '狭缝模头'] },
-    { id: 'wet-film-thickness', term: '湿膜厚度', english: 'Wet Film Thickness', definition: '涂布后未干燥的膜厚 (μm)', related: ['干膜厚度', '固含量'] },
-    { id: 'dry-film-thickness', term: '干膜厚度', english: 'Dry Film Thickness', definition: '干燥后的膜厚 = 湿膜×固含量', related: ['湿膜厚度', '涂布量'] },
-    { id: 'pump-speed', term: '泵速', english: 'Pump Speed', definition: '供液泵的转速，影响流量', related: ['流量', '涂布量'] },
-    { id: 'flow-rate', term: '流量', english: 'Flow Rate', definition: '单位时间供液量 (mL/min 或 L/h)', related: ['涂布量', '泵速'] },
-    { id: 'tension', term: '张力', english: 'Tension', definition: '基材运行时的拉伸力 (N 或 kg/m宽)', related: ['收放卷', '张力辊'] },
-    { id: 'wrap-angle', term: '包角', english: 'Wrap Angle', definition: '基材在辊筒上的接触弧度 (°)', related: ['张力', '摩擦力'] },
-
-    // 材料术语
-    { id: 'substrate', term: '基材', english: 'Substrate', definition: '被涂布的底材，如PET、PI、铜箔等', related: ['离型膜', '底涂'] },
-    { id: 'release-film', term: '离型膜', english: 'Release Film', definition: '涂有离型剂的薄膜，便于胶层剥离', related: ['离型力', '基材'] },
-    { id: 'release-force', term: '离型力', english: 'Release Force', definition: '将离型膜从胶面剥离所需的力', related: ['离型膜', '剥离力'] },
-    { id: 'primer', term: '底涂', english: 'Primer', definition: '涂布于基材与主涂层之间的处理层', related: ['附着力', '基材'] },
-    { id: 'tackifier', term: '增粘树脂', english: 'Tackifier', definition: '提高初粘力的树脂添加剂', related: ['初粘力', 'Tg'] },
-    { id: 'crosslinker', term: '交联剂', english: 'Crosslinker', definition: '使聚合物分子间形成化学键联的物质', related: ['凝胶分率', '内聚力'] },
-    { id: 'curing-agent', term: '固化剂', english: 'Curing Agent', definition: '促进涂层固化反应的物质', related: ['交联剂', '固化时间'] },
-
-    // 性能术语
-    { id: 'tack', term: '初粘力', english: 'Tack', definition: '胶黏剂与被粘物初始接触时的粘着力', related: ['Tg', '增粘树脂'] },
-    { id: 'peel-strength', term: '剥离力', english: 'Peel Strength', definition: '将胶带从被粘物剥离所需的力 (N/25mm)', related: ['180°剥离', '90°剥离'] },
-    { id: 'shear-holding', term: '保持力', english: 'Shear Holding Power', definition: '胶带抵抗剪切应力的能力', related: ['内聚力', '交联'] },
-    { id: 'cohesive-strength', term: '内聚力', english: 'Cohesive Strength', definition: '胶层本身的强度', related: ['保持力', '交联'] },
-    { id: 'tg', term: '玻璃化转变温度', english: 'Tg', definition: '聚合物从玻璃态转变为橡胶态的温度', related: ['Fox方程', 'DMA'] },
-    { id: 'creep', term: '蠕变', english: 'Creep', definition: '材料在恒定应力下随时间的变形', related: ['保持力', '粘弹性'] },
-
-    // 缺陷术语
-    { id: 'ribbing', term: '拉丝', english: 'Ribbing/Striation', definition: '涂层表面沿涂布方向的周期性条纹', related: ['毛细数', '粘度'] },
-    { id: 'pinhole', term: '针孔', english: 'Pinhole', definition: '涂层中微小的孔洞缺陷', related: ['消泡剂', '表面张力'] },
-    { id: 'orange-peel', term: '橘皮', english: 'Orange Peel', definition: '涂层表面类似橘子皮的凹凸不平', related: ['流平', 'Bénard对流'] },
-    { id: 'fish-eye', term: '鱼眼', english: 'Fish Eye', definition: '涂层中的圆形凹陷缺陷', related: ['污染', '表面张力'] },
-    { id: 'bubble', term: '气泡', english: 'Bubble', definition: '涂层或贴合界面的气体包裹', related: ['脱泡', '真空'] },
-    { id: 'edge-buildup', term: '边缘堆积', english: 'Edge Buildup', definition: '涂层边缘比中间厚的现象', related: ['Marangoni流动', '边缘效应'] },
-    { id: 'thickness-variation', term: '厚薄不均', english: 'Thickness Variation', definition: '涂层厚度分布不一致', related: ['涂布精度', '流量波动'] },
-    { id: 'adhesive-residue', term: '残胶', english: 'Adhesive Residue', definition: '剥离后留在被粘物表面的胶痕', related: ['内聚力', '界面粘结'] }
+  categories: [
+    {
+      id: 'basics',
+      title: '基础概念',
+      icon: '🔰',
+      items: [
+        { id: 'b01', term: '涂布 (Coating)', definition: '将流体覆盖在基材表面的工艺', detail: '核心目的是赋予基材新的功能（如隔膜涂胶、极片涂敷）。关键在于控制厚度均匀性。', related: ['流体', '基材'] },
+        { id: 'b02', term: '基材 (Substrate)', definition: '被涂布的载体材料', detail: '如锂电铜箔、铝箔、PET膜等。基材的表面能直接影响润湿效果。', related: ['表面能', '润湿'] },
+        { id: 'b03', term: '涂层 (Layer)', definition: '涂布形成的膜层', detail: '分为底涂、主涂层、面涂等。干燥后的涂层质量是最终交付物。', related: ['干膜厚度', '附着力'] },
+        { id: 'b04', term: '附着力 (Adhesion)', definition: '涂层与基材之间的结合力', detail: '界面化学键、机械互锁和范德华力的综合结果。附着力不足会导致脱膜、分层。电晕处理就是为了提高附着力。', related: ['剥离力', '电晕'] },
+        { id: 'b05', term: '内聚力 (Cohesion)', definition: '涂层内部的结合力', detail: '材料内部分子间的相互作用力。内聚力过低会导致涂层自身断裂（内聚破坏）。', related: ['保持力', '干燥'] },
+        { id: 'b06', term: '界面 (Interface)', definition: '两相接触的边界', detail: '气-液界面（表面张力）、液-固界面（润湿）。涂布过程就是操纵界面的过程。', related: ['表面张力', '润湿'] },
+        { id: 'b07', term: '润湿 (Wetting)', definition: '液体在固体表面铺展的能力', detail: '由接触角衡量。液体表面张力 < 固体表面能时，才能良好润湿。', related: ['接触角', '表面张力'] },
+        { id: 'b08', term: '流平 (Leveling)', definition: '涂层自发消除表面不平整的过程', detail: '驱动力是表面张力。阻力是粘度。流平时间不足会导致橘皮。', related: ['橘皮', '粘度'] },
+        { id: 'b09', term: '固化 (Curing)', definition: '液体转变为固体的过程', detail: '物理干燥（挥发）或化学交联（反应）。决定了涂层的最终性能。', related: ['干燥', '交联剂'] },
+        { id: 'b10', term: '涂布窗口 (Coating Window)', definition: '能获得均匀无缺陷涂层的工艺参数范围', detail: '通常以毛细数(Ca)和间隙比(G/H)为坐标轴。超出窗口会导致气泡、断液或条纹。', related: ['毛细数', '空气夹带'] }
+      ]
+    },
+    {
+      id: 'rheology',
+      title: '流体与理论',
+      icon: '📖',
+      items: [
+        { id: 'r01', term: '粘度 (Viscosity)', definition: '流体抵抗流动的内摩擦力', detail: '涂料通常是剪切变稀流体。粘度随剪切速率变化：低剪切影响流平，高剪切影响涂布。', related: ['剪切变稀', '触变性'] },
+        { id: 'r02', term: '剪切变稀 (Shear Thinning)', definition: '粘度随剪切速率增加而降低', detail: '假塑性流体特征。利于高速涂布（低阻力），但需防止涂后流挂。', related: ['粘度', '触变性'] },
+        { id: 'r03', term: '触变性 (Thixotropy)', definition: '粘度的时间依赖性（破坏-恢复）', detail: '恒定剪切下粘度下降，停止剪切后粘度随时间回升。触变环大小反映结构恢复快慢。', related: ['粘度', '流平'] },
+        { id: 'r04', term: '屈服应力 (Yield Stress)', definition: '流体发生流动所需的最小应力', detail: '有屈服值的流体静止时像固体（悬浮颗粒不沉降）。但屈服值过高会导致流平差。', related: ['流平', '悬浮'] },
+        { id: 'r05', term: '表面张力 (Surface Tension)', definition: '液体企图收缩表面积的力', detail: '驱动流平的动力，也是回缩（缩孔）的根源。', related: ['润湿', '接触角'] },
+        { id: 'r06', term: '毛细数 (Ca)', definition: '粘性力与表面张力的比值', detail: 'Ca = μV/σ。决定涂布窗口稳定性的无量纲数。Ca过大导致空气夹带。', related: ['空气夹带', '涂布窗口'] },
+        { id: 'r07', term: '粘弹性 (Viscoelasticity)', definition: '兼具粘性流动和弹性记忆', detail: '高分子的特征。弹性效应会导致爬杆、挤出胀大。', related: ['模量', '德雷数'] },
+        { id: 'r08', term: '雷诺数 (Re)', definition: '惯性力与粘性力的比值', detail: '判断层流/湍流。狭缝模头内通常为层流。', related: ['层流', '湍流'] },
+        { id: 'r09', term: '马兰戈尼效应 (Marangoni)', definition: '表面张力梯度驱动的流动', detail: '干燥时溶剂挥发不均导致张力差，引起流体流动，形成橘皮。', related: ['橘皮', '干燥'] },
+        { id: 'r10', term: 'Zeta电位', definition: '胶体颗粒剪切面电位', detail: '衡量分散稳定性。绝对值>30mV为稳定（静电斥力足）。', related: ['分散', '团聚'] },
+        { id: 'r11', term: '韦伯数 (We)', definition: '惯性力与表面张力的比值', detail: '涉及液滴破碎、喷涂雾化时的关键参数。', related: ['喷涂', '表面张力'] },
+        { id: 'r12', term: '德雷数 (De)', definition: '松弛时间与流动时间尺度的比值', detail: '表征粘弹性效应的强弱。', related: ['粘弹性', '松弛时间'] }
+      ]
+    },
+    {
+      id: 'materials',
+      title: '材料体系',
+      icon: '⚗️',
+      items: [
+        { id: 'm01', term: '粘结剂 (Binder)', definition: '提供内聚力和附着力的树脂', detail: 'PVDF、SBR、丙烯酸等。决定涂层的机械性能。', related: ['内聚力', '附着力'] },
+        { id: 'm02', term: '溶剂 (Solvent)', definition: '溶解树脂的挥发性液体', detail: 'NMP、水、甲苯。溶解参数HSP需匹配。', related: ['溶解度参数', '干燥'] },
+        { id: 'm03', term: '分散剂 (Dispersant)', definition: '防止颗粒团聚的助剂', detail: '降低粘度，改善流动性。', related: ['Zeta电位', '粘度'] },
+        { id: 'm04', term: '润湿剂 (Wetting Agent)', definition: '降低表面张力的助剂', detail: '防止缩孔，加快润湿速度。', related: ['表面张力', '缩孔'] },
+        { id: 'm05', term: '交联剂 (Crosslinker)', definition: '连接分子链形成网状结构的物质', detail: '提高耐热、耐溶剂性。', related: ['固化', '交联度'] },
+        { id: 'm06', term: '颜填料 (Pigment)', definition: '固体功能颗粒', detail: '活性物质、导电炭黑。粒径分布(D50)影响涂布质量。', related: ['固含量', '细度'] },
+        { id: 'm07', term: 'Tg (玻化温度)', definition: '玻璃化转变温度', detail: '高分子从玻璃态转变为橡胶态的温度。', related: ['DMA', '初粘力'] },
+        { id: 'm08', term: '固含量 (Solid Content)', definition: '非挥发份的质量占比', detail: 'NV%。固含量越高，溶剂越少，干燥负荷越低。', related: ['涂布量', '干燥'] },
+        { id: 'm09', term: 'PVC (颜料体积浓度)', definition: '颜料体积占干膜总体积的比例', detail: 'CPVC是性能转折点。', related: ['颜填料', '孔隙率'] },
+        { id: 'm10', term: 'HSP (溶解参数)', definition: '汉森溶解度参数', detail: '相似相溶。用于溶剂优化选择。', related: ['溶剂', '相容性'] },
+        { id: 'm11', term: '触变剂', definition: '赋予流体触变性的助剂', detail: '如气相二氧化硅。防止沉降和流挂。', related: ['触变性', '流挂'] },
+        { id: 'm12', term: '消泡剂', definition: '抑制或消除气泡的助剂', detail: '破泡剂/抑泡剂。防止针孔缺陷。', related: ['针孔', '气泡'] }
+      ]
+    },
+    {
+      id: 'equipment',
+      title: '设备与硬件',
+      icon: '🔧',
+      items: [
+        { id: 'e01', term: '狭缝模头 (Slot Die)', definition: '精密预计量涂布头', detail: '流道(Manifold)设计是核心。', related: ['垫片', '涂布量'] },
+        { id: 'e02', term: '微凹辊 (Micro Gravure)', definition: '小直径逆向凹版辊', detail: 'Kiss Coat原理，剪切力大，涂层薄且平整。', related: ['凹版', '逆向涂布'] },
+        { id: 'e03', term: '逗号刮刀 (Comma Roll)', definition: '逗号状截面的计量辊', detail: '用于高粘度厚涂层。精度优于钢片刮刀。', related: ['刮刀', '涂布量'] },
+        { id: 'e04', term: '计量泵 (Metering Pump)', definition: '精密输送泵', detail: '齿轮泵或螺杆泵。泵的精度决定纵向均匀性。', related: ['脉动', '涂布量'] },
+        { id: 'e05', term: '真空箱 (Vacuum Box)', definition: '模头唇口处的负压装置', detail: '稳定上游弯液面，防止空气夹带。', related: ['空气夹带', '涂布窗口'] },
+        { id: 'e06', term: '漂浮烘箱 (Flotation Oven)', definition: '气浮式非接触干燥箱', detail: '利用柯恩达效应托起基材。', related: ['干燥', '划伤'] },
+        { id: 'e07', term: '电晕 (Corona)', definition: '高压放电表面处理', detail: '提高基材表面能，改善附着力。', related: ['表面能', '附着力'] },
+        { id: 'e08', term: '纠偏 (Web Guiding)', definition: '边缘对齐系统', detail: 'EPC/CPC。确保卷材走料整齐。', related: ['收卷', '端面'] },
+        { id: 'e09', term: '蓄能器 (Dampener)', definition: '消除流体脉动的阻尼器', detail: '吸收泵的压力波动，消除横向条纹。', related: ['脉动', '横纹'] },
+        { id: 'e10', term: '测厚仪 (Thickness Gauge)', definition: '在线厚度/面密度检测', detail: '射线或激光原理。用于闭环控制。', related: ['闭环控制', '面密度'] },
+        { id: 'e11', term: 'RTO', definition: '蓄热式废气氧化炉', detail: '处理VOCs废气。', related: ['VOC', '环境'] },
+        { id: 'e12', term: '模温机', definition: '模头温度控制设备', detail: '稳定流体粘度，减少热变形。', related: ['粘度', '热胀冷缩'] }
+      ]
+    },
+    {
+      id: 'process',
+      title: '工艺控制',
+      icon: '⚙️',
+      items: [
+        { id: 'p01', term: '涂布量 (Coating Weight)', definition: '单位面积涂胶量(gsm)', detail: '控制核心。湿重=干重/固含量。', related: ['固含量', '面密度'] },
+        { id: 'p02', term: '涂布间隙 (Gap)', definition: '模头与基材的距离', detail: 'G/H比（间隙/湿膜）是关键。', related: ['G/H比', '湿膜'] },
+        { id: 'p03', term: '线速度 (Line Speed)', definition: '基材运行速度', detail: '产能指标。受干燥与流体极限限制。', related: ['产能', '空气夹带'] },
+        { id: 'p04', term: '速比 (Speed Ratio)', definition: '涂布辊与基材的速度比', detail: '辊涂核心参数。影响涂胶量和流平。', related: ['微凹', '涂布量'] },
+        { id: 'p05', term: '干燥曲线 (Drying Curve)', definition: '烘箱各温区设定', detail: '升温-恒速-降速。防止结皮。', related: ['结皮', '残留'] },
+        { id: 'p06', term: '张力 (Tension)', definition: '基材受到的纵向拉力', detail: '张力不稳导致套位漂移。', related: ['张力锥度', '收卷'] },
+        { id: 'p07', term: '张力锥度 (Taper Tension)', definition: '收卷张力随卷径递减', detail: '防止内松外紧。', related: ['收卷', '内应力'] },
+        { id: 'p08', term: '适用期 (Pot Life)', definition: '胶液调配后可使用的时间', detail: '超时无法涂布。', related: ['粘度', '固化'] },
+        { id: 'p09', term: 'LEL', definition: '爆炸下限', detail: 'VOC浓度需<25% LEL。', related: ['安全', 'RTO'] },
+        { id: 'p10', term: '过滤精度', definition: '滤芯拦截颗粒的尺寸', detail: '决定涂层表面颗粒缺陷。', related: ['划痕', '颗粒'] },
+        { id: 'p11', term: '老化', definition: '胶液静置熟化过程', detail: '消除气泡，稳定性质。', related: ['气泡', '分散'] }
+      ]
+    },
+    {
+      id: 'defects',
+      title: '缺陷诊断',
+      icon: '⚠️',
+      items: [
+        { id: 'd01', term: '空气夹带 (Air Entrainment)', definition: '微气泡导致的露底', detail: '速度过快，Ca数过高导致。', related: ['涂布窗口', '毛细数'] },
+        { id: 'd02', term: '流肋 (Ribbing)', definition: '纵向平行条纹', detail: '粘度高、间隙大导致。', related: ['流平', '粘度'] },
+        { id: 'd03', term: '震颤 (Chatter)', definition: '高频横向条纹', detail: '机械振动（齿轮/泵）。', related: ['脉动', '横纹'] },
+        { id: 'd04', term: '橘皮 (Orange Peel)', definition: '表面凹凸不平', detail: '马兰戈尼对流。张力梯度引起。', related: ['马兰戈尼效应', '流平'] },
+        { id: 'd05', term: '缩孔 (Craters)', definition: '圆形露底坑洞', detail: '低表面能污染物（硅油）。', related: ['表面张力', '润湿'] },
+        { id: 'd06', term: '厚边 (Fat Edge)', definition: '边缘异常增厚', detail: '液体向边缘聚集。', related: ['表面张力', '垫片'] },
+        { id: 'd07', term: '结皮 (Skinning)', definition: '表面过早干燥封闭', detail: '初期温度过高。导致鼓泡。', related: ['干燥曲线', '鼓泡'] },
+        { id: 'd08', term: '白雾 (Blushing)', definition: '表面吸潮发白', detail: '高湿环境导致。', related: ['溶剂', '环境'] },
+        { id: 'd09', term: '划痕 (Scratches)', definition: '纵向线条损伤', detail: '模头缺口或颗粒卡滞。', related: ['过滤', '狭缝模头'] },
+        { id: 'd10', term: '卷曲 (Curling)', definition: '成品向一侧弯曲', detail: '应力不匹配。', related: ['内应力', '收缩'] },
+        { id: 'd11', term: '开裂 (Cracking)', definition: '干燥后涂层龟裂', detail: '收缩应力过大或干燥过快。', related: ['干燥', '内应力'] },
+        { id: 'd12', term: '团聚 (Agglomeration)', definition: '颗粒重新聚集', detail: '分散不稳定。造成颗粒缺陷。', related: ['分散剂', 'Zeta电位'] }
+      ]
+    },
+    {
+      id: 'testing',
+      title: '测试与质量',
+      icon: '📊',
+      items: [
+        { id: 't01', term: '剥离力 (Peel Strength)', definition: '涂层剥离强度', detail: '表征附着力。180度或90度测试。', related: ['附着力', '内聚力'] },
+        { id: 't02', term: '保持力 (Holding Power)', definition: '静态抗剪切能力', detail: '反映胶粘剂内聚力。', related: ['内聚力', '蠕变'] },
+        { id: 't03', term: '初粘力 (Tack)', definition: '瞬间粘接能力', detail: '环形初粘或滚球法。', related: ['润湿', 'Tg'] },
+        { id: 't04', term: '接触角 (Contact Angle)', definition: '液滴与表面夹角', detail: '判断润湿性。', related: ['润湿', '表面张力'] },
+        { id: 't05', term: '雾度 (Haze)', definition: '透射光散射比例', detail: '光学膜清晰度指标。', related: ['光泽度', '流平'] },
+        { id: 't06', term: 'DMA', definition: '动态热机械分析', detail: '测定Tg、模量。', related: ['Tg', '粘弹性'] },
+        { id: 't07', term: 'SAICAS', definition: '界面斜切分析', detail: '测量微观层间附着力。', related: ['附着力', '界面'] },
+        { id: 't08', term: '细度 (Fineness)', definition: '最大颗粒粒径', detail: '刮板细度计测试。', related: ['颜填料', '划痕'] },
+        { id: 't09', term: '光泽度 (Gloss)', definition: '表面反光能力', detail: '反映表面平整度。', related: ['雾度', '流平'] },
+        { id: 't10', term: '压实密度', definition: '极片压实后密度', detail: '电池工艺指标。', related: ['孔隙率', '固含量'] },
+        { id: 't11', term: '面密度', definition: '单位面积质量', detail: '涂布过程控制的最关键指标。', related: ['涂布量', 'CPK'] },
+        { id: 't12', term: '残留溶剂', definition: '涂层中未挥发的溶剂', detail: '气相色谱GC测试。影响安全和性能。', related: ['干燥', 'VOC'] }
+      ]
+    }
   ]
 }

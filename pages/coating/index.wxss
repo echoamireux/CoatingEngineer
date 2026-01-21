@@ -220,6 +220,12 @@ page {
   letter-spacing: 1rpx;
 }
 
+.convert-btn {
+  margin-left: 20rpx;
+  font-size: 32rpx;
+  display: inline-block;
+}
+
 .tool-btn {
   font-size: 24rpx;
   color: var(--text-main);

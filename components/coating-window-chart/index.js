@@ -1,5 +1,13 @@
 Component({
-  properties: {},
+  properties: {
+    theme: {
+      type: String,
+      value: 'light',
+      observer() {
+        if (this.canvas) this.calculateState() // Re-draw when theme changes
+      }
+    }
+  },
 
   data: {
     // 物理参数初始值
@@ -20,7 +28,9 @@ Component({
     // 状态
     statusText: '初始化中',
     statusClass: '',
-    showAdvanced: false
+    showAdvanced: false,
+    controlMode: 'flow', // 'flow' | 'thickness'
+    targetDryH: 30       // 目标干厚用于滑块显示
   },
 
   lifetimes: {
@@ -83,19 +93,25 @@ Component({
       return {
         Ca: parseFloat(Ca.toFixed(3)),
         GH: parseFloat(GH.toFixed(2)),
-        H_um: parseFloat(H_um.toFixed(1))
+        H_um: parseFloat(H_um.toFixed(1)),
+        DryH_um: (H_um * (p.solid || 30) / 100) // 简易固含量计算
       }
     },
 
     calculateState() {
       if (!this.canvas) return
 
-      const { Ca, GH, H_um } = this.calculatePhysics()
+      const { Ca, GH, H_um, DryH_um } = this.calculatePhysics()
       this.setData({
         currentCa: Ca,
         currentGH: GH,
         currentH: H_um.toFixed(1)
       })
+
+      // 如果是流量控制模式，同步更新目标干厚显示
+      if (this.data.controlMode === 'flow') {
+        this.setData({ targetDryH: DryH_um.toFixed(1) })
+      }
 
       // 判定状态
       let statusText = '稳定涂布'
@@ -237,6 +253,42 @@ Component({
 
       this.setData({
         [`params.${key}`]: value
+      })
+
+      // 联动：如果是干厚模式，改变速度/幅宽/固含量时，需要调整流量Q以保持干厚不变
+      if (this.data.controlMode === 'thickness' && (key === 'speed' || key === 'width' || key === 'solid')) {
+        this.updateFlowFromThickness()
+      } else {
+        this.calculateState()
+      }
+    },
+
+    switchMode(e) {
+      const mode = e.currentTarget.dataset.mode
+      this.setData({ controlMode: mode })
+    },
+
+    onThicknessChange(e) {
+      const targetDryH = Number(e.detail.value)
+      this.setData({ targetDryH })
+      this.updateFlowFromThickness()
+    },
+
+    updateFlowFromThickness() {
+      const { targetDryH } = this.data
+      const p = this.data.params
+      const solid = p.solid || 30 // 默认30%
+
+      // 反算逻辑:
+      // DryH = WetH * Solid%
+      // WetH = DryH / (Solid/100)
+      // Q = WetH * V * W
+      const targetWetH = targetDryH / (solid / 100)
+      // Q (mL/min) = WetH(um) * Speed(m/min) * Width(mm) / 1000
+      const reqFlow = (targetWetH * p.speed * p.width) / 1000
+
+      this.setData({
+        'params.flow': parseFloat(reqFlow.toFixed(1))
       })
       this.calculateState()
     },

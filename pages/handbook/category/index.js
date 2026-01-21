@@ -95,25 +95,64 @@ Page({
 
 
 
+  // 统一搜索逻辑：仅限当前分类
   onSearchInput(e) {
-    const keyword = e.detail.value.toLowerCase()
-    this.setData({ searchKeyword: keyword })
+    const keyword = e.detail.value.trim().toLowerCase()
 
+    // 如果关键词为空，清空搜索结果
     if (!keyword) {
-      this.setData({ filteredTerms: [] })
+      this.setData({
+        searchKeyword: '',
+        searchResults: [],
+        filteredTerms: [] // Cleaning up old logic
+      })
       return
     }
 
-    const filtered = this.data.terms.filter(item =>
-      item.term.toLowerCase().includes(keyword) ||
-      (item.english && item.english.toLowerCase().includes(keyword)) ||
-      item.definition.toLowerCase().includes(keyword)
-    )
-    this.setData({ filteredTerms: filtered })
+    this.setData({ searchKeyword: keyword })
+
+    let results = []
+
+    // 逻辑：在当前 subcategories 或 terms 中查找
+    // 1. 查找扁平 Terms
+    if (this.data.terms && this.data.terms.length > 0) {
+       const matches = this.data.terms.filter(t =>
+         t.term.toLowerCase().includes(keyword) ||
+         (t.english && t.english.toLowerCase().includes(keyword))
+       )
+       results = matches.map(t => ({
+         id: t.id || t.term,
+         title: t.term,
+         desc: t.definition || t.brief || '暂无简介',
+         originalData: t
+       }))
+    }
+    // 2. 查找分类 Subcategories
+    else if (this.data.subcategories && this.data.subcategories.length > 0) {
+      this.data.subcategories.forEach(cat => {
+        if (cat.items) {
+          const matches = cat.items.filter(item =>
+             (item.title && item.title.toLowerCase().includes(keyword)) ||
+             (item.term && item.term.toLowerCase().includes(keyword))
+          )
+          const mapped = matches.map(item => ({
+            id: item.id,
+            title: item.title || item.term,
+            desc: item.brief || item.definition || '暂无简介',
+            originalData: item
+          }))
+          results = results.concat(mapped)
+        }
+      })
+    }
+
+    this.setData({
+      searchResults: results
+    })
   },
 
   clearSearch() {
-    this.setData({ searchKeyword: '', filteredTerms: [] })
+    this.setData({ searchKeyword: '', filteredTerms: [], searchResults: [] })
   },
 
   showTermDetail(e) {
@@ -133,5 +172,51 @@ Page({
     wx.navigateTo({
       url: `/pages/handbook/detail/index?id=${id}&title=${encodeURIComponent(title)}&category=${category}`
     })
+  },
+
+  // 点击相关术语 --> 无限跳转
+  onRelatedTap(e) {
+    const keyword = e.currentTarget.dataset.keyword
+    if (!keyword) return
+
+    // 1. 尝试在当前分类中查找
+    let target = this.findTerm(keyword)
+
+    // 2. 如果没找到，尝试在全局 Glossary 中查找 (需要引入全量数据)
+    if (!target) {
+       // 简易查找：遍历所有分类
+       if (dataMap.glossary && dataMap.glossary.categories) {
+         for (const cat of dataMap.glossary.categories) {
+           const found = cat.items.find(t => t.term === keyword || t.title === keyword)
+           if (found) {
+             target = found
+             break
+           }
+         }
+       }
+    }
+
+    if (target) {
+      this.setData({ currentTerm: target })
+    } else {
+      wx.showToast({ title: '暂无收录', icon: 'none' })
+    }
+  },
+
+  findTerm(keyword) {
+    // 扁平查找 (terms)
+    if (this.data.terms) {
+      return this.data.terms.find(t => t.term === keyword)
+    }
+    // 分类查找 (subcategories)
+    if (this.data.subcategories) {
+      for (const cat of this.data.subcategories) {
+        if (cat.items) {
+          const found = cat.items.find(t => t.term === keyword || t.title === keyword)
+          if (found) return found
+        }
+      }
+    }
+    return null
   }
 })
