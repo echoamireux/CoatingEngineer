@@ -90,10 +90,37 @@
         <view class="modal-english" wx:if="{{currentTerm.english}}">{{currentTerm.english}}</view>
       </view>
       <view class="modal-body">
+         <!-- 1. 定义 -->
         <view class="modal-section">
-          <text class="section-label">📖 详细说明</text>
-          <text class="section-content">{{currentTerm.detail || currentTerm.definition || '暂无详细说明'}}</text>
+          <text class="section-label">📖 定义</text>
+          <text class="section-content">{{currentTerm.definition}}</text>
         </view>
+
+        <!-- 2. 工程意义 (New) -->
+        <view class="modal-section" wx:if="{{currentTerm.impact}}">
+          <text class="section-label">⚡ 工程与质量意义</text>
+          <text class="section-content">{{currentTerm.impact}}</text>
+        </view>
+
+        <!-- 3. 管控要点 (New) -->
+        <view class="modal-section" wx:if="{{currentTerm.control}}">
+          <text class="section-label">🎛 关键管控点</text>
+          <text class="section-content">{{currentTerm.control}}</text>
+        </view>
+
+        <!-- Fallback: 详细说明 (Old) -->
+        <view class="modal-section" wx:if="{{!currentTerm.impact && currentTerm.detail}}">
+          <text class="section-label">📝 详细说明</text>
+          <text class="section-content">{{currentTerm.detail}}</text>
+        </view>
+
+         <!-- 4. 深度学习链接 (New) -->
+        <view class="deep-dive-box" wx:if="{{currentTerm.moduleLink}}" bindtap="navToModule" data-link="{{currentTerm.moduleLink}}">
+           <text class="dive-icon">📚</text>
+           <text class="dive-text">深度学习：{{currentTerm.moduleLink.title}}</text>
+           <text class="dive-arrow">➡️</text>
+        </view>
+
         <view class="modal-section" wx:if="{{currentTerm.related && currentTerm.related.length > 0}}">
           <text class="section-label">🔗 相关术语</text>
           <view class="related-tags">

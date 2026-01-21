@@ -234,5 +234,13 @@ Page({
     } else {
       wx.showToast({ title: '暂无收录', icon: 'none' })
     }
+  },
+
+  navToModule(e) {
+    const link = e.currentTarget.dataset.link
+    if (!link || !link.id) return
+    // 深度学习：跳转到对应模块的分类列表页
+    let url = `/pages/handbook/category/index?id=${link.id}&title=${encodeURIComponent(link.title)}`
+    wx.navigateTo({ url })
   }
 })

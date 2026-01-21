@@ -397,6 +397,33 @@
   border-radius: 10rpx;
 }
 
+.deep-dive-box {
+  margin-top: 10rpx;
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.dive-icon {
+  font-size: 32rpx;
+}
+
+.dive-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.dive-arrow {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
 .modal-footer {
   margin-top: 40rpx;
 }
