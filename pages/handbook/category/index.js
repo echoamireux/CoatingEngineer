@@ -27,17 +27,18 @@ Page({
     filteredTerms: [],
     showTermModal: false,
     currentTerm: {},
+    scrollToId: '',
     statusBarHeight: 44
   },
 
   onLoad(options) {
     initTheme(this)
-    const { id, title } = options
+    const { id, title, anchor } = options
     this.setData({
       categoryId: id,
       title: decodeURIComponent(title || '')
     })
-    this.loadCategoryData(id)
+    this.loadCategoryData(id, anchor)
 
     // 获取状态栏高度
     const systemInfo = wx.getSystemInfoSync()
@@ -50,7 +51,7 @@ Page({
     initTheme(this)
   },
 
-  loadCategoryData(categoryId) {
+  loadCategoryData(categoryId, anchor) {
     const data = dataMap[categoryId]
     if (!data) {
       this.setData({ loading: false })
@@ -67,9 +68,21 @@ Page({
     }
     // 其他分类使用 subcategories 格式
     else if (data.categories) {
+      let displayCategories = data.categories
+
+      // 核心逻辑：如果有 anchor (过滤模式)，只显示该分类
+      if (anchor) {
+        displayCategories = data.categories.filter(c => c.id === anchor)
+        // 自动修正标题：如果找到了对应的分类，让页面标题变成该分类的标题
+        if (displayCategories.length > 0) {
+          wx.setNavigationBarTitle({ title: displayCategories[0].title })
+          this.setData({ title: displayCategories[0].title })
+        }
+      }
+
       this.setData({
-        subcategories: data.categories,
-        showSearch: false,
+        subcategories: displayCategories,
+        showSearch: false, // 过滤模式下隐藏搜索，避免干扰
         loading: false
       })
     }
@@ -237,6 +250,9 @@ Page({
 
     // 深度学习：跳转到对应模块的分类列表页
     let url = `/pages/handbook/category/index?id=${link.id}&title=${encodeURIComponent(link.title)}`
+    if (link.anchor) {
+      url += `&anchor=${link.anchor}`
+    }
 
     wx.navigateTo({
       url: url

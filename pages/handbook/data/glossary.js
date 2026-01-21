@@ -25,7 +25,7 @@ module.exports = {
           impact: '基材表面能决定润湿成败；基材厚度均匀性直接遗传给最终涂层；接头质量影响连续生产。',
           control: '表面张力(达因值)、厚度偏差、静电消除、边缘平整度。',
           related: ['表面能', '润湿', '电晕'],
-          moduleLink: { id: 'troubleshoot', title: '缺陷诊断-缩孔' }
+          moduleLink: { id: 'troubleshoot', title: '缺陷诊断-外观', anchor: 'appearance' }
         },
         {
           id: 'b03',
@@ -42,7 +42,7 @@ module.exports = {
           impact: '致命指标。附着力不足会导致极片分层（电池失效）、保护膜残胶或脱落。',
           control: '基材清洗、电晕处理、底涂(Primer)使用、干燥温度控制。',
           related: ['剥离力', '电晕'],
-          moduleLink: { id: 'testing', title: '粘着性能测试' }
+          moduleLink: { id: 'testing', title: '粘着性能测试', anchor: 'adhesion' }
         },
         {
           id: 'b05',
@@ -51,7 +51,7 @@ module.exports = {
           impact: '决定涂层自身的机械强度。内聚力过低会导致胶层内部断裂（内聚破坏），如胶带撕除后残留。',
           control: '交联密度（固化剂比例）、分子量设计、干燥程度。',
           related: ['保持力', '干燥', '交联剂'],
-          moduleLink: { id: 'testing', title: '保持力测试' }
+          moduleLink: { id: 'testing', title: '粘着性能测试', anchor: 'adhesion' }
         },
         {
           id: 'b06',
@@ -68,7 +68,7 @@ module.exports = {
           impact: '涂布的第一步。润湿不良直接导致缩孔、漏涂、厚边等缺陷。',
           control: '确保液体表面张力 < 固体表面能（通常差值>10mN/m为佳）。',
           related: ['接触角', '表面张力', '缩孔'],
-          moduleLink: { id: 'troubleshoot', title: '缺陷-缩孔' }
+          moduleLink: { id: 'troubleshoot', title: '缺陷诊断-外观', anchor: 'appearance' }
         },
         {
           id: 'b08',
@@ -77,7 +77,7 @@ module.exports = {
           impact: '决定最终涂层的平整度和光泽度。流平不足导致橘皮、刷痕。',
           control: '流平时间、低剪切粘度、溶剂挥发速率、表面张力控制。',
           related: ['橘皮', '粘度', '表面张力'],
-          moduleLink: { id: 'troubleshoot', title: '缺陷-橘皮' }
+          moduleLink: { id: 'troubleshoot', title: '缺陷诊断-外观', anchor: 'appearance' }
         },
         {
           id: 'b09',
@@ -94,7 +94,7 @@ module.exports = {
           impact: '工艺稳定性的核心。窗口越宽，生产越容易抗干扰。超出窗口必定产生缺陷（起泡、断液）。',
           control: '毛细数(Ca)、间隙比(G/H)、真空度、流变特性优化。',
           related: ['毛细数', '空气夹带', '狭缝模头'],
-          moduleLink: { id: 'coating-theory', title: '涂布窗口理论' }
+          moduleLink: { id: 'coating-theory', title: '狭缝涂布理论', anchor: 'slot-die' }
         }
       ]
     },
@@ -110,7 +110,7 @@ module.exports = {
           impact: '涂布窗口的决定性参数。粘度过高导致供液压力过大或流平差；粘度过低引起湍流或边缘流淌。',
           control: '温度控制（±0.5℃）、固含量波动、在线粘度监测。',
           related: ['剪切变稀', '触变性'],
-          moduleLink: { id: 'testing', title: '流变分析' }
+          moduleLink: { id: 'testing', title: '流变分析', anchor: 'rheology' }
         },
         {
           id: 'r02',
@@ -151,7 +151,7 @@ module.exports = {
           impact: '衡量高速涂布稳定性的核心无量纲数。Ca过大（速度快/粘度高）会导致严重的空气夹带。',
           control: '通过降低粘度或提高表面张力来允许更高的涂布速度。',
           related: ['空气夹带', '涂布窗口'],
-          moduleLink: { id: 'coating-theory', title: '核心理论公式' }
+          moduleLink: { id: 'coating-theory', title: '狭缝涂布理论', anchor: 'slot-die' }
         },
         {
           id: 'r07',
@@ -263,7 +263,7 @@ module.exports = {
           impact: '决定材料的使用温区和加工性能。PSA压敏胶通常Tg < -20℃以保持室温粘性。',
           control: '单体配比（软硬单体调节）。',
           related: ['DMA', '初粘力'],
-          moduleLink: { id: 'testing', title: 'DMA测试' }
+          moduleLink: { id: 'testing', title: 'DMA测试', anchor: 'dma' }
         },
         {
           id: 'm08',
@@ -319,7 +319,7 @@ module.exports = {
           impact: '精密涂布的心脏。封闭式供液，不受粘度、速度波动影响，精度可达±1%。',
           control: '唇口平直度(<2μm)、垫片厚度均匀性、背压调节。',
           related: ['垫片', '涂布量'],
-          moduleLink: { id: 'coating-theory', title: '狭缝涂布理论' }
+          moduleLink: { id: 'coating-theory', title: '狭缝涂布理论', anchor: 'slot-die' }
         },
         {
           id: 'e02',
@@ -328,7 +328,7 @@ module.exports = {
           impact: '薄膜涂布首选。接触面积小，对超薄基材（如2μm PET）张力影响小，且无背辊，避免背印。',
           control: '速比、接触弧度、微凹辊动平衡。',
           related: ['凹版', '逆向涂布'],
-          moduleLink: { id: 'coating-theory', title: '微凹涂布' }
+          moduleLink: { id: 'coating-theory', title: '微凹涂布', anchor: 'micro-gravure' }
         },
         {
           id: 'e03',
@@ -337,7 +337,7 @@ module.exports = {
           impact: '高粘度厚涂层利器。无刀口磨损问题，适合涂胶带、光学保护膜。',
           control: '刀口间隙、背辊跳动、左右水平度。',
           related: ['刮刀', '涂布量'],
-          moduleLink: { id: 'coating-theory', title: '逗号刮刀涂布' }
+          moduleLink: { id: 'coating-theory', title: '逗号刮刀涂布', anchor: 'comma' }
         },
         {
           id: 'e04',
@@ -520,7 +520,7 @@ module.exports = {
           impact: '高速涂布的第一大障碍。表现为极小的密集气泡或露底。破坏绝缘性或光学均一性。',
           control: '提高真空度、降低间隙、降低粘度、减速。',
           related: ['涂布窗口', '毛细数'],
-          moduleLink: { id: 'coating-theory', title: '狭缝涂布-缺陷' }
+          moduleLink: { id: 'coating-theory', title: '狭缝涂布理论', anchor: 'slot-die' }
         },
         {
           id: 'd02',
@@ -624,7 +624,7 @@ module.exports = {
           impact: '评估附着力最直接的指标。行业标准通常为180°或90°剥离。',
           control: '测试速度(300mm/min)、压辊重量(2kg)、停放时间。',
           related: ['附着力', '内聚力'],
-          moduleLink: { id: 'testing', title: '粘着性能测试' }
+          moduleLink: { id: 'testing', title: '粘着性能测试', anchor: 'adhesion' }
         },
         {
           id: 't02',
@@ -633,7 +633,7 @@ module.exports = {
           impact: '反映压敏胶的内聚强度（耐剪切性）。保持力差会导致胶带受力后位移或脱落。',
           control: '交联密度、测试温度、贴合面积。',
           related: ['内聚力', '蠕变'],
-          moduleLink: { id: 'testing', title: '保持力测试' }
+          moduleLink: { id: 'testing', title: '粘着性能测试', anchor: 'adhesion' }
         },
         {
           id: 't03',
@@ -642,7 +642,7 @@ module.exports = {
           impact: '用户的第一手感。初粘差会导致复卷翘头或贴合不牢。',
           control: '树脂Tg、增粘树脂添加量。',
           related: ['润湿', 'Tg'],
-          moduleLink: { id: 'testing', title: '初粘测试' }
+          moduleLink: { id: 'testing', title: '粘着性能测试', anchor: 'adhesion' }
         },
         {
           id: 't04',
@@ -651,7 +651,7 @@ module.exports = {
           impact: '判断润湿性的金标准。<90°润湿，>90°不润湿。',
           control: '表面清洗、电晕处理。',
           related: ['润湿', '表面张力'],
-          moduleLink: { id: 'testing', title: '光学性能测试' } // 暂归类
+          moduleLink: { id: 'testing', title: '光学性能测试', anchor: 'optical' }
         },
         {
           id: 't05',
@@ -660,7 +660,7 @@ module.exports = {
           impact: '光学膜清晰度的核心指标。雾度高看起来发蒙。',
           control: '表面粗糙度、内部颗粒团聚、结晶。',
           related: ['光泽度', '流平'],
-          moduleLink: { id: 'testing', title: '光学性能测试' }
+          moduleLink: { id: 'testing', title: '光学性能测试', anchor: 'optical' }
         },
         {
           id: 't06',
@@ -669,7 +669,7 @@ module.exports = {
           impact: '研发配方如虎添翼的工具。精确测定Tg、模量、交联密度。',
           control: '升温速率、频率。',
           related: ['Tg', '粘弹性'],
-          moduleLink: { id: 'testing', title: 'DMA动态热机械分析' }
+          moduleLink: { id: 'testing', title: 'DMA测试', anchor: 'dma' }
         },
         {
           id: 't07',

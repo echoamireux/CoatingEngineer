@@ -53,11 +53,11 @@
   </scroll-view>
 
   <!-- 内容滚动区 (Search Inactive) -->
-  <scroll-view class="content-scroll" scroll-y enhanced show-scrollbar="{{false}}" wx:else>
+  <scroll-view class="content-scroll" scroll-y enhanced show-scrollbar="{{false}}" scroll-into-view="{{scrollToId}}" scroll-with-animation wx:else>
     <!-- 子分类列表 -->
     <view class="subcategory-list" wx:if="{{subcategories.length > 0}}">
       <block wx:for="{{subcategories}}" wx:key="id">
-        <view class="subcategory-section">
+        <view class="subcategory-section" id="category-{{item.id}}">
           <view class="section-header">
             <image class="section-icon-img" src="{{item.icon}}" wx:if="{{item.icon.length > 4}}" mode="aspectFit"></image>
             <text class="section-icon" wx:else>{{item.icon}}</text>
