@@ -25,7 +25,7 @@ module.exports = {
           impact: '基材表面能决定润湿成败；基材厚度均匀性直接遗传给最终涂层；接头质量影响连续生产。',
           control: '表面张力(达因值)、厚度偏差、静电消除、边缘平整度。',
           related: ['表面能', '润湿', '电晕'],
-          moduleLink: { id: 'defects', title: '缺陷诊断-缩孔' }
+          moduleLink: { id: 'troubleshoot', title: '缺陷诊断-缩孔' }
         },
         {
           id: 'b03',
@@ -68,7 +68,7 @@ module.exports = {
           impact: '涂布的第一步。润湿不良直接导致缩孔、漏涂、厚边等缺陷。',
           control: '确保液体表面张力 < 固体表面能（通常差值>10mN/m为佳）。',
           related: ['接触角', '表面张力', '缩孔'],
-          moduleLink: { id: 'defects', title: '缺陷-缩孔' }
+          moduleLink: { id: 'troubleshoot', title: '缺陷-缩孔' }
         },
         {
           id: 'b08',
@@ -77,7 +77,7 @@ module.exports = {
           impact: '决定最终涂层的平整度和光泽度。流平不足导致橘皮、刷痕。',
           control: '流平时间、低剪切粘度、溶剂挥发速率、表面张力控制。',
           related: ['橘皮', '粘度', '表面张力'],
-          moduleLink: { id: 'defects', title: '缺陷-橘皮' }
+          moduleLink: { id: 'troubleshoot', title: '缺陷-橘皮' }
         },
         {
           id: 'b09',
@@ -110,7 +110,7 @@ module.exports = {
           impact: '涂布窗口的决定性参数。粘度过高导致供液压力过大或流平差；粘度过低引起湍流或边缘流淌。',
           control: '温度控制（±0.5℃）、固含量波动、在线粘度监测。',
           related: ['剪切变稀', '触变性'],
-          moduleLink: { id: 'rheology', title: '流变分析' }
+          moduleLink: { id: 'testing', title: '流变分析' }
         },
         {
           id: 'r02',
@@ -520,7 +520,7 @@ module.exports = {
           impact: '高速涂布的第一大障碍。表现为极小的密集气泡或露底。破坏绝缘性或光学均一性。',
           control: '提高真空度、降低间隙、降低粘度、减速。',
           related: ['涂布窗口', '毛细数'],
-          moduleLink: { id: 'slot-die', title: '狭缝涂布-缺陷' }
+          moduleLink: { id: 'coating-theory', title: '狭缝涂布-缺陷' }
         },
         {
           id: 'd02',
