@@ -87,49 +87,94 @@
 
 /* ... lines 46-59 unchanged ... */
 
-.advanced-controls {
+/* 优化布局为网格 */
+.control-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+
+.grid-item {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
-  background: rgba(255,255,255,0.02);
-  padding: 20rpx;
-  border-radius: 12rpx;
+  gap: 10rpx;
+  align-items: center;
+}
+
+.control-label-sm {
+  font-size: 24rpx;
+  color: var(--text-sub, #9ca3af);
 }
 
 .mini-input {
-  width: 120rpx;
-  height: 50rpx;
-  background: rgba(255,255,255,0.05); /* Transparent Input Bg */
-  border: 1px solid rgba(255,255,255,0.1);
+  width: 100%;
+  height: 60rpx;
+  background: var(--bg-level-2, rgba(255,255,255,0.05)); /* 适配浅色/深色 */
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
   border-radius: 8rpx;
   text-align: center;
-  font-size: 24rpx;
-  color: #fff;
+  font-size: 26rpx;
+  color: var(--text, #fff); /* 适配字体颜色 */
+}
+
+/* 强制浅色模式下的输入框样式 */
+.chart-container.light .mini-input {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.chart-container.light .canvas-box {
+  background: #f9fafb; /* 浅色背景 */
+  border-color: #e5e7eb;
+}
+
+.chart-container.light .chart-title {
+  color: #111827;
+}
+
+.chart-container.light .coord-label,
+.chart-container.light .control-label,
+.chart-container.light .control-label-sm {
+  color: #4b5563;
+}
+
+.chart-container.light .control-group .control-label {
+    color: #4b5563;
+}
+
+.chart-container.light .advanced-controls {
+    background: rgba(0,0,0,0.03);
+}
+
+.chart-container.light .mode-switch {
+    background: rgba(0,0,0,0.03);
 }
 
 .status-badge.stable {
   background: rgba(16, 185, 129, 0.1);
-  color: #34d399;
+  color: #10b981;
 }
 
 .status-badge.warning {
   background: rgba(245, 158, 11, 0.1);
-  color: #fbbf24;
+  color: #f59e0b;
 }
 
 .status-badge.danger {
   background: rgba(239, 68, 68, 0.1);
-  color: #f87171;
+  color: #ef4444;
 }
 
 .canvas-box {
   width: 100%;
   height: 480rpx;
   position: relative;
-  background: #111827; /* Force Dark Background for Canvas */
+  background: #111827; /* 默认深色 */
   border-radius: 16rpx;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  transition: background 0.3s;
 }
 
 .coating-canvas {
@@ -139,7 +184,7 @@
 
 .mode-switch {
   display: flex;
-  background: rgba(255,255,255,0.05);
+  background: var(--bg-level-2); /* 适配 */
   padding: 8rpx;
   border-radius: 16rpx;
   margin-bottom: 24rpx;
@@ -156,8 +201,8 @@
 }
 
 .switch-item.active {
-  background: rgba(99, 102, 241, 0.2); /* Accent Dim */
-  color: #818cf8; /* Accent Color */
+  background: var(--accent-dim, rgba(99, 102, 241, 0.2));
+  color: var(--accent, #818cf8);
   font-weight: 600;
   box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
 }
@@ -167,7 +212,7 @@
   justify-content: space-around;
   margin-top: 20rpx;
   padding: 20rpx 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .coord-item {
@@ -186,7 +231,7 @@
   font-size: 32rpx;
   font-weight: bold;
   font-family: 'Courier New', Courier, monospace;
-  color: #818cf8;
+  color: var(--accent, #818cf8);
 }
 
 .controls {
@@ -217,7 +262,7 @@
 .control-value {
   font-size: 26rpx;
   font-weight: 600;
-  color: #818cf8;
+  color: var(--accent, #818cf8);
 }
 
 slider {
@@ -236,7 +281,7 @@ slider {
   display: flex;
   flex-direction: column;
   gap: 20rpx;
-  background: rgba(255,255,255,0.02);
+  background: var(--bg-level-2, rgba(255,255,255,0.02));
   padding: 20rpx;
   border-radius: 12rpx;
 }

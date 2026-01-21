@@ -1,4 +1,4 @@
-<view class="chart-container">
+<view class="chart-container {{theme}}">
   <!-- 标题与状态栏 -->
   <view class="chart-header">
     <view class="title-group">
@@ -12,7 +12,6 @@
       <view class="status-badge {{statusClass}}">
         <text>{{statusText}}</text>
       </view>
-      <text class="sub-status" wx:if="{{currentH}}">Calc Dry: {{targetDryH}}μm</text>
     </view>
   </view>
 
@@ -41,6 +40,10 @@
     <view class="coord-item">
       <text class="coord-label">H (湿膜μm)</text>
       <text class="coord-value">{{currentH}}</text>
+    </view>
+     <view class="coord-item highlight">
+      <text class="coord-label">Dry (干厚μm)</text>
+      <text class="coord-value">{{currentDryH}}</text>
     </view>
   </view>
 
@@ -125,23 +128,23 @@
     </view>
 
     <view class="advanced-controls" wx:if="{{showAdvanced}}">
-      <view class="control-group">
-        <view class="control-header">
-           <text class="control-label">粘度 η (cP)</text>
+      <view class="control-grid">
+         <view class="grid-item">
+           <text class="control-label-sm">固含量(%)</text>
+           <input class="mini-input" type="digit" value="{{params.solid}}" bindinput="onInputParam" data-key="solid" />
+         </view>
+         <view class="grid-item">
+           <text class="control-label-sm">粘度(cP)</text>
            <input class="mini-input" type="digit" value="{{params.viscosity}}" bindinput="onInputParam" data-key="viscosity" />
-        </view>
-      </view>
-      <view class="control-group">
-        <view class="control-header">
-           <text class="control-label">表面张力 σ (mN/m)</text>
+         </view>
+         <view class="grid-item">
+           <text class="control-label-sm">张力(mN)</text>
            <input class="mini-input" type="digit" value="{{params.tension}}" bindinput="onInputParam" data-key="tension" />
-        </view>
-      </view>
-       <view class="control-group">
-        <view class="control-header">
-           <text class="control-label">涂布宽度 W (mm)</text>
+         </view>
+         <view class="grid-item">
+           <text class="control-label-sm">幅宽(mm)</text>
            <input class="mini-input" type="digit" value="{{params.width}}" bindinput="onInputParam" data-key="width" />
-        </view>
+         </view>
       </view>
     </view>
   </view>

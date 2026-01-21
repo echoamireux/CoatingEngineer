@@ -2,7 +2,7 @@ Component({
   properties: {
     theme: {
       type: String,
-      value: 'light',
+      value: 'dark',
       observer() {
         if (this.canvas) this.calculateState() // Re-draw when theme changes
       }
@@ -17,20 +17,22 @@ Component({
       speed: 10,      // m/min
       gap: 100,       // μm
       flow: 100,      // mL/min
-      width: 200      // mm (涂布宽度，用于计算H)
+      width: 200,     // mm (涂布宽度，用于计算H)
+      solid: 30       // % (固含量)
     },
 
     // 计算出的无量纲数
     currentCa: 0,
     currentGH: 0,
     currentH: 0, // 湿膜厚度
+    currentDryH: 0, // 干膜厚度
 
     // 状态
     statusText: '初始化中',
     statusClass: '',
     showAdvanced: false,
     controlMode: 'flow', // 'flow' | 'thickness'
-    targetDryH: 30       // 目标干厚用于滑块显示
+    targetDryH: 9        // 目标干厚用于滑块显示 (默认30*0.3=9)
   },
 
   lifetimes: {
@@ -94,7 +96,7 @@ Component({
         Ca: parseFloat(Ca.toFixed(3)),
         GH: parseFloat(GH.toFixed(2)),
         H_um: parseFloat(H_um.toFixed(1)),
-        DryH_um: (H_um * (p.solid || 30) / 100) // 简易固含量计算
+        DryH_um: parseFloat((H_um * (p.solid || 30) / 100).toFixed(1))
       }
     },
 
@@ -105,12 +107,13 @@ Component({
       this.setData({
         currentCa: Ca,
         currentGH: GH,
-        currentH: H_um.toFixed(1)
+        currentH: H_um.toFixed(1),
+        currentDryH: DryH_um // 添加到 Data 以便显示
       })
 
       // 如果是流量控制模式，同步更新目标干厚显示
       if (this.data.controlMode === 'flow') {
-        this.setData({ targetDryH: DryH_um.toFixed(1) })
+        this.setData({ targetDryH: DryH_um }) // 已是固定小数位数值
       }
 
       // 判定状态
@@ -170,9 +173,18 @@ Component({
       ctx.textAlign = 'center'
       ctx.fillText('Stable Window', mapX(0.3), mapY(2.0))
 
-      // 2. 绘制坐标轴
+      // 3. 绘制 - 主题颜色定义
+      const isLight = this.data.theme === 'light'
+      const colors = {
+        axis: isLight ? '#e5e7eb' : '#374151',
+        text: isLight ? '#6b7280' : '#9ca3af',
+        title: isLight ? '#9ca3af' : '#6b7280',
+        grid: isLight ? '#f3f4f6' : '#1f2937'
+      }
+
+      // 坐标轴
       ctx.beginPath()
-      ctx.strokeStyle = '#9ca3af'
+      ctx.strokeStyle = colors.axis
       ctx.lineWidth = 1
       // Y轴
       ctx.moveTo(padding.left, padding.top)
@@ -183,7 +195,7 @@ Component({
       ctx.stroke()
 
       // 刻度文本
-      ctx.fillStyle = '#6b7280'
+      ctx.fillStyle = colors.text
       ctx.font = '10px sans-serif'
       ctx.textAlign = 'right'
       ctx.textBaseline = 'middle'

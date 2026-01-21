@@ -26,7 +26,7 @@
 
         <!-- 自定义组件: 涂布窗口图 -->
         <view class="section-custom" wx:if="{{item.type === 'custom-coating-window'}}">
-          <coating-window-chart />
+          <coating-window-chart theme="{{theme}}" />
         </view>
 
         <!-- 文本内容 -->
