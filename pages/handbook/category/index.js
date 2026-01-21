@@ -187,7 +187,12 @@ Page({
        // 简易查找：遍历所有分类
        if (dataMap.glossary && dataMap.glossary.categories) {
          for (const cat of dataMap.glossary.categories) {
-           const found = cat.items.find(t => t.term === keyword || t.title === keyword)
+           // 模糊匹配：只要包含关键词即可（适配 "基材" -> "基材 (Substrate)"）
+           const found = cat.items.find(t =>
+             t.term === keyword ||
+             t.title === keyword ||
+             (t.term && t.term.includes(keyword))
+           )
            if (found) {
              target = found
              break
@@ -206,13 +211,19 @@ Page({
   findTerm(keyword) {
     // 扁平查找 (terms)
     if (this.data.terms) {
-      return this.data.terms.find(t => t.term === keyword)
+      return this.data.terms.find(t =>
+        t.term === keyword || (t.term && t.term.includes(keyword))
+      )
     }
     // 分类查找 (subcategories)
     if (this.data.subcategories) {
       for (const cat of this.data.subcategories) {
         if (cat.items) {
-          const found = cat.items.find(t => t.term === keyword || t.title === keyword)
+          const found = cat.items.find(t =>
+            t.term === keyword ||
+            t.title === keyword ||
+            (t.term && t.term.includes(keyword))
+          )
           if (found) return found
         }
       }
