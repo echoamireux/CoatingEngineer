@@ -202,5 +202,37 @@ Page({
 
   closeTermModal() {
     this.setData({ showTermModal: false })
+  },
+
+  // 点击相关术语 (Home Page)
+  onRelatedTap(e) {
+    const keyword = e.currentTarget.dataset.keyword
+    if (!keyword) return
+
+    let target = null
+
+    // 在名词库中查找
+    if (glossaryData.categories) {
+      for (const cat of glossaryData.categories) {
+        if (cat.items) {
+           // 模糊匹配
+           const found = cat.items.find(t =>
+             t.term === keyword ||
+             t.title === keyword ||
+             (t.term && t.term.includes(keyword))
+           )
+           if (found) {
+             target = found
+             break
+           }
+        }
+      }
+    }
+
+    if (target) {
+      this.setData({ currentTerm: target })
+    } else {
+      wx.showToast({ title: '暂无收录', icon: 'none' })
+    }
   }
 })

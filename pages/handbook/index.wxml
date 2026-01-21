@@ -91,13 +91,13 @@
       </view>
       <view class="modal-body">
         <view class="modal-section">
-          <text class="section-label">📖 定义</text>
-          <text class="section-content">{{currentTerm.definition}}</text>
+          <text class="section-label">📖 详细说明</text>
+          <text class="section-content">{{currentTerm.detail || currentTerm.definition || '暂无详细说明'}}</text>
         </view>
         <view class="modal-section" wx:if="{{currentTerm.related && currentTerm.related.length > 0}}">
           <text class="section-label">🔗 相关术语</text>
           <view class="related-tags">
-            <text class="related-tag" wx:for="{{currentTerm.related}}" wx:key="*this">{{item}}</text>
+            <text class="related-tag" wx:for="{{currentTerm.related}}" wx:key="*this" bindtap="onRelatedTap" data-keyword="{{item}}">{{item}}</text>
           </view>
         </view>
       </view>
