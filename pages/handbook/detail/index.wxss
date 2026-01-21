@@ -110,12 +110,13 @@
   color: var(--text);
 }
 
-/* 表格 - 支持横向滚动 */
+/* 表格 - 移动端自适应布局 (无横向滚动) */
 .section-table {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 16rpx;
+  border-radius: 12rpx;
   overflow: hidden;
+  margin-top: 20rpx;
 }
 
 .table-scroll {
@@ -123,35 +124,52 @@
 }
 
 .table-inner {
-  min-width: 100%;
-  width: max-content; /* 关键：让容器随内容撑开，保证背景色铺满 */
+  width: 100%; /* 核心：铺满屏幕，禁止强制撑开 */
 }
 
 .table-header {
   display: flex;
-  background: rgba(99, 102, 241, 0.1); /* Indigo 0.1 */
-  width: 100%; /* 继承 max-content */
+  background: rgba(99, 102, 241, 0.08);
+  width: 100%;
+  border-bottom: 1px solid var(--border);
 }
 
 .table-header .table-cell {
-  font-weight: bold;
+  font-weight: 600;
   color: var(--primary);
+  font-size: 26rpx;
+  padding: 20rpx 16rpx;
 }
 
 .table-row {
   display: flex;
-  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.table-row:last-child {
+  border-bottom: none;
 }
 
 .table-cell {
-  flex: 1;
-  min-width: 160rpx;
-  padding: 20rpx 16rpx;
-  font-size: 24rpx;
+  flex: 1; /* 均分空间，内容多自动换行 */
+  padding: 24rpx 16rpx; /* 增加舒适度 */
+  font-size: 26rpx;
   color: var(--text);
-  text-align: center;
-  word-break: break-word;
+  text-align: left; /* 核心：左对齐 */
+  line-height: 1.5; /* 优化多行阅读 */
+  word-break: break-all; /* 防止长单词撑破 */
+  display: flex;
+  align-items: center; /* 垂直居中 */
 }
+
+/* 智能列宽优化 (针对常见2-3列表格) */
+/* 第一列通常是名词，给少一点；后面是说明，给多一点 */
+.table-row .table-cell:first-child,
+.table-header .table-cell:first-child {
+  flex: 0 0 30%; /* 固定首列占比 */
+}
+
+/* 剩下的列自动平分剩余70% */
 
 /* 公式 */
 .section-formula {
