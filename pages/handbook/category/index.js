@@ -2,14 +2,19 @@ const { initTheme } = require('../../../utils/common')
 
 // 引入数据
 const glossaryData = require('../data/glossary')
-const adhesiveData = require('../data/adhesive')
+const materialsData = require('../data/materials')
+const equipmentData = require('../data/equipment')
+const processData = require('../data/process')
 const coatingTheoryData = require('../data/coating-theory')
 const testingData = require('../data/testing')
 const troubleshootData = require('../data/troubleshoot')
 
 const dataMap = {
   glossary: glossaryData,
-  adhesive: adhesiveData,
+  materials: materialsData,
+  equipment: equipmentData,
+  process: processData,
+  // adhesive: adhesiveData, // Migrated to materials
   'coating-theory': coatingTheoryData,
   testing: testingData,
   troubleshoot: troubleshootData

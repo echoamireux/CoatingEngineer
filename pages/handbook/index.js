@@ -2,7 +2,9 @@ const { initTheme } = require('../../utils/common')
 
 // 引入所有手册数据
 const glossaryData = require('./data/glossary')
-const adhesiveData = require('./data/adhesive')
+const materialsData = require('./data/materials')
+const equipmentData = require('./data/equipment')
+const processData = require('./data/process')
 const coatingTheoryData = require('./data/coating-theory')
 const testingData = require('./data/testing')
 const troubleshootData = require('./data/troubleshoot')
@@ -18,47 +20,66 @@ Page({
       {
         id: 'glossary',
         title: '涂布名词库',
-        desc: '基础术语 / 设备 / 工艺参数',
+        desc: '80+ 专业术语 / 快速查阅',
         icon: '📖',
         color: '#6366f1',
+        isWide: true, // Make Glossary prominent as "The One"
         count: 80,
         unit: '词条'
       },
       {
-        id: 'adhesive',
-        title: '胶黏剂体系',
-        desc: '丙烯酸 / 有机硅 / UV / 热熔',
+        id: 'materials',
+        title: '材料科学',
+        desc: '胶黏剂 / 基材 / 界面化学',
         icon: '🧪',
-        color: '#6366f1',
-        count: 5,
-        unit: '类型'
+        color: '#3b82f6',
+        count: 7,
+        unit: '章'
+      },
+      {
+        id: 'equipment',
+        title: '设备硬件',
+        desc: '模头 / 供料 / 烘箱 / 辅助',
+        icon: '⚙️',
+        color: '#10b981',
+        count: 4,
+        unit: '章'
+      },
+      {
+        id: 'process',
+        title: '工艺控制',
+        desc: '干燥 / 涂布 / 固化 / 卷材',
+        icon: '🎛️',
+        color: '#f59e0b',
+        count: 4,
+        unit: '章'
       },
       {
         id: 'coating-theory',
-        title: '涂布工艺理论',
-        desc: '狭缝涂布 / 凹版 / 微凹',
+        title: '涂布技术',
+        desc: '狭缝 / 凹版 / 理论公式',
         icon: '🔬',
-        color: '#6366f1',
+        color: '#8b5cf6',
         count: 4,
-        unit: '工艺',
-        countColor: '#6366f1'
+        unit: '技术'
       },
       {
         id: 'testing',
-        title: '测试方法',
-        desc: 'DMA / 凝胶分率 / 流变 / 老化',
+        title: '测试与质量',
+        desc: '物性 / 光学 / 表面能',
         icon: '📊',
-        color: '#6366f1',
+        color: '#ec4899',
         count: 6,
         unit: '类别'
       },
       {
         id: 'troubleshoot',
-        title: '问题诊断手册',
-        desc: '快速定位涂布异常根因与处理方案',
+        title: '缺陷诊断',
+        desc: '外观 / 干燥 / 性能缺陷',
         icon: '🛠️',
-        color: '#6366f1',
-        isWide: true
+        color: '#ef4444',
+        count: 3,
+        unit: '大类'
       }
     ],
 
@@ -136,10 +157,12 @@ Page({
 
     // 2. 搜索其他模块 (Articles / Troubleshoot)
     const modules = [
-      { id: 'adhesive', title: '胶黏剂体系', data: adhesiveData },
-      { id: 'coating-theory', title: '涂布工艺理论', data: coatingTheoryData },
-      { id: 'testing', title: '测试方法', data: testingData },
-      { id: 'troubleshoot', title: '问题诊断', data: troubleshootData }
+      { id: 'materials', title: '材料科学', data: materialsData },
+      { id: 'equipment', title: '设备硬件', data: equipmentData },
+      { id: 'process', title: '工艺控制', data: processData },
+      { id: 'coating-theory', title: '涂布技术', data: coatingTheoryData },
+      { id: 'testing', title: '测试与质量', data: testingData },
+      { id: 'troubleshoot', title: '缺陷诊断', data: troubleshootData }
     ]
 
     modules.forEach(mod => {

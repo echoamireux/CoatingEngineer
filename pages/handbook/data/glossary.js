@@ -25,7 +25,7 @@ module.exports = {
           impact: '基材表面能决定润湿成败；基材厚度均匀性直接遗传给最终涂层；接头质量影响连续生产。',
           control: '表面张力(达因值)、厚度偏差、静电消除、边缘平整度。',
           related: ['表面能', '润湿', '电晕'],
-          moduleLink: { id: 'troubleshoot', title: '缺陷诊断-外观', anchor: 'appearance' }
+          moduleLink: { id: 'materials', title: '基材科学', anchor: 'substrate' }
         },
         {
           id: 'b03',
@@ -68,7 +68,7 @@ module.exports = {
           impact: '涂布的第一步。润湿不良直接导致缩孔、漏涂、厚边等缺陷。',
           control: '确保液体表面张力 < 固体表面能（通常差值>10mN/m为佳）。',
           related: ['接触角', '表面张力', '缩孔'],
-          moduleLink: { id: 'troubleshoot', title: '缺陷诊断-外观', anchor: 'appearance' }
+          moduleLink: { id: 'materials', title: '界面与润湿', anchor: 'interface' }
         },
         {
           id: 'b08',
@@ -263,7 +263,7 @@ module.exports = {
           impact: '决定材料的使用温区和加工性能。PSA压敏胶通常Tg < -20℃以保持室温粘性。',
           control: '单体配比（软硬单体调节）。',
           related: ['DMA', '初粘力'],
-          moduleLink: { id: 'testing', title: 'DMA测试', anchor: 'dma' }
+          moduleLink: { id: 'materials', title: '胶黏剂-Tg调控', anchor: 'acrylic' }
         },
         {
           id: 'm08',
@@ -319,7 +319,7 @@ module.exports = {
           impact: '精密涂布的心脏。封闭式供液，不受粘度、速度波动影响，精度可达±1%。',
           control: '唇口平直度(<2μm)、垫片厚度均匀性、背压调节。',
           related: ['垫片', '涂布量'],
-          moduleLink: { id: 'coating-theory', title: '狭缝涂布理论', anchor: 'slot-die' }
+          moduleLink: { id: 'equipment', title: '涂布模头', anchor: 'coating-head' }
         },
         {
           id: 'e02',
@@ -345,7 +345,8 @@ module.exports = {
           definition: '提供精密稳定流量的输送设备（通常为齿轮泵或螺杆泵）。',
           impact: '决定纵向涂布精度的源头。泵的脉动直接导致纵向条纹。',
           control: '容积效率、脉动率(<1%)、入口压力。',
-          related: ['脉动', '涂布量']
+          related: ['脉动', '涂布量'],
+          moduleLink: { id: 'equipment', title: '供料系统', anchor: 'feeding' }
         },
         {
           id: 'e05',
@@ -353,7 +354,8 @@ module.exports = {
           definition: '安装在模头唇口下方的负压抽气装置。',
           impact: '高速狭缝涂布的必需品。通过负压稳定上游弯液面(Meniscus)，防止空气夹带，拓宽涂布窗口。',
           control: '真空度稳定性(±50Pa)、密封性。',
-          related: ['空气夹带', '涂布窗口']
+          related: ['空气夹带', '涂布窗口'],
+          moduleLink: { id: 'equipment', title: '涂布模头', anchor: 'coating-head' }
         },
         {
           id: 'e06',
@@ -361,7 +363,8 @@ module.exports = {
           definition: '利用上下喷嘴气流将基材悬浮托起的干燥设备。',
           impact: '实现双面涂布或防划伤的关键。传热效率高，基材无接触。',
           control: '风嘴风速均匀性（防止飘带）、张力匹配。',
-          related: ['干燥', '划伤']
+          related: ['干燥', '划伤'],
+          moduleLink: { id: 'equipment', title: '干燥系统', anchor: 'drying-sys' }
         },
         {
           id: 'e07',
@@ -369,7 +372,8 @@ module.exports = {
           definition: '利用高频高压放电对基材表面进行极化处理的装置。',
           impact: '解决附着力问题的首选手段。提高表面能（达因值），引入极性基团。',
           control: '功率密度(W·min/m²)、达因值检测。',
-          related: ['表面能', '附着力']
+          related: ['表面能', '附着力'],
+          moduleLink: { id: 'materials', title: '基材表面处理', anchor: 'substrate' }
         },
         {
           id: 'e08',
@@ -377,7 +381,8 @@ module.exports = {
           definition: '检测并校正卷材边缘位置的自动控制系统。',
           impact: '不仅影响收卷整齐度，更重要的是防止跑偏导致模头漏料或烘箱挂壁。',
           control: '传感器灵敏度、执行机构响应速度。',
-          related: ['收卷', '端面']
+          related: ['收卷', '端面'],
+          moduleLink: { id: 'equipment', title: '辅助与控制', anchor: 'auxiliary' }
         },
         {
           id: 'e09',
@@ -401,7 +406,8 @@ module.exports = {
           definition: '蓄热式热氧化炉，用于处理有机废气(VOCs)。',
           impact: '环保合规的生命线。高效回收热能用于烘箱加热。',
           control: '燃烧室温度、VOC浓度监测(LEL)。',
-          related: ['VOC', '环境']
+          related: ['VOC', '环境'],
+          moduleLink: { id: 'equipment', title: '干燥系统', anchor: 'drying-sys' }
         },
         {
           id: 'e12',
@@ -424,7 +430,8 @@ module.exports = {
           definition: '单位面积基材上涂覆的胶液质量(g/m²)。',
           impact: '最基本的工艺控制指标。直接关系到成本和性能。对于电池极片，叫“面密度”。',
           control: '称重法（离线）、射线规（在线）、泵速与线速联锁。',
-          related: ['固含量', '面密度']
+          related: ['固含量', '面密度'],
+          moduleLink: { id: 'process', title: '涂布品质控制', anchor: 'coating-control' }
         },
         {
           id: 'p02',
@@ -456,7 +463,8 @@ module.exports = {
           definition: '烘箱各温区温度设置形成的温度分布曲线。',
           impact: '“三分涂，七分干”。升温过快导致结皮、气泡；升温过慢导致流平过度或效率低。',
           control: '分段控温（升温段-恒速干燥段-降速干燥段-冷却段）。',
-          related: ['结皮', '残留']
+          related: ['结皮', '残留'],
+          moduleLink: { id: 'process', title: '干燥工艺', anchor: 'drying-process' }
         },
         {
           id: 'p06',
@@ -464,7 +472,8 @@ module.exports = {
           definition: '基材在传输方向上受到的拉伸力。',
           impact: '卷材处理的基础。张力波动会导致套位不准、涂布厚度横向震荡、收卷起皱。',
           control: 'PID参数整定、张力传感器校准。',
-          related: ['张力锥度', '收卷']
+          related: ['张力锥度', '收卷'],
+          moduleLink: { id: 'process', title: '卷材控制', anchor: 'web-handling' }
         },
         {
           id: 'p07',
@@ -472,7 +481,8 @@ module.exports = {
           definition: '收卷过程中张力随卷径增大而线性衰减的控制策略。',
           impact: '防止收卷“内松外紧”（菜心）或“内紧外松”（菊花芯/伸缩卷）。',
           control: '锥度系数设定（通常10-30%）。',
-          related: ['收卷', '内应力']
+          related: ['收卷', '内应力'],
+          moduleLink: { id: 'process', title: '卷材控制', anchor: 'web-handling' }
         },
         {
           id: 'p08',
@@ -651,7 +661,7 @@ module.exports = {
           impact: '判断润湿性的金标准。<90°润湿，>90°不润湿。',
           control: '表面清洗、电晕处理。',
           related: ['润湿', '表面张力'],
-          moduleLink: { id: 'testing', title: '光学性能测试', anchor: 'optical' }
+          moduleLink: { id: 'materials', title: '界面与润湿', anchor: 'interface' }
         },
         {
           id: 't05',
@@ -709,7 +719,8 @@ module.exports = {
           definition: '单位面积涂层的质量(mg/cm²或g/m²)。',
           impact: '涂布过程控制的第一属性。直接通过称重获得。',
           control: '供料系统精度、模头调节。',
-          related: ['涂布量', 'CPK']
+          related: ['涂布量', 'CPK'],
+          moduleLink: { id: 'process', title: '涂布品质控制', anchor: 'coating-control' }
         },
         {
           id: 't12',
@@ -717,7 +728,8 @@ module.exports = {
           definition: '干燥后涂层中残留的微量挥发性物质(ppm)。',
           impact: '食品药品包装及锂电安全的严控指标。残留过高会导致异味、毒性或电池胀气。',
           control: '干燥温度、时间、风速。',
-          related: ['干燥', 'VOC']
+          related: ['干燥', 'VOC'],
+          moduleLink: { id: 'process', title: '干燥工艺', anchor: 'drying-process' }
         }
       ]
     }
