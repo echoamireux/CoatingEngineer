@@ -262,8 +262,11 @@ Page({
   navToModule(e) {
     const link = e.currentTarget.dataset.link
     if (!link || !link.id) return
-    // 深度学习：跳转到对应模块的分类列表页
+    // 深度学习：跳转到对应模块的分类列表页，并带上 anchor
     let url = `/pages/handbook/category/index?id=${link.id}&title=${encodeURIComponent(link.title)}`
+    if (link.anchor) {
+      url += `&anchor=${link.anchor}`
+    }
     wx.navigateTo({ url })
   }
 })
