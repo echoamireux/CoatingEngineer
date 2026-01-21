@@ -45,6 +45,7 @@ page {
   padding: 0 24rpx;
   gap: 12rpx;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .nav-left {
@@ -80,6 +81,7 @@ page {
   gap: 40rpx; /* 图标间较大间距 */
   background: transparent;
   margin-bottom: 4rpx;
+  box-sizing: border-box;
 }
 
 /* Back Button */
@@ -334,6 +336,8 @@ page {
 .filter-bar {
   white-space: nowrap;
   padding: 16rpx 30rpx 20rpx 30rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .filter-item {

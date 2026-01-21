@@ -44,6 +44,7 @@
   padding: 0 24rpx;
   gap: 12rpx;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .back-btn {
@@ -79,6 +80,7 @@
   gap: 40rpx; /* 图标间宽间距 */
   background: transparent;
   margin-bottom: 4rpx;
+  box-sizing: border-box;
 }
 
 /* Ghost Button Style */
