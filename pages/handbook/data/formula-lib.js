@@ -11,7 +11,7 @@ module.exports = {
 
   CPK: "CPK = \\min \\frac{USL-\\mu}{3\\sigma}, \\frac{\\mu-LSL}{3\\sigma}",
 
-  TAPER_TENSION: "F = F_0 \\times [1 - Taper% \\times \\frac{D - D_0}{D}]",
+  TAPER_TENSION: "F = F_0 \\times [1 - Taper\\% \\times \\frac{D - D_0}{D}]",
 
   // Coating Theory Formulas
   WET_FILM_THICKNESS: "H = \\frac{Q}{V \\times W}",
@@ -33,9 +33,9 @@ module.exports = {
   TAN_DELTA: "\\tan \\delta = \\frac{G''}{G'}",
   WLF_EQUATION: "\\log a_T = \\frac{-C_1 (T - T_r)}{C_2 + (T - T_r)}",
   CROSSLINK_DENSITY: "\\nu_e = \\frac{G'}{3RT}",
-  GEL_FRACTION: "Gel% = \\frac{W_{gel}}{W_{initial}} \\times 100%",
-  SOLID_CONTENT: "SC = \\frac{W_{dry}}{W_{wet}} \\times 100%",
+  GEL_FRACTION: "Gel\\% = \\frac{W_{gel}}{W_{initial}} \\times 100\\%",
+  SOLID_CONTENT: "SC = \\frac{W_{dry}}{W_{wet}} \\times 100\\%",
   PEEL_STRENGTH: "F_{peel} = \\frac{F_{avg}}{Width}",
-  HAZE_CALC: "Haze% = \\frac{T_{diffuse}}{T_{total}} \\times 100%",
+  HAZE_CALC: "Haze\\% = \\frac{T_{diffuse}}{T_{total}} \\times 100\\%",
   YI_CALC: "YI = \\frac{100(1.30X - 1.15Z)}{Y}"
 };

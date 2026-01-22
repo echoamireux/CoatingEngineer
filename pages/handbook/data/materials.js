@@ -104,10 +104,10 @@ module.exports = {
     'acrylic-tg': {
       sections: [
         { type: 'text', content: 'Tg（玻璃化转变温度）是压敏胶配方设计的核心参数，直接影响胶的粘弹性窗口和使用性能。' },
-        { type: 'formula', title: 'Fox方程', formula: '1/Tg = Σ(Wᵢ/Tg,ᵢ)', description: '用于预测共聚物的玻璃化转变温度', params: [
+        { type: 'formula', title: 'Fox方程', formula: '1/Tg = \\sum (W_i / Tg_i)', description: '用于预测共聚物的玻璃化转变温度', params: [
           { symbol: 'Tg', desc: '共聚物玻璃化转变温度 (K)' },
-          { symbol: 'Wᵢ', desc: '第i种单体的质量分数' },
-          { symbol: 'Tg,ᵢ', desc: '第i种单体均聚物的Tg (K)' }
+          { symbol: 'W_i', desc: '第i种单体的质量分数' },
+          { symbol: 'Tg_i', desc: '第i种单体均聚物的Tg (K)' }
         ]},
         { type: 'table', title: '常用单体Tg参考值', headers: ['单体', '简称', 'Tg (°C)'], rows: [
           ['丙烯酸丁酯', 'BA', '-54'],
@@ -326,11 +326,11 @@ module.exports = {
     'surf-wetting': {
       sections: [
         { type: 'text', content: '润湿是涂布的第一步。只有液体在固体表面良好铺展，才能形成均匀的涂层。' },
-        { type: 'formula', title: '杨氏方程 (Young Equation)', formula: 'γ_sv = γ_sl + γ_lv · cosθ', description: '描述气-液-固三相界面的平衡关系', params: [
-          { symbol: 'θ', desc: '接触角 (Contact Angle)' },
-          { symbol: 'γ_sv', desc: '固-气表面张力 (固体表面能)' },
-          { symbol: 'γ_lv', desc: '液-气表面张力 (液体表面张力)' },
-          { symbol: 'γ_sl', desc: '固-液界面张力' }
+        { type: 'formula', title: '杨氏方程 (Young Equation)', formula: '\\gamma_{sv} = \\gamma_{sl} + \\gamma_{lv} \\cdot \\cos\\theta', description: '描述气-液-固三相界面的平衡关系', params: [
+          { symbol: '\\theta', desc: '接触角 (Contact Angle)' },
+          { symbol: '\\gamma_{sv}', desc: '固-气表面张力 (固体表面能)' },
+          { symbol: '\\gamma_{lv}', desc: '液-气表面张力 (液体表面张力)' },
+          { symbol: '\\gamma_{sl}', desc: '固-液界面张力' }
         ]},
         { type: 'table', title: '润湿判据', headers: ['接触角 θ', '润湿状态', '涂布结果'], rows: [
           ['θ < 0°', '完全润湿', '理想铺展'],
@@ -354,10 +354,10 @@ module.exports = {
     'surf-hsp': {
       sections: [
         { type: 'text', content: '汉森溶解度参数(HSP)用于预测溶剂对聚合物的溶解性及树脂间的相容性。' },
-        { type: 'formula', title: 'HSP距离公式', formula: 'Ra² = 4(δd₁-δd₂)² + (δp₁-δp₂)² + (δh₁-δh₂)²', description: 'Ra越小，相容性越好', params: [
-          { symbol: 'δd', desc: '色散力分量' },
-          { symbol: 'δp', desc: '极性力分量' },
-          { symbol: 'δh', desc: '氢键力分量' }
+        { type: 'formula', title: 'HSP距离公式', formula: 'Ra^2 = 4(\\delta d_1 - \\delta d_2)^2 + (\\delta p_1 - \\delta p_2)^2 + (\\delta h_1 - \\delta h_2)^2', description: 'Ra越小，相容性越好', params: [
+          { symbol: '\\delta d', desc: '色散力分量' },
+          { symbol: '\\delta p', desc: '极性力分量' },
+          { symbol: '\\delta h', desc: '氢键力分量' }
         ]},
         { type: 'tip', tipType: 'info', content: '传统的“相似相溶”原理的量化版。Ra < R0 (溶解半径) 时判定为可溶。' }
       ]
