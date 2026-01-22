@@ -13,20 +13,20 @@
       </view>
       <text class="header-title">{{title}}</text>
     </view>
-  </view>
 
-  <!-- 搜索框（名词库显示）-->
-  <view class="search-box" wx:if="{{showSearch}}">
-    <view class="search-input-wrapper">
-      <text class="search-icon">🔍</text>
-      <input
-        class="search-input"
-        placeholder="在{{title}}中搜索..."
-        placeholder-class="search-placeholder"
-        bindinput="onSearchInput"
-        value="{{searchKeyword}}"
-      />
-      <text class="clear-icon" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
+    <!-- 搜索框 (Sticky inside header) -->
+    <view class="search-box" wx:if="{{showSearch}}">
+      <view class="search-input-wrapper">
+        <text class="search-icon">🔍</text>
+        <input
+          class="search-input"
+          placeholder="在{{title}}中搜索..."
+          placeholder-class="search-placeholder"
+          bindinput="onSearchInput"
+          value="{{searchKeyword}}"
+        />
+        <text class="clear-icon" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
+      </view>
     </view>
   </view>
 
@@ -54,6 +54,7 @@
 
   <!-- 内容滚动区 (Search Inactive) -->
   <scroll-view class="content-scroll" scroll-y enhanced show-scrollbar="{{false}}" scroll-into-view="{{scrollToId}}" scroll-with-animation wx:else>
+    <view id="top"></view>
     <!-- 子分类列表 -->
     <view class="subcategory-list" wx:if="{{subcategories.length > 0}}">
       <block wx:for="{{subcategories}}" wx:key="id">

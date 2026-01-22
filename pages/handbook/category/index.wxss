@@ -2,7 +2,8 @@
 
 /* 页面容器 */
 .page-container {
-  min-height: 100vh;
+  height: 100vh; /* 强制固定高度 */
+  overflow: hidden; /* 禁止页面级滚动，强迫使用scroll-view */
   /* 手册专属主题色 */
   --primary: #6366f1;
   background: var(--bg);
@@ -13,14 +14,93 @@
 
 /* 固定头部 - 单行沉浸式设计 */
 .category-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  /* Remove sticky here if header is sticky */
+  z-index: 90;
   background: var(--bg); /* 沉浸式：与页面背景一致 */
   /* 移除border-bottom */
   box-sizing: border-box;
 }
 
+/* 搜索结果列表 (复用Handbook Index样式) */
+.search-results {
+  flex: 1;
+  height: 0; /* 关键：强制flex子项不按内容撑开 */
+  width: 100%;
+  padding: 24rpx 30rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding-bottom: 40rpx;
+}
+
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.result-card:active {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.result-icon-box {
+  width: 72rpx;
+  height: 72rpx;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.result-icon {
+  font-size: 36rpx;
+}
+
+.result-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  overflow: hidden;
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-desc {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-tag {
+  font-size: 22rpx;
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 .nav-bar {
   height: 44px;
   display: flex;
@@ -71,12 +151,9 @@
 
 /* 搜索框 */
 .search-box {
-  padding: 20rpx 30rpx 10rpx; /* 调整下边距 */
+  padding: 0 24rpx 20rpx; /* Match header padding */
   background: var(--bg);
-  position: sticky;
-  top: 44px; /* header height ? no, dynamic. Sticky under header requires knowing header height */
-  /* Remove sticky here if header is sticky */
-  z-index: 90;
+  /* Nested in sticky header, so no position needed */
 }
 
 .search-input-wrapper {
@@ -118,6 +195,7 @@
 /* 内容滚动区 */
 .content-scroll {
   flex: 1;
+  height: 0; /* 关键：强制flex子项不按内容撑开，而是被压缩到容器剩余空间 */
   padding: 0 30rpx;
   box-sizing: border-box; /* 修复溢出问题 */
   width: 100%;

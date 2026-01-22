@@ -63,15 +63,26 @@ Page({
       return
     }
 
-    // 名词库使用 terms 格式
-    if (categoryId === 'glossary' && data.terms) {
+    // 名词库: 无论结构如何，始终开启搜索
+    if (categoryId === 'glossary') {
+      let flatTerms = [];
+      // 兼容两种结构：1. flat terms 2. categories (flatten them)
+      if (data.terms) {
+        flatTerms = data.terms;
+      } else if (data.categories) {
+        data.categories.forEach(cat => {
+          if (cat.items) flatTerms = flatTerms.concat(cat.items);
+        });
+      }
+
       this.setData({
-        terms: data.terms,
+        terms: flatTerms, // Flatten for easier finding/display if needed, or just use subcategories
+        subcategories: data.categories || [], // Keep categories for default view
         showSearch: true,
         loading: false
-      })
+      });
     }
-    // 其他分类使用 subcategories 格式
+    // 其他分类: 默认隐藏搜索，除非以后有需求
     else if (data.categories) {
       let displayCategories = data.categories
 
@@ -80,14 +91,14 @@ Page({
         displayCategories = data.categories.filter(c => c.id === anchor)
         // 自动修正标题：如果找到了对应的分类，让页面标题变成该分类的标题
         if (displayCategories.length > 0) {
-          wx.setNavigationBarTitle({ title: displayCategories[0].title })
-          this.setData({ title: displayCategories[0].title })
+           wx.setNavigationBarTitle({ title: displayCategories[0].title })
+           this.setData({ title: displayCategories[0].title })
         }
       }
 
       this.setData({
         subcategories: displayCategories,
-        showSearch: false, // 过滤模式下隐藏搜索，避免干扰
+        showSearch: false,
         loading: false
       })
     }
@@ -127,7 +138,10 @@ Page({
       return
     }
 
-    this.setData({ searchKeyword: keyword })
+    this.setData({
+      searchKeyword: keyword,
+      scrollToId: 'top' // Utilizes scroll-into-view or scrollTop if bound
+    })
 
     let results = []
 
