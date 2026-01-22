@@ -49,7 +49,7 @@ Page({
       {
         id: 'handbook',
         title: '涂布工程师手册',
-        desc: '术语 / 理论 / 胶系 / 测试 / 诊断',
+        desc: '术语 / 材料 / 设备 / 工艺 / 诊断',
         path: '/pages/handbook/index',
         icon: '📚',
         color: '#6366f1' // Indigo - 手册专属色

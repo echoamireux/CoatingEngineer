@@ -57,7 +57,7 @@ Page({
       {
         id: 'coating-theory',
         title: '涂布技术',
-        desc: '狭缝 / 凹版 / 理论公式',
+        desc: '狭缝 / 凹版 / 微凹 / 逗号',
         icon: '🔬',
         color: '#8b5cf6',
         count: 4,
@@ -66,10 +66,10 @@ Page({
       {
         id: 'testing',
         title: '测试与质量',
-        desc: '物性 / 光学 / 表面能',
+        desc: '流变 / 压敏胶 / 光学 / 可靠性',
         icon: '📊',
         color: '#ec4899',
-        count: 6,
+        count: 7,
         unit: '类别'
       },
       {
