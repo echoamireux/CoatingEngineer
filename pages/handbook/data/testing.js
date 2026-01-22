@@ -33,9 +33,9 @@ module.exports = {
       title: '压敏胶性能 (PSA)',
       icon: '🤏',
       items: [
-        { id: 'psa-peel', title: '剥离强度', brief: '180°/90°/解卷力' },
-        { id: 'psa-tack', title: '初粘力', brief: '环形/滚球/探针' },
-        { id: 'psa-shear', title: '剪切保持力', brief: '静态剪切/SAFT' }
+        { id: 'psa-peel', title: '剥离强度', brief: '180°(标准) / 90° / T型' },
+        { id: 'psa-tack', title: '初粘力', brief: '环形(Loop) vs 滚球/探针' },
+        { id: 'psa-shear', title: '剪切保持力', brief: '静态剪切 / SAFT / 动态剪切' }
       ]
     },
     {
@@ -269,6 +269,18 @@ module.exports = {
              { mode: 'CF', label: '内聚破坏 (Cohesive Failure)', desc: '异常模式: 胶层内部撕裂，被贴面和背材均有胶。原因：固化不全或分子量太低。' },
              { mode: 'ATB', label: '脱胶 (Adhesive Transfer)', desc: '异常模式: 胶层全部留在被贴面上。原因：与背材结合力差或底涂剂失效。' }
           ]
+        },
+        // --- Method Comparison ---
+        { type: 'text', content: '不同剥离角度适用场景对比：' },
+        {
+          type: 'table',
+          title: '剥离方法选择 (Method Selection)',
+          headers: ['类型', '角度', '适用场景'],
+          rows: [
+            ['180°剥离', '180°', '标准胶带 (PET/BOPP等柔性背材)'],
+            ['90°剥离', '90°', '刚性背材 (金属/硬塑料) 或 易折背材'],
+            ['T型剥离', 'T-Peel', '双面胶对贴 或 柔性基材互粘']
+          ]
         }
       ]
     },
@@ -296,6 +308,18 @@ module.exports = {
              { mode: 'Low', label: '低初粘 (Low Tack)', tagType: 'tag-info', desc: '峰值力 < 2 N/25mm。应用：如保护膜、可移除标签 (排气性好)。' },
              { mode: 'Slip', label: '震荡 (Slip-Stick)', tagType: 'tag-warning', desc: '锯齿状曲线: 表明模量过高或涂布不均 (Coating Defects)。' }
           ]
+        },
+        // --- Method Comparison ---
+        { type: 'text', content: '不同初粘测试方法对比：' },
+        {
+           type: 'table',
+           title: '初粘测试方法 (Tack Methods)',
+           headers: ['方法', 'ASTM', '特点'],
+           rows: [
+             ['环形法 (Loop)', 'D6195', '最通用，模拟贴标，重现性好'],
+             ['滚球法 (Ball)', 'D3121', '设备简单，适合产线速测，灵敏度低'],
+             ['探针法 (Probe)', 'D2979', '适合微小面积，可测模量，设备昂贵']
+           ]
         }
       ]
     },

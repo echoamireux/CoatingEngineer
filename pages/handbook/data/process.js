@@ -34,9 +34,9 @@ module.exports = {
       title: "卷材控制",
       icon: "⚙️",
       items: [
-        { id: "proc-tension", title: "张力控制原理", brief: "PID与浮动辊" },
-        { id: "proc-taper", title: "收卷锥度", brief: "内紧外松防止菜心" },
-        { id: "proc-splice", title: "接带工艺", brief: "不停机换卷技巧" },
+        { id: "proc-tension", title: "张力控制原理", brief: "PID控制 / 张力区段" },
+        { id: "proc-taper", title: "收卷锥度", brief: "防止菜心 / 线性公式" },
+        { id: "proc-splice", title: "接带工艺", brief: "搭接(Lap) vs 对接(Butt)" },
       ],
     },
     {

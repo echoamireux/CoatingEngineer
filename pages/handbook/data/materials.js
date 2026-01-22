@@ -13,7 +13,7 @@ module.exports = {
         { id: 'acrylic-monomer', title: '单体体系', brief: '软单体/硬单体/功能单体' },
         { id: 'acrylic-tg', title: 'Tg调控理论', brief: 'Fox方程与配方设计' },
         { id: 'acrylic-crosslink', title: '交联体系', brief: '金属螯合/异氰酸酯/环氧' },
-        { id: 'acrylic-type', title: '乳液vs溶剂型', brief: '工艺差异与性能对比' }
+        { id: 'acrylic-type', title: '乳液vs溶剂型', brief: '溶剂/乳液 性能对比' }
       ]
     },
     {
@@ -21,9 +21,9 @@ module.exports = {
       title: '有机硅压敏胶',
       icon: '🔬',
       items: [
-        { id: 'silicone-resin', title: 'MQ树脂体系', brief: '硅橡胶与树脂配比' },
+        { id: 'silicone-resin', title: 'MQ树脂体系', brief: '胶/树脂比 (M/Q Ratio)' },
         { id: 'silicone-cure', title: '固化体系', brief: '加成/过氧化物/缩合' },
-        { id: 'silicone-hightemp', title: '高温特性', brief: '耐温机理与应用' }
+        { id: 'silicone-hightemp', title: '高温特性', brief: 'Si-O键能 / 耐温应用' }
       ]
     },
     {
