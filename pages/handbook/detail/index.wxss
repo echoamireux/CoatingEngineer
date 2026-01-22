@@ -215,28 +215,33 @@
 }
 
 .formula-params {
-  display: flex;
-  flex-direction: column;
-  gap: 12rpx;
+  display: table; /* 核心方案：表格布局 - 让每组公式根据内容自适应列宽 */
+  width: 100%;
+  border-spacing: 0 12rpx; /* 模拟 gap: 12rpx */
+  margin-left: 0; /* 移除之前的左移 hack */
 }
 
 .param-item {
-  display: flex;
-  align-items: baseline;
-  gap: 16rpx;
+  display: table-row; /* 表格行 */
+  /* gap 在 table-row 无效，使用 border-spacing */
 }
 
 .param-symbol {
-  font-size: 26rpx;
-  font-family: 'Times New Roman', serif;
-  color: var(--primary);
-  min-width: 80rpx;
+  display: table-cell; /* 表格单元格 */
+  width: auto; /* 关键修复：自然宽度，防止压缩换行 */
+  white-space: nowrap; /* 必须：禁止换行 */
+  text-align: right; /* Axis Alignment */
+  padding-right: 16rpx;
+  vertical-align: middle;
 }
 
 .param-desc {
-  font-size: 24rpx;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+  font-size: 26rpx;
   color: var(--text-sub);
-  flex: 1;
+  line-height: 1.4;
 }
 
 /* 列表 */

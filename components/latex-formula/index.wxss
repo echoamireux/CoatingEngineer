@@ -14,7 +14,7 @@
 
 /* 文本与符号 */
 .latex-text {
-  margin: 0 2rpx;
+  margin: 0; /* 移除额外间距，修复 min 等下标过宽问题 */
   display: inline-block;
   white-space: nowrap;
   color: inherit; /* 继承父级颜色 */

@@ -72,13 +72,14 @@ module.exports = {
         { type: 'formula', title: '毛细数 (Capillary Number)', formula: Formulas.CAPILLARY_NUMBER, description: '表征粘性力与表面张力的比值。Ca值决定了涂布流动的控制机制：', params: [
           { symbol: 'Ca < 0.1', desc: '表面张力主导 (易平整，但易断液)' },
           { symbol: 'Ca > 0.5', desc: '粘性力主导 (易稳定，但易出条纹)' },
-          { symbol: 'η', desc: '动态粘度 (Pa·s)' },
-          { symbol: 'σ', desc: '表面张力 (N/m)' }
+          { symbol: '\\eta', desc: '动态粘度 (Pa·s)' },
+          { symbol: 'V', desc: '涂布线速 (m/s)' },
+          { symbol: '\\sigma', desc: '表面张力 (N/m)' }
         ]},
         { type: 'formula', title: '临界最小湿膜厚度', formula: Formulas.CRITICAL_THICKNESS, description: 'Ruschak公式，预测稳定涂布的最小膜厚', params: [
-          { symbol: 'Hₘᵢₙ', desc: '最小湿膜厚度' },
-          { symbol: 'G', desc: '涂布间隙' },
-          { symbol: 'Ca', desc: '毛细数' }
+          { symbol: 'H_{min}', desc: '最小湿膜厚度 (μm)' },
+          { symbol: 'G', desc: '涂布间隙 (μm)' },
+          { symbol: 'Ca', desc: '毛细数 (无量纲)' }
         ]},
         { type: 'tip', tipType: 'info', content: '实际涂布时，Ca值通常在0.01-1范围内，G/H比值在1.5-2.5之间为稳定区。' }
       ]
@@ -168,7 +169,7 @@ module.exports = {
         { type: 'text', content: '微凹涂布(Micro Gravure)是凹版涂布的精密变体，适合超薄膜涂布。' },
         { type: 'table', title: '微凹涂布特点', headers: ['参数', '微凹涂布', '普通凹版'], rows: [
           ['辊径', '20-50 mm', '100-300 mm'],
-          ['LPI', '150-300', '80-150'],
+          ['LPI', '150-300 LPI', '80-150 LPI'],
           ['膜厚范围', '0.5-10 μm', '5-50 μm'],
           ['精度', '±2%', '±5%']
         ]},

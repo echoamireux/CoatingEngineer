@@ -1,5 +1,5 @@
 <!-- 主入口：遍历 AST -->
-<view class="latex-container">
+<view class="latex-container" style="color: {{color}}">
   <block wx:for="{{ast}}" wx:key="index" wx:for-item="node">
 
     <!-- 文本 -->
