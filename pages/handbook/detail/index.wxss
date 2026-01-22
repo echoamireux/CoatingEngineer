@@ -350,49 +350,95 @@
   padding: 16rpx;
 }
 
+.analysis-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16rpx;
+  border-left: 4rpx solid var(--primary);
+  padding-left: 10rpx;
+}
+
 .analysis-header {
   font-size: 26rpx;
   font-weight: bold;
   color: var(--text);
-  margin-bottom: 12rpx;
-  border-left: 4rpx solid var(--primary);
-  padding-left: 10rpx;
+}
+
+.analysis-subtitle {
+  font-size: 20rpx;
+  color: var(--text-sub);
 }
 
 .analysis-grid {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
+  gap: 20rpx; /* Increased gap for better separation */
 }
 
 .analysis-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Align top for multi-line text */
+}
+
+.fail-tag-wrapper {
+  width: 80rpx; /* Fixed width for alignment */
+  flex-shrink: 0;
+  margin-right: 16rpx;
+  display: flex;
+  justify-content: center;
+  padding-top: 4rpx; /* Visual alignment with text */
 }
 
 .fail-tag {
-  font-size: 20rpx;
-  padding: 4rpx 10rpx;
-  border-radius: 4rpx;
-  width: 100rpx;
+  font-size: 22rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 6rpx;
+  min-width: 60rpx; /* Ensure 2-3 chars fit nicely */
   text-align: center;
-  margin-right: 16rpx;
   font-weight: bold;
-  flex-shrink: 0;
+  font-family: monospace; /* Code-like look */
 }
 
 .tag-success {
-  background: rgba(48, 209, 88, 0.2);
+  background: rgba(48, 209, 88, 0.15);
   color: #30d158;
+  border: 1rpx solid rgba(48, 209, 88, 0.3);
 }
 
 .tag-error {
-  background: rgba(255, 69, 58, 0.2);
+  background: rgba(255, 69, 58, 0.15);
   color: #ff453a;
+  border: 1rpx solid rgba(255, 69, 58, 0.3);
+}
+
+.tag-info {
+  background: rgba(10, 132, 255, 0.15);
+  color: #0a84ff;
+  border: 1rpx solid rgba(10, 132, 255, 0.3);
+}
+
+.tag-warning {
+  background: rgba(255, 159, 10, 0.15);
+  color: #ff9f0a;
+  border: 1rpx solid rgba(255, 159, 10, 0.3);
+}
+
+.fail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.fail-label {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: var(--text);
 }
 
 .fail-desc {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: var(--text-sub);
-  flex: 1;
+  line-height: 1.4;
 }

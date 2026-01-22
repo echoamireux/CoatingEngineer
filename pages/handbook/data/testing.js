@@ -240,14 +240,14 @@ module.exports = {
     'psa-peel': {
       sections: [
         { type: 'text', content: '剥离强度 (Peel Strength) 是衡量压敏胶粘性最核心的指标，代表破坏粘接界面所需的单位力。' },
-        // V6.5 Canvas Diagram
-        { type: 'diagram', mode: 'peel-180', caption: 'ASTM D3330 Method A: 180° 剥离测试' },
+        // V6.5 Interactive Simulation
+
         // V6.5 Localized Card
         {
           type: 'standard-card',
           title: 'ASTM D3330 关键参数',
           items: [
-            { label: '制样宽度', value: '24 mm (标准宽度)' },
+            { label: '制样宽度', value: '24 mm / 25 mm (1 inch)' },
             { label: '剥离速度', value: '300 mm/min ± 30' },
             { label: '压滚负载', value: '2040 g (4.5 lb)' },
             { label: '压滚速度', value: '10 mm/s (无气泡)' },
@@ -263,10 +263,11 @@ module.exports = {
         {
           type: 'analysis-block',
           title: '失效模式判定 (Failure Modes)',
+          subtitle: '代码基于 ASTM 缩写标准',
           items: [
-             { mode: 'AF (界面破坏)', desc: '正常模式: 胶带从被贴面干净剥离，无残胶。' },
-             { mode: 'CF (内聚破坏)', desc: '异常模式: 胶层内部撕裂，被贴面和背材均有胶。原因：固化不全或分子量太低。' },
-             { mode: 'ATB (脱胶)', desc: '异常模式: 胶层全部留在被贴面上。原因：底涂剂(Primer)失效。' }
+             { mode: 'AF', label: '界面破坏 (Adhesive Failure)', desc: '正常模式: 胶带从被贴面干净剥离，无残胶。表明粘接力小于内聚力。' },
+             { mode: 'CF', label: '内聚破坏 (Cohesive Failure)', desc: '异常模式: 胶层内部撕裂，被贴面和背材均有胶。原因：固化不全或分子量太低。' },
+             { mode: 'ATB', label: '脱胶 (Adhesive Transfer)', desc: '异常模式: 胶层全部留在被贴面上。原因：与背材结合力差或底涂剂失效。' }
           ]
         }
       ]
@@ -288,11 +289,12 @@ module.exports = {
         { type: 'tip', tipType: 'info', content: 'Loop Tack 能更好地反映自动化贴标机的抓取性能，比滚球法(Rolling Ball)更具指导意义。' },
          {
           type: 'analysis-block',
-          title: '判定标准',
+          title: '判定标准 (Judgment)',
+          subtitle: '结果分析',
           items: [
-             { mode: '高初粘', desc: '峰值力 > 10 N/25mm (难以重贴)' },
-             { mode: '低初粘', desc: '峰值力 < 2 N/25mm (排气性好)' },
-             { mode: '震荡(Slip Stick)', desc: '曲线呈现锯齿状: 发生了粘-滑现象' }
+             { mode: 'High', label: '高初粘 (High Tack)', tagType: 'tag-success', desc: '峰值力 > 10 N/25mm。应用：如防伪封口、重型包装 (难以重贴)。' },
+             { mode: 'Low', label: '低初粘 (Low Tack)', tagType: 'tag-info', desc: '峰值力 < 2 N/25mm。应用：如保护膜、可移除标签 (排气性好)。' },
+             { mode: 'Slip', label: '震荡 (Slip-Stick)', tagType: 'tag-warning', desc: '锯齿状曲线: 表明模量过高或涂布不均 (Coating Defects)。' }
           ]
         }
       ]

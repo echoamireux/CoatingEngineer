@@ -199,8 +199,8 @@ module.exports = {
           formula: Formulas.CPK,
           description: "衡量制程满足规格能力的指标 (越大越好)",
           params: [
-             { symbol: 'USL', desc: '规格上限 (Upper Limit)' },
-             { symbol: 'LSL', desc: '规格下限 (Lower Limit)' },
+             { symbol: 'USL', desc: '规格上限' },
+             { symbol: 'LSL', desc: '规格下限' },
              { symbol: 'μ', desc: '制程均值' },
              { symbol: 'σ', desc: '标准差 (制程波动)' }
           ]
