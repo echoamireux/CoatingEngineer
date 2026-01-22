@@ -151,9 +151,9 @@
 
 /* 搜索框 */
 .search-box {
-  padding: 0 24rpx 20rpx; /* Match header padding */
+  padding: 40rpx 30rpx 24rpx; /* Match Home Page: More breathing room */
   background: var(--bg);
-  /* Nested in sticky header, so no position needed */
+  /* Nested in sticky header */
 }
 
 .search-input-wrapper {
