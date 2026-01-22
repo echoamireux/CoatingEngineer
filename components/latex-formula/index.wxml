@@ -1,12 +1,60 @@
+<!-- 主入口：遍历 AST -->
 <view class="latex-container">
-  <canvas
-    type="2d"
-    id="latex-canvas-{{canvasId}}"
-    class="latex-canvas"
-    style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;"
-  ></canvas>
-  <!-- 备用文本显示 -->
-  <view class="latex-fallback" wx:if="{{showFallback}}">
-    <text class="formula-text">{{formula}}</text>
-  </view>
+  <block wx:for="{{ast}}" wx:key="index" wx:for-item="node">
+
+    <!-- 文本 -->
+    <block wx:if="{{node.type === 'text'}}">
+      <text class="latex-text {{node.style}}">{{node.content}}</text>
+    </block>
+
+    <!-- 符号 -->
+    <block wx:elif="{{node.type === 'symbol'}}">
+      <text class="latex-symbol">{{node.content}}</text>
+    </block>
+
+    <!-- 分式 (Component Recursion) -->
+    <block wx:elif="{{node.type === 'frac'}}">
+      <view class="latex-frac">
+        <view class="latex-frac-num">
+          <latex-formula nodes="{{node.numerator}}" />
+        </view>
+        <view class="latex-frac-line"></view>
+        <view class="latex-frac-den">
+          <latex-formula nodes="{{node.denominator}}" />
+        </view>
+      </view>
+    </block>
+
+    <!-- 上标 -->
+    <block wx:elif="{{node.type === 'sup'}}">
+      <view class="latex-sup">
+        <latex-formula nodes="{{node.content}}" />
+      </view>
+    </block>
+
+    <!-- 下标 -->
+    <block wx:elif="{{node.type === 'sub'}}">
+      <view class="latex-sub">
+        <latex-formula nodes="{{node.content}}" />
+      </view>
+    </block>
+
+    <!-- 组合 -->
+    <block wx:elif="{{node.type === 'group'}}">
+      <view class="latex-group">
+        <latex-formula nodes="{{node.content}}" />
+      </view>
+    </block>
+
+    <!-- 根号 -->
+     <block wx:elif="{{node.type === 'sqrt'}}">
+       <view class="latex-sqrt">
+         <view class="latex-sqrt-symbol">√</view>
+         <view class="latex-sqrt-content">
+             <latex-formula nodes="{{node.content}}" />
+         </view>
+       </view>
+    </block>
+
+  </block>
 </view>

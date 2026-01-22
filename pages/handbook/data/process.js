@@ -1,6 +1,8 @@
 /**
  * 工艺控制数据 (Process Control)
  */
+const Formulas = require('./formula-lib');
+
 module.exports = {
   categories: [
     {
@@ -109,8 +111,15 @@ module.exports = {
         {
           type: "formula",
           title: "扩散公式",
-          formula: "D = D₀ · exp(-Ea/RT)",
+          formula: Formulas.DIFFUSION,
           description: "扩散系数随温度升高呈指数增加",
+          params: [
+            { symbol: 'D', desc: '扩散系数' },
+            { symbol: 'D₀', desc: '前指因子' },
+            { symbol: 'Ea', desc: '活化能' },
+            { symbol: 'R', desc: '气体常数' },
+            { symbol: 'T', desc: '绝对温度 (K)' }
+          ]
         },
         {
           type: "tip",
@@ -128,8 +137,15 @@ module.exports = {
         {
           type: "formula",
           title: "面密度控制",
-          formula: "泵速(RPM) = K · 线速 · 目标面密度 / 泵排量",
-          description: "前馈控制基础",
+          formula: Formulas.AREA_DENSITY,
+          description: "前馈控制基础：泵速与线速、涂布量成正比",
+          params: [
+            { symbol: 'RPM', desc: '供液泵转速' },
+            { symbol: 'K', desc: '泵排量系数' },
+            { symbol: 'V', desc: '涂布线速' },
+            { symbol: 'Target', desc: '目标面密度' },
+            { symbol: 'Pump', desc: '泵校准量' }
+          ]
         },
         {
           type: "list",
@@ -180,8 +196,14 @@ module.exports = {
         {
           type: "formula",
           title: "CPK计算公式",
-          formula: "CPK = min((USL-μ)/(3σ), (μ-LSL)/(3σ))",
-          description: "USL/LSL为规格上下限，μ为均值，σ为标准差",
+          formula: Formulas.CPK,
+          description: "衡量制程满足规格能力的指标 (越大越好)",
+          params: [
+             { symbol: 'USL', desc: '规格上限 (Upper Limit)' },
+             { symbol: 'LSL', desc: '规格下限 (Lower Limit)' },
+             { symbol: 'μ', desc: '制程均值' },
+             { symbol: 'σ', desc: '标准差 (制程波动)' }
+          ]
         },
         {
           type: "table",
@@ -245,8 +267,15 @@ module.exports = {
         {
           type: "formula",
           title: "线性锥度公式",
-          formula: "F = F₀ × [1 - Taper% × (D - D₀)/D]",
-          description: "F为当前张力，F₀为初始张力",
+          formula: Formulas.TAPER_TENSION,
+          description: "内卷紧外卷松，防止因应力累积产生菜心皱纹",
+          params: [
+            { symbol: 'F', desc: '当前实际张力' },
+            { symbol: 'F₀', desc: '起卷初始张力' },
+            { symbol: 'Taper%', desc: '锥度百分比 (通常10-30%)' },
+            { symbol: 'D', desc: '当前卷径' },
+            { symbol: 'D₀', desc: '卷芯直径' }
+          ]
         },
         {
           type: "list",

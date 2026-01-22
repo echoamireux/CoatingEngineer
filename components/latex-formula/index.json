@@ -1,4 +1,10 @@
 {
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "latex-formula": "./index"
+  },
+  "options": {
+    "styleIsolation": "apply-shared",
+    "virtualHost": true
+  }
 }

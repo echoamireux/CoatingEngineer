@@ -1,6 +1,8 @@
 /**
  * 涂布工艺理论数据
  */
+const Formulas = require('./formula-lib');
+
 module.exports = {
   categories: [
     {
@@ -55,25 +57,25 @@ module.exports = {
           ['涂布速度', 'V', 'm/min', '基材运行速度'],
           ['流量', 'Q', 'mL/min', '供液泵的体积流量']
         ]},
-        { type: 'formula', title: '湿膜厚度计算', formula: 'H = Q / (V × W)', description: '质量守恒，Q为流量，V为速度，W为涂布宽度' },
+        { type: 'formula', title: '湿膜厚度计算', formula: Formulas.WET_FILM_THICKNESS, description: '质量守恒，Q为流量，V为速度，W为涂布宽度' },
         { type: 'tip', tipType: 'info', content: '典型精密涂布精度可达±2%，关键在于流量稳定性和间隙均匀性。' }
       ]
     },
     'slot-die-formula': {
       sections: [
-        { type: 'formula', title: '质量守恒方程', formula: 'H = Q / (V × W)', description: '湿膜厚度与供液量的关系', params: [
+        { type: 'formula', title: '质量守恒方程', formula: Formulas.WET_FILM_THICKNESS, description: '湿膜厚度与供液量的关系', params: [
           { symbol: 'H', desc: '湿膜厚度 (m)' },
           { symbol: 'Q', desc: '体积流量 (m³/s)' },
           { symbol: 'V', desc: '涂布速度 (m/s)' },
           { symbol: 'W', desc: '涂布宽度 (m)' }
         ]},
-        { type: 'formula', title: '毛细数 (Capillary Number)', formula: 'Ca = η × V / σ', description: '表征粘性力与表面张力的比值。Ca值决定了涂布流动的控制机制：', params: [
+        { type: 'formula', title: '毛细数 (Capillary Number)', formula: Formulas.CAPILLARY_NUMBER, description: '表征粘性力与表面张力的比值。Ca值决定了涂布流动的控制机制：', params: [
           { symbol: 'Ca < 0.1', desc: '表面张力主导 (易平整，但易断液)' },
           { symbol: 'Ca > 0.5', desc: '粘性力主导 (易稳定，但易出条纹)' },
           { symbol: 'η', desc: '动态粘度 (Pa·s)' },
           { symbol: 'σ', desc: '表面张力 (N/m)' }
         ]},
-        { type: 'formula', title: '临界最小湿膜厚度', formula: 'Hₘᵢₙ = 0.65 × G × Ca²/³', description: 'Ruschak公式，预测稳定涂布的最小膜厚', params: [
+        { type: 'formula', title: '临界最小湿膜厚度', formula: Formulas.CRITICAL_THICKNESS, description: 'Ruschak公式，预测稳定涂布的最小膜厚', params: [
           { symbol: 'Hₘᵢₙ', desc: '最小湿膜厚度' },
           { symbol: 'G', desc: '涂布间隙' },
           { symbol: 'Ca', desc: '毛细数' }
@@ -91,7 +93,7 @@ module.exports = {
     'slot-die-pressure': {
       sections: [
         { type: 'text', content: '模头内部液体流动产生压降，主要包括狭缝内压降和入口压降。' },
-        { type: 'formula', title: '狭缝内压降 (泊肃叶流动)', formula: 'ΔP = 12ηQL / (Wb³)', description: '牛顿流体在狭缝内的压降计算', params: [
+        { type: 'formula', title: '狭缝内压降 (泊肃叶流动)', formula: Formulas.SLOT_DIE_PRESSURE, description: '牛顿流体在狭缝内的压降计算', params: [
           { symbol: 'ΔP', desc: '压降 (Pa)' },
           { symbol: 'η', desc: '粘度 (Pa·s)' },
           { symbol: 'Q', desc: '流量 (m³/s)' },
@@ -123,13 +125,18 @@ module.exports = {
           ['网穴容积', '单位面积容积', '10-50 mL/m²'],
           ['网穴形状', '金字塔/梯形/六角', '影响转移效率']
         ]},
-        { type: 'formula', title: '理论涂布量', formula: 'W = V × ρ × η_t', description: 'V为网穴容积，ρ为液体密度，η_t为转移效率' }
+        { type: 'formula', title: '理论涂布量', formula: Formulas.GRAVURE_COATING, description: 'V为网穴容积，ρ为液体密度，η_t为转移效率', params: [
+          { symbol: 'W', desc: '理论涂布量 (g/m²)' },
+          { symbol: 'V', desc: '网穴容积 (mL/m²)' },
+          { symbol: '\\rho', desc: '液体密度 (g/mL)' },
+          { symbol: '\\eta_t', desc: '转移效率' }
+        ] }
       ]
     },
     'gravure-transfer': {
       sections: [
         { type: 'text', content: '凹版涂布量取决于网穴参数和转移效率。' },
-        { type: 'formula', title: '涂布量计算', formula: 'W = V × ρ × η_t', description: '实际涂布量 = 网穴容积 × 密度 × 转移效率', params: [
+        { type: 'formula', title: '涂布量计算', formula: Formulas.GRAVURE_COATING, description: '实际涂布量 = 网穴容积 × 密度 × 转移效率', params: [
           { symbol: 'W', desc: '湿涂布量 (g/m²)' },
           { symbol: 'V', desc: '网穴容积 (mL/m²)' },
           { symbol: 'ρ', desc: '液体密度 (g/mL)' },

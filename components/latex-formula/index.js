@@ -1,186 +1,180 @@
-/**
- * LaTeX公式渲染组件
- * 使用Canvas 2D绘制数学公式
- */
+// components/latex-formula/index.js
 Component({
   properties: {
-    // LaTeX公式字符串
+    nodes: {
+      type: Array,
+      value: [],
+      observer: 'onNodesChange'
+    },
     formula: {
       type: String,
       value: '',
-      observer: 'renderFormula'
+      observer: 'parse'
     },
-    // 字体大小 (rpx)
-    fontSize: {
-      type: Number,
-      value: 32
-    },
-    // 文字颜色
     color: {
       type: String,
-      value: '#e5e7eb'
-    },
-    // 是否居中
-    center: {
-      type: Boolean,
-      value: true
+      value: 'currentColor'
     }
   },
 
   data: {
-    canvasId: '',
-    canvasWidth: 300,
-    canvasHeight: 50,
-    showFallback: true,
-    ctx: null
-  },
-
-  lifetimes: {
-    attached() {
-      // 生成唯一ID
-      this.setData({
-        canvasId: 'latex_' + Math.random().toString(36).substr(2, 9)
-      })
-    },
-    ready() {
-      this.initCanvas()
-    }
+    ast: []
   },
 
   methods: {
-    async initCanvas() {
-      try {
-        const query = this.createSelectorQuery()
-        query.select(`#latex-canvas-${this.data.canvasId}`)
-          .fields({ node: true, size: true })
-          .exec((res) => {
-            if (res[0] && res[0].node) {
-              const canvas = res[0].node
-              const ctx = canvas.getContext('2d')
-
-              // 设置canvas尺寸
-              const dpr = wx.getSystemInfoSync().pixelRatio
-              canvas.width = res[0].width * dpr
-              canvas.height = res[0].height * dpr
-              ctx.scale(dpr, dpr)
-
-              this.canvas = canvas
-              this.ctx = ctx
-
-              if (this.properties.formula) {
-                this.renderFormula()
-              }
-            }
-          })
-      } catch (e) {
-        console.warn('Canvas初始化失败，使用文本备用显示', e)
-        this.setData({ showFallback: true })
+    onNodesChange(newVal) {
+      if (newVal && newVal.length > 0) {
+        this.setData({ ast: newVal });
       }
     },
 
-    renderFormula() {
-      if (!this.ctx || !this.properties.formula) {
-        this.setData({ showFallback: true })
-        return
+    parse(formula) {
+      // 如果有传入 nodes，则优先使用 nodes，忽略 formula
+      if (this.properties.nodes && this.properties.nodes.length > 0) return;
+
+      if (!formula) return;
+      const tokens = this.tokenize(formula);
+      const ast = this.buildAST(tokens);
+      this.setData({ ast });
+    },
+
+    // 1. 词法分析 (Tokenizer)
+    tokenize(formula) {
+      const tokens = [];
+      let i = 0;
+
+      while (i < formula.length) {
+        const char = formula[i];
+
+        // 忽略空白
+        if (/\s/.test(char)) {
+          i++;
+          continue;
+        }
+
+        // 命令 (\frac, \mu, \min)
+        if (char === '\\') {
+          let cmd = '\\';
+          i++;
+          // 读取直到非字母或结束
+          while (i < formula.length && /[a-zA-Z]/.test(formula[i])) {
+            cmd += formula[i];
+            i++;
+          }
+          tokens.push({ type: 'cmd', value: cmd });
+          continue;
+        }
+
+        // 特殊符号
+        if (['{', '}', '^', '_'].includes(char)) {
+          tokens.push({ type: 'control', value: char });
+          i++;
+          continue;
+        }
+
+        // 普通字符 (数字, 字母, 运算符)
+        tokens.push({ type: 'char', value: char });
+        i++;
       }
+      return tokens;
+    },
 
-      const ctx = this.ctx
-      const formula = this.properties.formula
-      const fontSize = this.properties.fontSize / 2 // rpx to px approximate
-      const color = this.properties.color
+    // 2. 语法分析 (Build AST)
+    // 递归构建树
+    buildAST(tokens) {
+      const result = [];
 
-      // 清空画布
-      ctx.clearRect(0, 0, this.data.canvasWidth, this.data.canvasHeight)
+      while (tokens.length > 0) {
+        const token = tokens.shift();
 
-      // 设置样式
-      ctx.fillStyle = color
-      ctx.font = `${fontSize}px "Times New Roman", serif`
-      ctx.textAlign = this.properties.center ? 'center' : 'left'
-      ctx.textBaseline = 'middle'
+        if (token.type === 'control' && token.value === '}') {
+          // 遇到右括号，结束当前层级
+          return result;
+        }
 
-      // 解析并渲染公式
-      const rendered = this.parseAndRender(formula, ctx, fontSize)
+        if (token.type === 'cmd') {
+           const node = this.handleCommand(token.value, tokens);
+           if (node) result.push(node);
+        } else if (token.type === 'control' && token.value === '^') {
+            // 上标，取出前一个元素作为基底（如果需要）或者直接作为独立的上标元素
+            // 简单的实现：上标紧跟前一个元素，但在我们的 Flex 布局中，上标可以作为一个独立的 View 跟在后面
+            const content = this.parseGroup(tokens);
+            result.push({ type: 'sup', content });
+        } else if (token.type === 'control' && token.value === '_') {
+            // 下标
+            const content = this.parseGroup(tokens);
+            result.push({ type: 'sub', content });
+        } else if (token.type === 'control' && token.value === '{') {
+            // 显式组 { ... }
+            const content = this.buildAST(tokens); // 递归直到 }
+            result.push({ type: 'group', content });
+        } else {
+            // 普通字符处理
+            result.push(this.handleChar(token.value));
+        }
+      }
+      return result;
+    },
 
-      if (rendered) {
-        this.setData({ showFallback: false })
+    // 解析形如 { ... } 或 单个字符 的参数
+    parseGroup(tokens) {
+      if (tokens.length === 0) return [];
+
+      const next = tokens[0];
+      if (next.type === 'control' && next.value === '{') {
+        tokens.shift(); // 消耗 {
+        return this.buildAST(tokens); // buildAST 会消耗对应的 }
       } else {
-        this.setData({ showFallback: true })
+        // 单个 Token 作为参数
+        const token = tokens.shift();
+        if (token.type === 'cmd') {
+            return [this.handleCommand(token.value, tokens)];
+        }
+        return [this.handleChar(token.value)];
       }
     },
 
-    /**
-     * 简单的LaTeX解析器
-     * 支持: 分数(\frac)、上标(^)、下标(_)、希腊字母、特殊符号
-     */
-    parseAndRender(formula, ctx, fontSize) {
-      try {
-        // 简化处理：将LaTeX转换为Unicode显示
-        let displayText = formula
+    handleCommand(cmd, tokens) {
+       if (cmd === '\\frac') {
+           const num = this.parseGroup(tokens);
+           const den = this.parseGroup(tokens);
+           return { type: 'frac', numerator: num, denominator: den };
+       }
+       if (cmd === '\\min') {
+           return { type: 'text', content: 'min', style: 'normal' };
+       }
+        if (cmd === '\\sqrt') {
+           const content = this.parseGroup(tokens);
+           return { type: 'sqrt', content: content };
+       }
 
-        // 希腊字母替换
-        const greekMap = {
-          '\\alpha': 'α', '\\beta': 'β', '\\gamma': 'γ', '\\delta': 'δ',
-          '\\epsilon': 'ε', '\\eta': 'η', '\\theta': 'θ', '\\lambda': 'λ',
-          '\\mu': 'μ', '\\nu': 'ν', '\\pi': 'π', '\\rho': 'ρ',
-          '\\sigma': 'σ', '\\tau': 'τ', '\\omega': 'ω', '\\phi': 'φ',
-          '\\varepsilon': 'ε', '\\Delta': 'Δ', '\\Sigma': 'Σ', '\\Omega': 'Ω'
+       // 希腊字母与符号映射
+       const map = {
+           '\\mu': 'μ', '\\sigma': 'σ', '\\rho': 'ρ',
+           '\\eta': 'η', '\\theta': 'θ', '\\gamma': 'γ',
+           '\\delta': 'δ', '\\pi': 'π', '\\times': '×',
+           '\\cdot': '·', '\\approx': '≈', '\\le': '≤',
+           '\\ge': '≥', '\\pm': '±', '\\Delta': 'Δ'
+       };
+
+       if (map[cmd]) {
+           return { type: 'symbol', content: map[cmd] };
+       }
+
+       return { type: 'text', content: cmd, style: 'normal' };
+    },
+
+    handleChar(char) {
+        if (/[a-zA-Z]/.test(char)) {
+            // 变量设为斜体
+            return { type: 'text', content: char, style: 'italic' };
         }
-
-        // 数学符号替换
-        const symbolMap = {
-          '\\cdot': '·', '\\times': '×', '\\div': '÷', '\\pm': '±',
-          '\\leq': '≤', '\\geq': '≥', '\\neq': '≠', '\\approx': '≈',
-          '\\infty': '∞', '\\sum': 'Σ', '\\prod': 'Π', '\\int': '∫',
-          '\\partial': '∂', '\\nabla': '∇', '\\rightarrow': '→', '\\leftarrow': '←',
-          '\\Rightarrow': '⇒', '\\Leftrightarrow': '⇔'
+        if (/[0-9]/.test(char)) {
+             // 数字设为正体
+            return { type: 'text', content: char, style: 'normal' };
         }
-
-        // 替换希腊字母
-        for (const [latex, unicode] of Object.entries(greekMap)) {
-          displayText = displayText.replace(new RegExp(latex.replace(/\\/g, '\\\\'), 'g'), unicode)
-        }
-
-        // 替换数学符号
-        for (const [latex, unicode] of Object.entries(symbolMap)) {
-          displayText = displayText.replace(new RegExp(latex.replace(/\\/g, '\\\\'), 'g'), unicode)
-        }
-
-        // 处理分数 \frac{a}{b} -> a/b
-        displayText = displayText.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1/$2)')
-
-        // 处理上标 ^{x} -> ˣ（简化处理）
-        displayText = displayText.replace(/\^(\{[^}]+\}|\w)/g, (match, p1) => {
-          const content = p1.startsWith('{') ? p1.slice(1, -1) : p1
-          // 常见上标数字
-          const superscripts = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹',
-            'n':'ⁿ', 'i':'ⁱ', '+':'⁺', '-':'⁻', '(':'⁽', ')':'⁾'}
-          return content.split('').map(c => superscripts[c] || `^${c}`).join('')
-        })
-
-        // 处理下标 _{x} -> ₓ（简化处理）
-        displayText = displayText.replace(/_(\{[^}]+\}|\w)/g, (match, p1) => {
-          const content = p1.startsWith('{') ? p1.slice(1, -1) : p1
-          // 常见下标
-          const subscripts = {'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉',
-            'i':'ᵢ', 'j':'ⱼ', 'n':'ₙ', 'm':'ₘ', 'x':'ₓ', 'y':'ᵧ', 'a':'ₐ', 'e':'ₑ', 'o':'ₒ', 'r':'ᵣ', 't':'ₜ'}
-          return content.split('').map(c => subscripts[c] || `_${c}`).join('')
-        })
-
-        // 清理多余的花括号和反斜杠
-        displayText = displayText.replace(/[{}]/g, '')
-        displayText = displayText.replace(/\\\\/g, '')
-
-        // 绘制文本
-        const x = this.properties.center ? this.data.canvasWidth / 2 : 10
-        const y = this.data.canvasHeight / 2
-
-        ctx.fillText(displayText, x, y)
-
-        return true
-      } catch (e) {
-        console.warn('公式渲染失败', e)
-        return false
-      }
+        // 其他符号
+        return { type: 'symbol', content: char };
     }
   }
 })

@@ -51,14 +51,16 @@
         <!-- 公式内容 -->
         <view class="section-formula" wx:if="{{item.type === 'formula'}}">
           <view class="formula-box">
-            <text class="formula-text">{{item.formula}}</text>
+            <latex-formula formula="{{item.formula}}" />
           </view>
           <view class="formula-desc" wx:if="{{item.description}}">
             <text>{{item.description}}</text>
           </view>
           <view class="formula-params" wx:if="{{item.params && item.params.length > 0}}">
             <view class="param-item" wx:for="{{item.params}}" wx:key="symbol" wx:for-item="param">
-              <text class="param-symbol">{{param.symbol}}</text>
+              <view class="param-symbol">
+                <latex-formula formula="{{param.symbol}}" color="var(--primary)" />
+              </view>
               <text class="param-desc">{{param.desc}}</text>
             </view>
           </view>
