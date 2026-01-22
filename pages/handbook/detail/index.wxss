@@ -337,7 +337,62 @@
   opacity: 0.6;
 }
 
-/* 底部留白 */
+/* 顶部留白 */
 .content-footer {
   height: 100rpx;
+}
+
+/* ================== Analysis Block (V6.0) ================== */
+.section-analysis {
+  margin: 24rpx 0;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8rpx;
+  padding: 16rpx;
+}
+
+.analysis-header {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: var(--text);
+  margin-bottom: 12rpx;
+  border-left: 4rpx solid var(--primary);
+  padding-left: 10rpx;
+}
+
+.analysis-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.analysis-item {
+  display: flex;
+  align-items: center;
+}
+
+.fail-tag {
+  font-size: 20rpx;
+  padding: 4rpx 10rpx;
+  border-radius: 4rpx;
+  width: 100rpx;
+  text-align: center;
+  margin-right: 16rpx;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.tag-success {
+  background: rgba(48, 209, 88, 0.2);
+  color: #30d158;
+}
+
+.tag-error {
+  background: rgba(255, 69, 58, 0.2);
+  color: #ff453a;
+}
+
+.fail-desc {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  flex: 1;
 }

@@ -3,6 +3,8 @@
   "navigationStyle": "custom",
   "usingComponents": {
     "latex-formula": "/components/latex-formula/index",
-    "coating-window-chart": "/components/coating-window-chart/index"
+    "coating-window-chart": "/components/coating-window-chart/index",
+    "test-diagram": "/components/test-diagram-canvas/index",
+    "standard-card": "/components/standard-card/index"
   }
 }

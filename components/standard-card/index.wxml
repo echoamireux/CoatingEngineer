@@ -1,0 +1,14 @@
+<!-- components/standard-card/index.wxml -->
+<view class="card-container">
+  <view class="card-header" wx:if="{{title}}">
+    <text class="card-icon">⚡</text>
+    <text class="card-title">{{title}}</text>
+  </view>
+
+  <view class="card-body">
+    <view class="card-item" wx:for="{{items}}" wx:key="label">
+      <text class="item-label">{{item.label}}</text>
+      <text class="item-value">{{item.value}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,8 @@
+<view class="diagram-container">
+  <canvas
+    type="2d"
+    id="diagramCanvas"
+    class="canvas"
+  ></canvas>
+  <view class="caption" wx:if="{{caption}}">{{caption}}</view>
+</view>

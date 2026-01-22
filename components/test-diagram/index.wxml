@@ -1,0 +1,60 @@
+<!-- components/test-diagram/index.wxml -->
+<view class="diagram-container">
+  <!-- 1. 180° Peel Test -->
+  <view class="diagram-canvas peel-mode" wx:if="{{mode === 'peel-180'}}">
+    <view class="plate">
+        <text class="label">Steel Plate</text>
+    </view>
+    <view class="tape-bonded"></view>
+    <view class="tape-peeled">
+        <view class="arrow-force">F</view>
+    </view>
+    <view class="clamp"></view>
+  </view>
+
+  <!-- 2. Shear Test (Static) -->
+  <view class="diagram-canvas shear-mode" wx:if="{{mode === 'shear-static'}}">
+      <view class="plate-vertical">
+          <text class="label">Plate</text>
+      </view>
+      <view class="tape-area">
+          <view class="weight-box">
+              <text class="weight-text">1kg</text>
+          </view>
+      </view>
+  </view>
+
+  <!-- 3. Loop Tack -->
+  <view class="diagram-canvas tack-mode" wx:if="{{mode === 'tack-loop'}}">
+      <view class="plate-flat">
+          <text class="label">Substrate</text>
+      </view>
+      <view class="tape-loop">
+          <view class="arrow-down">⬇</view>
+      </view>
+  </view>
+
+  <!-- 4. Viscosity (Rotational) -->
+  <view class="diagram-canvas visc-mode" wx:if="{{mode === 'viscosity'}}">
+      <view class="beaker">
+          <view class="liquid-level"></view>
+          <view class="spindle">
+             <view class="spindle-shaft"></view>
+             <view class="spindle-disc"></view>
+             <view class="arrow-rotate">⟳</view>
+          </view>
+      </view>
+  </view>
+
+  <!-- 5. Release Test (High Speed) -->
+  <view class="diagram-canvas release-mode" wx:if="{{mode === 'release'}}">
+      <view class="roller-big"></view>
+      <view class="liner-strip"></view>
+      <view class="tape-strip">
+          <view class="arrow-force-angle">F</view>
+      </view>
+  </view>
+
+
+  <view class="diagram-caption" wx:if="{{caption}}">{{caption}}</view>
+</view>

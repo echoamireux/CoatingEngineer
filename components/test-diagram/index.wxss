@@ -1,0 +1,245 @@
+/* components/test-diagram/index.wxss */
+.diagram-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30rpx 0;
+  width: 100%;
+}
+
+.diagram-canvas {
+  position: relative;
+  width: 100%;
+  height: 240rpx;
+  background-color: var(--bg-card, #2c2c2e);
+  border-radius: 12rpx;
+  border: 1px solid var(--border-color, #444);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.diagram-caption {
+  font-size: 24rpx;
+  color: var(--text-secondary, #8e8e93);
+  margin-top: 12rpx;
+  text-align: center;
+}
+
+/* ================== Peel 180 Mode ================== */
+.peel-mode .plate {
+  width: 240rpx;
+  height: 20rpx;
+  background: #636366; /* Steel gray */
+  position: absolute;
+  bottom: 60rpx;
+  border-radius: 2rpx;
+}
+.peel-mode .label {
+  font-size: 16rpx;
+  color: #fff;
+  position: absolute;
+  top: 24rpx;
+  width: 100%;
+  text-align: center;
+}
+.peel-mode .tape-bonded {
+  width: 140rpx;
+  height: 6rpx;
+  background: var(--primary, #007aff);
+  position: absolute;
+  bottom: 80rpx;
+  left: 50%;
+  margin-left: -120rpx; /* Align with plate left */
+}
+.peel-mode .tape-peeled {
+  width: 120rpx;
+  height: 6rpx;
+  background: var(--primary, #007aff);
+  position: absolute;
+  bottom: 110rpx; /* Lifted */
+  left: 50%;
+  margin-left: -120rpx;
+  transform-origin: left center;
+  transform: rotate(175deg); /* Slightly less than 180 to show separation */
+}
+.peel-mode .arrow-force {
+  position: absolute;
+  right: -20rpx;
+  top: -15rpx;
+  font-size: 20rpx;
+  color: var(--primary, #007aff);
+}
+.peel-mode .clamp {
+  width: 20rpx;
+  height: 30rpx;
+  border: 2px solid #aaa;
+  position: absolute;
+  left: 50%;
+  margin-left: -140rpx; /* Grip end */
+  bottom: 100rpx;
+}
+
+/* ================== Shear Mode ================== */
+.shear-mode .plate-vertical {
+  width: 20rpx;
+  height: 160rpx;
+  background: #636366;
+  position: absolute;
+  top: 30rpx;
+}
+.shear-mode .label {
+  font-size: 16rpx;
+  color: #aaa;
+  position: absolute;
+  left: 30rpx;
+  top: 10rpx;
+}
+.shear-mode .tape-area {
+  width: 16rpx;
+  height: 60rpx;
+  background: var(--primary, #007aff);
+  position: absolute;
+  top: 50rpx;
+  left: 50%;
+  margin-left: 10rpx; /* Attached to right side of plate */
+}
+.shear-mode .weight-box {
+  width: 40rpx;
+  height: 40rpx;
+  background: #ff3b30; /* Red weight */
+  position: absolute;
+  bottom: -50rpx;
+  left: -12rpx;
+  border-radius: 4rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.shear-mode .weight-box::before {
+  content: '';
+  width: 2rpx;
+  height: 20rpx;
+  background: #aaa; /* String */
+  position: absolute;
+  top: -20rpx;
+  left: 50%;
+}
+.shear-mode .weight-text {
+  font-size: 14rpx;
+  color: white;
+  font-weight: bold;
+}
+
+/* ================== Tack Loop Mode ================== */
+.tack-mode .plate-flat {
+  width: 200rpx;
+  height: 10rpx;
+  background: #636366;
+  position: absolute;
+  bottom: 50rpx;
+}
+.tack-mode .label {
+  font-size: 16rpx;
+  color: #8e8e93;
+  position: absolute;
+  bottom: -30rpx;
+  width: 100%;
+  text-align: center;
+}
+.tack-mode .tape-loop {
+  width: 60rpx;
+  height: 80rpx;
+  border: 4rpx solid var(--primary, #007aff);
+  border-bottom: none; /* Open bottom? No, loop is continuous but viewed side */
+  border-radius: 30rpx 30rpx 10rpx 10rpx;
+  position: absolute;
+  bottom: 60rpx;
+}
+.tack-mode .arrow-down {
+  position: absolute;
+  top: -30rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24rpx;
+  color: var(--primary, #007aff);
+}
+
+/* ================== Viscosity Mode ================== */
+.visc-mode .beaker {
+  width: 120rpx;
+  height: 140rpx;
+  border: 2px solid #8e8e93;
+  border-top: none;
+  border-radius: 0 0 10rpx 10rpx;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.visc-mode .liquid-level {
+  width: 100%;
+  height: 80%;
+  background: rgba(0, 122, 255, 0.2);
+  position: absolute;
+  bottom: 0;
+}
+.visc-mode .spindle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: -20rpx;
+}
+.visc-mode .spindle-shaft {
+  width: 4rpx;
+  height: 80rpx;
+  background: #fff;
+}
+.visc-mode .spindle-disc {
+  width: 60rpx;
+  height: 10rpx;
+  background: #fff;
+  border-radius: 50%;
+}
+.visc-mode .arrow-rotate {
+  font-size: 24rpx;
+  color: #fff;
+  margin-top: 5rpx;
+}
+
+/* ================== Release Mode (High Speed) ================== */
+.release-mode .roller-big {
+  width: 100rpx;
+  height: 100rpx;
+  border: 4rpx solid #aaa;
+  border-radius: 50%;
+  position: absolute;
+  top: 40rpx;
+  left: 60rpx;
+}
+.release-mode .liner-strip {
+  width: 200rpx;
+  height: 4rpx;
+  background: #636366;
+  position: absolute;
+  top: 140rpx; /* Under roller */
+  left: 60rpx;
+}
+.release-mode .tape-strip {
+  width: 160rpx;
+  height: 6rpx;
+  background: var(--primary, #007aff);
+  position: absolute;
+  top: 136rpx;
+  left: 60rpx;
+  transform-origin: left center;
+  transform: rotate(-30deg);
+}
+.release-mode .arrow-force-angle {
+  position: absolute;
+  right: -30rpx;
+  top: -20rpx;
+  font-size: 20rpx;
+  color: var(--primary);
+}

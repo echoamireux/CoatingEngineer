@@ -1,5 +1,5 @@
 /**
- * 测试与质量数据 (Quality & Testing) V5.0
+ * 测试与质量数据 (Quality & Testing) V6.5 Digital SOP
  * 架构：7-Pillar Architecture (Fluid, Substrate, PSA, Coating Physics, Polymer Physics, Optical, Reliability)
  */
 const Formulas = require('./formula-lib');
@@ -80,10 +80,20 @@ module.exports = {
     }
   ],
   details: {
-    // === 1. Fluid ===
+    // === 1. Fluid (V6.5 Localized) ===
     'fluid-viscosity': {
       sections: [
-        { type: 'text', content: '粘度是涂布工艺窗口的核心。需区分单点粘度(QC)与流变行为(研发)。' },
+        { type: 'text', content: '粘度 (Viscosity) 是涂布工艺窗口的核心。需区分单点粘度(QC)与流变行为(研发)。' },
+        // V6.5 Canvas Diagram
+        { type: 'diagram', mode: 'viscosity', caption: 'Brookfield 旋转粘度计原理' },
+
+        { type: 'standard-card', title: '粘度测试 SOP 参数', items: [
+           { label: '温度控制', value: '25.0 ± 0.1 °C' },
+           { label: '转子选择', value: '使扭矩保持在 10-90%' },
+           { label: '转速设定', value: '需检查触变性 (如 10/100 rpm)' },
+           { label: '测试容器', value: '标准烧杯 (避免壁效应)' }
+        ]},
+
         { type: 'table', title: '常用测试方法', headers: ['方法', '设备', '剪切速率', '用途'], rows: [
           ['旋转法', 'Brookfield', '0.1-100 s⁻¹', '出货QC'],
           ['流变仪', 'Rheometer', '0.01-10⁴ s⁻¹', '触变性分析'],
@@ -134,42 +144,76 @@ module.exports = {
       ]
     },
 
-    // === 2. Substrate ===
+    // === 2. Substrate (V6.5 Localized & Canvas) ===
     'sub-thickness': {
       sections: [
-        { type: 'text', content: '厚度均一性是精密涂布的基石。' },
-        { type: 'table', title: '测量方法 (ASTM D374)', headers: ['类型', '精度', '特点'], rows: [
-          ['千分尺', '1 μm', '接触式，硬基材准确'],
-          ['LVDT测厚仪', '0.1 μm', '接触式，恒定压力，适合薄膜'],
-          ['光谱共焦', '0.01 μm', '在线非接触，透明膜首选']
-        ]},
-        { type: 'tip', tipType: 'info', content: '报告厚度时应包含：平均值、公差范围 (Range) 及标准差 (Stdev)。' }
+        { type: 'text', content: '厚度 (Thickness) 均一性是精密涂布的基石。不同基材需选用对应的测量原理。' },
+        {
+          type: 'standard-card',
+          title: 'ASTM D374 测厚标准',
+          items: [
+            { label: '千分尺法', value: '精度: 1μm (接触式)' },
+            { label: 'LVDT法', value: '恒定压力: 50kPa' },
+            { label: '光谱共焦', value: '精度: 0.01μm (非接触)' },
+            { label: '统计要求', value: '报告: 平均值/极差/标准差' }
+          ]
+        },
+        { type: 'table', title: '测量设备对比', headers: ['类型', '精度', '适用场景'], rows: [
+          ['千分尺', '1 μm', '硬基材 (PET/Glass)'],
+          ['LVDT', '0.1 μm', '软薄膜 (需恒定压力)'],
+          ['光谱共焦', '0.01 μm', '在线检测 / 液膜']
+        ]}
       ]
     },
     'sub-release': {
       sections: [
-        { type: 'text', content: '离型力决定了模切排废和客户端解卷的顺畅度。' },
-        { type: 'table', title: 'FTM 3 / FTM 10 标准', headers: ['工况', '速度', '意义'], rows: [
-          ['低速剥离', '0.3 m/min', '手工剥离手感，常规QC'],
-          ['高速剥离', '10-300 m/min', '模拟自动贴标/分条机解卷']
-        ]},
-        { type: 'text', content: '**常见判定标准**：' },
+        { type: 'text', content: '离型力 (Release Force) 决定了模切排废和客户端解卷的顺畅度。' },
+        // V6.5 Canvas Diagram
+        { type: 'diagram', mode: 'release', caption: '高速离型力测试 (FTM 3/10)' },
+
+        {
+          type: 'standard-card',
+          title: 'FTM 3 / FTM 10 标准参数',
+          items: [
+            { label: '测试胶带', value: 'TESA 7475 (标准测试胶带)' },
+            { label: '低速剥离', value: '0.3 m/min (人工手感模拟)' },
+            { label: '高速剥离', value: '10-300 m/min (自动化模拟)' },
+            { label: '剥离角度', value: '180° (水平剥离)' }
+          ]
+        },
+
+        { type: 'text', content: '**常见分级标准 (g/25mm)**：' },
         { type: 'list', items: [
-          '超轻离型：1-3 g/25mm',
-          '轻离型：3-5g/25mm',
-          '中离型：10-15g/25mm',
-          '重离型：30-50g/25mm'
-        ]}
+          '超轻离型 (Ultra-light): 1-3 g',
+          '轻离型 (Light): 3-5 g',
+          '中离型 (Medium): 10-15 g',
+          '重离型 (Heavy): 30-50 g'
+        ]},
+        {
+          type: 'analysis-block',
+          title: '失效模式分析 (Failure Analysis)',
+          items: [
+             { mode: 'Lock-up', desc: '锁死断裂: 离型力过大导致基材拉断。' },
+             { mode: 'Zipping', desc: '拉链声: 涂布不均或固化不全导致的震荡。' },
+             { mode: 'Rub-off', desc: '掉硅: 硅油层附着力差，从基材脱落。' }
+          ]
+        }
       ]
     },
     'sub-sas': {
       sections: [
-        { type: 'text', content: 'SAS (Subsequent Adhesion Strength) 残余粘着率，用于评价离型膜硅油固化程度及转移情况。' },
-        { type: 'list', items: [
-          '标准：FTM 11',
-          '原理：用标准胶带贴合离型膜后撕下，再测试其对钢板的剥离力，与空白样对比。'
-        ]},
-        { type: 'formula', title: 'SAS 计算', formula: "SAS\\% = \\frac{F_{tested}}{F_{initial}} \\times 100\\%", description: '越接近100%越好', params: [
+        { type: 'text', content: 'SAS (残余粘着率) 用于评价离型膜硅油固化程度及转移情况。' },
+        {
+           type: 'standard-card',
+           title: 'FTM 11 测试参数',
+           items: [
+             { label: '步骤 1', value: '胶带贴合离型膜 (70°C/20h)' },
+             { label: '步骤 2', value: '撕下胶带，测试对钢板剥离力' },
+             { label: '对照组', value: '未经贴合的空白胶带剥离力' },
+             { label: '计算公式', value: 'SAS% = 测试组 / 对照组' }
+           ]
+        },
+        { type: 'formula', title: 'SAS 计算', formula: "SAS% = \\frac{F_{tested}}{F_{initial}} \\times 100%", description: '越接近100%越好', params: [
           { symbol: 'F_{tested}', desc: '接触离型膜后的剥离力' },
           { symbol: 'F_{initial}', desc: '原始胶带剥离力' }
         ]},
@@ -178,89 +222,185 @@ module.exports = {
     },
     'sub-dyne': {
       sections: [
-         { type: 'text', content: '表面能测试用于确认基材是否经过电晕处理(Corona)。' },
-         { type: 'list', items: [
-           '达因笔法 (ASTM D2578)：观察液体收缩。若3秒内不收缩为合格。',
-           '接触角法 (ASTM D7490)：测水和二碘甲烷接触角，计算色散/极性分量。'
-         ]}
+         { type: 'text', content: '表面能测试用于确认基材是否经过电晕处理(Corona)，确保涂布液能铺展。' },
+         {
+           type: 'standard-card',
+           title: '表面能测试 SOP',
+           items: [
+             { label: '达因笔法', value: 'ASTM D2578 (快速检测)' },
+             { label: '接触角法', value: 'ASTM D7490 (实验室级)' },
+             { label: '判定标准', value: '液体收缩时间 > 2秒' },
+             { label: '目标值', value: '> 38-42 dyne (适合涂布)' }
+           ]
+         }
       ]
     },
 
-    // === 3. PSA ===
+    // === 3. PSA (V6.5 Localized & Canvas) ===
     'psa-peel': {
       sections: [
-        { type: 'text', content: '剥离强度是衡量压敏胶粘性的最直观指标。' },
-        { type: 'table', title: '常见剥离类型', headers: ['类型', '标准', '应用'], rows: [
-          ['180°剥离', 'ASTM D3330', '标准测试，对钢板/玻璃'],
-          ['90°剥离', 'ASTM D6862', '刚性背材或易折断材料'],
-          ['T型剥离', 'ASTM D1876', '柔性对柔性 (Film-Film)']
+        { type: 'text', content: '剥离强度 (Peel Strength) 是衡量压敏胶粘性最核心的指标，代表破坏粘接界面所需的单位力。' },
+        // V6.5 Canvas Diagram
+        { type: 'diagram', mode: 'peel-180', caption: 'ASTM D3330 Method A: 180° 剥离测试' },
+        // V6.5 Localized Card
+        {
+          type: 'standard-card',
+          title: 'ASTM D3330 关键参数',
+          items: [
+            { label: '制样宽度', value: '24 mm (标准宽度)' },
+            { label: '剥离速度', value: '300 mm/min ± 30' },
+            { label: '压滚负载', value: '2040 g (4.5 lb)' },
+            { label: '压滚速度', value: '10 mm/s (无气泡)' },
+            { label: '停放时间', value: '1 min (初粘) / 20 min (标准)' }
+          ]
+        },
+        { type: 'formula', title: '结果计算', formula: Formulas.PEEL_STRENGTH, description: '取中间80%数据的平均值', params: [
+           { symbol: 'F_{peel}', desc: '剥离强度 (N/25mm)' },
+           { symbol: 'F_{avg}', desc: '有效行程平均力值 (N)' },
+           { symbol: 'Width', desc: '测试条宽度 (mm)' }
         ]},
-        { type: 'formula', title: '结果计算', formula: Formulas.PEEL_STRENGTH, description: '单位 N/25mm 或 N/in', params: [
-           { symbol: 'F_{peel}', desc: '剥离强度' },
-           { symbol: 'F_{avg}', desc: '平均力值 (避开初始/结尾)' }
-        ]}
+        // V6.5 Localized Analysis
+        {
+          type: 'analysis-block',
+          title: '失效模式判定 (Failure Modes)',
+          items: [
+             { mode: 'AF (界面破坏)', desc: '正常模式: 胶带从被贴面干净剥离，无残胶。' },
+             { mode: 'CF (内聚破坏)', desc: '异常模式: 胶层内部撕裂，被贴面和背材均有胶。原因：固化不全或分子量太低。' },
+             { mode: 'ATB (脱胶)', desc: '异常模式: 胶层全部留在被贴面上。原因：底涂剂(Primer)失效。' }
+          ]
+        }
       ]
     },
     'psa-tack': {
       sections: [
-        { type: 'text', content: '初粘力 (Tack) 指胶面与被粘物以极轻压力瞬间接触后的抵抗分离的能力。' },
-        { type: 'table', title: '测试对比', headers: ['方法', '特点', '适用'], rows: [
-          ['环形 Loop', 'ASTM D6195', '定量力值，重复性好，研发首选'],
-          ['滚球 Ball', 'PSTC-6', '设备简单，仅能分级(球号)，产线首选'],
-          ['探针 Probe', 'ASTM D2979', '微观点接触，研究流变机理']
-        ]}
+        { type: 'text', content: '初粘力 (Tack) 指胶面与被粘物以极轻压力瞬间接触后抵抗分离的能力。' },
+        { type: 'diagram', mode: 'tack-loop', caption: 'PSTC-16: 环形初粘力测试 (Loop Tack)' },
+        {
+          type: 'standard-card',
+          title: 'Loop Tack 测试参数',
+          items: [
+            { label: '环形长度', value: '150 mm' },
+            { label: '接触面积', value: '25 mm x 25 mm' },
+            { label: '测试速度', value: '300 mm/min' },
+            { label: '接触时间', value: '< 3 seconds (瞬间接触)' }
+          ]
+        },
+        { type: 'tip', tipType: 'info', content: 'Loop Tack 能更好地反映自动化贴标机的抓取性能，比滚球法(Rolling Ball)更具指导意义。' },
+         {
+          type: 'analysis-block',
+          title: '判定标准',
+          items: [
+             { mode: '高初粘', desc: '峰值力 > 10 N/25mm (难以重贴)' },
+             { mode: '低初粘', desc: '峰值力 < 2 N/25mm (排气性好)' },
+             { mode: '震荡(Slip Stick)', desc: '曲线呈现锯齿状: 发生了粘-滑现象' }
+          ]
+        }
       ]
     },
     'psa-shear': {
       sections: [
-        { type: 'text', content: '剪切保持力反映胶体的内聚强度 (Cohesion) 和耐蠕变性。' },
-        { type: 'list', items: [
-          '**静态剪切 (Static Shear)**: ASTM D3654。在 1kg 负载下记录胶带滑落时间 (min)。',
-          '**SAFT (剪切失效温度)**: ASTM D4498。挂重物升温 (如 1°C/min)，记录滑落时的温度。'
-        ]},
-        { type: 'tip', tipType: 'info', content: '高内聚胶水剪切时间应 > 10,000 min (不滑落)。失效模式应为内聚破坏 (Cohesive Failure)。' }
+        { type: 'text', content: '剪切保持力 (Holding Power) 反映胶体的内聚强度 (Cohesion) 和耐蠕变性。' },
+        { type: 'diagram', mode: 'shear-static', caption: 'ASTM D3654: 静态剪切测试' },
+        {
+          type: 'standard-card',
+          title: '静态剪切 (Static Shear) 参数',
+          items: [
+            { label: '负载重量', value: '1000 g (标准)' },
+            { label: '接触面积', value: '25 mm x 25 mm' },
+            { label: '倾斜角度', value: '2° (防止剥离分力)' },
+            { label: '测试钢板', value: '不锈钢 (抛光处理)' }
+          ]
+        },
+        {
+            type: 'standard-card',
+            title: 'SAFT (剪切失效温度)',
+            items: [
+                { label: '起始温度', value: '40 °C' },
+                { label: '升温速率', value: '1 °C/min' },
+                { label: '失效判定', value: '记录砝码滑落时的温度' }
+            ]
+        },
+        { type: 'tip', tipType: 'warning', content: '高内聚胶水剪切时间应 > 10,000 min (7天不滑落)。若发生滑落，必须记录是CF还是AF模式。' }
       ]
     },
 
-    // === 4. Coating Phys ===
+    // === 4. Coating Phys (V6.5 Localized) ===
     'phys-hardness': {
       sections: [
-        { type: 'text', content: '铅笔硬度是评价 Hard Coat (HC) 涂层表面抗刮伤能力的标准方法。' },
-        { type: 'table', title: 'ASTM D3363 规范', headers: ['参数', '值'], rows: [
-          ['铅笔', '三菱 Uni (标准)'],
-          ['负载', '750g 或 1000g (日系)'],
-          ['角度', '45°'],
-          ['判定', '未划破涂层的最硬铅笔号']
-        ]},
+        { type: 'text', content: '铅笔硬度 (Pencil Hardness) 是评价 Hard Coat (HC) 涂层表面抗刮伤能力的标准方法。' },
+        {
+          type: 'standard-card',
+          title: 'ASTM D3363 测试参数',
+          items: [
+            { label: '标准铅笔', value: 'Mitsubishi Uni (三菱)' },
+            { label: '负载', value: '750g (通用) / 1000g (日系)' },
+            { label: '测试角度', value: '45° (使用小推车固定)' },
+            { label: '判定', value: '未划破涂层的最硬铅笔号' }
+          ]
+        },
         { type: 'text', content: '等级排序：9H(最硬) ... H, F, HB ... 6B(最软)。常见HC膜要求 2H-3H。' }
       ]
     },
     'phys-adhesion': {
       sections: [
         { type: 'text', content: '百格测试 (Cross-Cut) 评价涂层与基材的结合牢度。' },
-        { type: 'table', title: 'ASTM D3359 等级', headers: ['等级', '脱落情况', '合格判定'], rows: [
+        {
+          type: 'standard-card',
+          title: 'ASTM D3359 Method B',
+          items: [
+            { label: '刀具选择', value: '1mm间距 x 11刃 (硬基材)' },
+            { label: '测试胶带', value: '3M 600 或 3M 610 (关键)' },
+            { label: '撕拉操作', value: '180°反向迅速撕下' },
+            { label: '观察', value: '使用放大镜 + 光源' }
+          ]
+        },
+        { type: 'table', title: '等级判定', headers: ['等级', '脱落情况', '合格判定'], rows: [
           ['5B', '切口边缘完全光滑，无脱落', '优秀'],
           ['4B', '交叉点微小脱落 (<5%)', '合格'],
           ['3B', '脱落面积 5-15%', '不合格 (通常)'],
           ['0B', '脱落面积 > 65%', '严重失效']
-        ]},
-        { type: 'tip', tipType: 'warning', content: '测试胶带必须使用标准规定的 3M 600 或 3M 610，否则结果无效。' }
+        ]}
       ]
     },
     'phys-abrasion': {
       sections: [
         { type: 'text', content: '耐磨测试评价功能涂层（如AF防指纹、疏水层）的耐久性。' },
-        { type: 'list', items: [
-          '钢丝绒耐磨：1kg负载，#0000 钢丝绒，磨擦 2000-5000 次后测水接触角。',
-          'RCA 纸带耐磨：ASTM F2357，评估按键/外壳涂层。'
-        ]}
+        {
+           type: 'standard-card',
+           title: '钢丝绒耐磨 SOP',
+           items: [
+             { label: '磨料', value: '#0000 号钢丝绒' },
+             { label: '负载', value: '1000 g / 1 cm² 磨头' },
+             { label: '速率', value: '40-60 次/分钟' },
+             { label: '失效点', value: '水接触角 < 100°' }
+           ]
+        },
+        {
+           type: 'standard-card',
+           title: 'RCA 纸带耐磨 (ASTM F2357)',
+           items: [
+             { label: '负载', value: '175g (标准) / 275g' },
+             { label: '检查频率', value: '每 50-100 次停机检查' },
+             { label: '失效', value: '基材裸露 (Substrate Exposure)' }
+           ]
+        }
       ]
     },
 
-    // === 5. Polymer Phys ===
+    // === 5. Polymer Phys (V6.5 Localized) ===
     'phys-dma': {
       sections: [
         { type: 'text', content: 'DMA (动态热机械分析) 是高分子物理研究的“透视眼”。' },
+        {
+          type: 'standard-card',
+          title: 'DMA 设置参数 (PSA)',
+          items: [
+            { label: '模式', value: '剪切三明治 (Shear Sandwich)' },
+            { label: '频率', value: '1 Hz (标准) / 10 Hz' },
+            { label: '应变', value: '0.1% (线性粘弹区)' },
+            { label: '升温程序', value: '3 °C/min (-50 到 150°C)' }
+          ]
+        },
         { type: 'formula', title: '储能模量', formula: Formulas.STORAGE_MODULUS, description: '弹性部分，代表能量储存' },
         { type: 'formula', title: '损耗模量', formula: Formulas.LOSS_MODULUS, description: '粘性部分，代表能量耗散' },
         { type: 'formula', title: '损耗因子', formula: Formulas.TAN_DELTA, description: 'Tanδ峰值温度常被定义为 Tg' }
@@ -268,20 +408,39 @@ module.exports = {
     },
     'phys-tts': {
       sections: [
-        { type: 'text', content: '时温等效原理 (TTS) 允许利用高温下的短时数据预测低温下的长期性能。' },
+        { type: 'text', content: '时温等效 (TTS) 利用高温短时数据预测低温长期性能。' },
+        {
+           type: 'standard-card',
+           title: 'WLF 方程参数',
+           items: [
+             { label: '参考温度 (Tr)', value: '通常取 Tg' },
+             { label: '通用常数 C1', value: '17.44' },
+             { label: '通用常数 C2', value: '51.6 K' },
+             { label: '移位因子 aT', value: '高温时 log(aT) < 0' }
+           ]
+        },
         { type: 'formula', title: 'WLF 方程', formula: Formulas.WLF_EQUATION, params: [
            { symbol: 'a_T', desc: '移位因子 (Shift Factor)' },
-           { symbol: 'C_1', desc: '经验常数 (通用值 17.44)' },
-           { symbol: 'C_2', desc: '经验常数 (通用值 51.6 K)' },
+           { symbol: 'C_1', desc: '经验常数' },
+           { symbol: 'C_2', desc: '经验常数' },
            { symbol: 'T', desc: '测试温度 (K)' },
-           { symbol: 'T_r', desc: '参考温度 (K, 通常即 Tg)' }
-        ]},
-        { type: 'tip', tipType: 'info', content: '通过 TTS 构建的主曲线 (Master Curve) 可以预测胶带在 10⁻⁵ ~ 10⁵ Hz 极宽频率范围内的表现。' }
+           { symbol: 'T_r', desc: '参考温度 (K)' }
+        ]}
       ]
     },
     'phys-gel': {
       sections: [
-        { type: 'text', content: '凝胶分率 (Gel Fraction) 宏观表征聚合物网络的交联致密程度。' },
+        { type: 'text', content: '凝胶分率 (Gel Fraction) 表征聚合物网络的交联致密程度。' },
+        {
+          type: 'standard-card',
+          title: '凝胶测试 SOP',
+          items: [
+            { label: '溶剂', value: '甲苯 或 乙酸乙酯' },
+            { label: '过滤', value: '200目 不锈钢网' },
+            { label: '浸泡时间', value: '24小时 @ 室温' },
+            { label: '干燥', value: '120°C 烘烤 1小时' }
+           ]
+        },
         { type: 'formula', title: '凝胶计算', formula: Formulas.GEL_FRACTION, description: '溶剂萃取24h后的残留比例', params: [
            { symbol: 'W_{gel}', desc: '萃取干燥后质量 (g)' },
            { symbol: 'W_{initial}', desc: '初始质量 (g)' }
@@ -295,66 +454,109 @@ module.exports = {
       ]
     },
 
-    // === 6. Optical ===
+    // === 6. Optical (V6.5 Localized) ===
     'opt-trans': {
       sections: [
         { type: 'text', content: '透光率和雾度 (Haze) 是OCA光学胶的关键指标。' },
-        { type: 'formula', title: '雾度计算', formula: Formulas.HAZE_CALC, description: 'ASTM D1003', params: [
+        {
+          type: 'standard-card',
+          title: 'ASTM D1003 参数',
+          items: [
+            { label: '光源', value: 'C光源 或 D65光源' },
+            { label: '观察角', value: '2度 (2 Degree)' },
+            { label: '制样', value: '贴合在玻璃上 (Film on Glass)' },
+            { label: '参比', value: '空气 或 空白玻璃' }
+          ]
+        },
+        { type: 'formula', title: '雾度计算', formula: Formulas.HAZE_CALC, description: '散射光比例', params: [
            { symbol: 'T_{diffuse}', desc: '散射光透射率 (>2.5°)' },
            { symbol: 'T_{total}', desc: '总透射率' }
-        ]},
-        { type: 'text', content: '高端显示用OCA要求：透光率 > 99%，雾度 < 0.5%。' }
+        ]}
       ]
     },
     'opt-yi': {
       sections: [
         { type: 'text', content: '黄度指数 (YI - Yellowness Index) 评价材料的“泛黄”程度。' },
+        { type: 'standard-card', title: 'ASTM E313 参数', items: [
+             { label: '标准', value: 'ASTM E313-20' },
+             { label: '几何结构', value: 'd/8 (积分球)' },
+             { label: 'UV分量', value: '包含UV / 排除UV' },
+             { label: '合格判据', value: 'ΔYI < 1.0 (通常)' }
+        ]},
         { type: 'formula', title: 'YI E313', formula: Formulas.YI_CALC, description: '基于CIE三刺激值', params: [
           { symbol: 'X, Y, Z', desc: 'CIE 三刺激值' }
-        ]},
-        { type: 'tip', tipType: 'warning', content: '耐老化测试后 ΔYI < 1.0 通常作为合格标准。' }
+        ]}
       ]
     },
     'opt-gloss': {
        sections: [
          { type: 'text', content: '光泽度 (Gloss) 评价表面的镜面反射能力 (ASTM D523)。' },
+         { type: 'standard-card', title: '角度选择建议', items: [
+           { label: '20°角', value: '高光泽 (>70 GU)' },
+           { label: '60°角', value: '中光泽 (10-70 GU)' },
+           { label: '85°角', value: '低光泽/哑光 (<10 GU)' }
+         ]},
          { type: 'list', items: [
-           '高光泽：60°角测试值 > 70GU (如钢琴黑表面)',
-           '半光泽：10-70GU',
+           '高光泽：60°角测试值 > 70GU (如钢琴黑)',
            '哑光 (Matte)：< 10GU (如AG防眩光膜)'
          ]}
        ]
     },
 
-    // === 7. Reliability ===
+    // === 7. Reliability (V6.5 Localized) ===
     'rel-env': {
       sections: [
         { type: 'text', content: '环境老化测试用于模拟产品在极端气候下的可靠性。' },
-        { type: 'table', title: '常用老化条件', headers: ['简称', '条件', '考核点'], rows: [
-          ['双85', '85°C / 85%RH', '水解、气泡'],
-          ['高温高湿', '60°C / 90%RH', '消费电子常用'],
-          ['冷热冲击', '-40°C ↔ 85°C', '界面应力、分层'],
-          ['高温存储', '85°C 或 120°C', '耐热、挥发']
-        ]}
+        {
+          type: 'standard-card',
+          title: '常用信赖性条件',
+          items: [
+            { label: '双85 (Double 85)', value: '85°C / 85% RH / 1000h' },
+            { label: '冷热冲击', value: '-40°C (30min) ↔ 85°C (30min)' },
+            { label: '高温高湿', value: '60°C / 90% RH (消费电子常见)' },
+            { label: '低温存储', value: '-40°C / 1000h' }
+          ]
+        },
+        {
+           type: 'analysis-block',
+           title: '常见老化失效',
+           items: [
+              { mode: 'Delamination', desc: '分层/起泡: 湿气侵入或应力失配' },
+              { mode: 'Whitening', desc: '白化/发雾: 聚合物吸水微相分离' },
+              { mode: 'Yellowing', desc: '黄变: 氧化或UV降解' }
+           ]
+        }
       ]
     },
     'rel-weather': {
       sections: [
-        { type: 'text', content: '耐候性测试 (Quartz/Xenon/UV) 模拟阳光照射导致的老化。' },
-        { type: 'table', title: 'ASTM G154 (QUV)', headers: ['光源', '波长', '特点'], rows: [
-          ['UVA-340', '340nm 峰值', '模拟户外阳光最佳'],
-          ['UVB-313', '313nm 峰值', '加速因子高，但可能导致非自然老化']
-        ]}
+        { type: 'text', content: '耐候性测试 (QUV/Xenon) 模拟阳光照射导致的老化。' },
+        {
+          type: 'standard-card',
+          title: 'ASTM G154 (QUV) SOP',
+          items: [
+            { label: '灯管', value: 'UVA-340 (模拟户外阳光)' },
+            { label: '辐照度', value: '0.89 W/m² @ 340nm' },
+            { label: '循环条件', value: '8h UV @60°C / 4h 冷凝 @50°C' },
+            { label: '测试时长', value: '500h / 1000h' }
+          ]
+        }
       ]
     },
     'rel-pct': {
       sections: [
         { type: 'text', content: 'PCT (Pressure Cooker Test) 高压蒸煮测试，极端苛刻的湿热老化。' },
-        { type: 'list', items: [
-          '条件：121°C / 100% RH / 2 atm (饱和蒸汽压)',
-          '时间：24h / 48h / 96h',
-          '应用：半导体封装、高端OCA、车规级材料。'
-        ]}
+        {
+          type: 'standard-card',
+          title: 'JEDEC JESD22-A102 参数',
+          items: [
+            { label: '温度', value: '121 °C' },
+            { label: '湿度', value: '100% RH' },
+            { label: '压力', value: '2 atm (205 kPa)' },
+            { label: '时长', value: '96 hrs (典型值)' }
+          ]
+        },
+        { type: 'tip', tipType: 'warning', content: 'PCT 是破坏性极强的测试，通常用于评估材料的耐水解性能极限。' }
       ]
     }
   }

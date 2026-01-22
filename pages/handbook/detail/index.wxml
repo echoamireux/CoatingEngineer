@@ -79,6 +79,27 @@
           <text class="tip-icon">{{item.tipType === 'warning' ? '⚠️' : '💡'}}</text>
           <text class="tip-text">{{item.content}}</text>
         </view>
+
+        <!-- V6.0 新增: 矢量原理图 -->
+        <view class="section-diagram" wx:if="{{item.type === 'diagram'}}">
+             <test-diagram mode="{{item.mode}}" caption="{{item.caption}}" />
+        </view>
+
+        <!-- V6.0 新增: 标准参数卡 -->
+        <view class="section-card" wx:if="{{item.type === 'standard-card'}}">
+             <standard-card title="{{item.title}}" items="{{item.items}}" />
+        </view>
+
+        <!-- V6.0 新增: 失效分析板块 -->
+        <view class="section-analysis" wx:if="{{item.type === 'analysis-block'}}">
+             <view class="analysis-header" wx:if="{{item.title}}">{{item.title}}</view>
+             <view class="analysis-grid">
+               <view class="analysis-item" wx:for="{{item.items}}" wx:key="mode" wx:for-item="failItem">
+                 <view class="fail-tag {{failItem.mode.includes('AF') ? 'tag-success' : 'tag-error'}}">{{failItem.mode}}</view>
+                 <view class="fail-desc">{{failItem.desc}}</view>
+               </view>
+             </view>
+        </view>
       </view>
     </block>
 
