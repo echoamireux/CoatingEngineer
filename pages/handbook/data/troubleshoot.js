@@ -51,7 +51,9 @@ module.exports = {
           ['间隙过小', 'G/H比值偏低', '适当增大涂布间隙'],
           ['模头污染', '局部流场扰动', '清洁模头唇口']
         ]},
-        { type: 'formula', title: '临界条件', formula: 'Ca > Ca_critical', description: '当毛细数超过临界值时容易发生Ribbing' },
+        { type: 'formula', title: '临界条件', formula: 'Ca > Ca_{critical}', description: '当毛细数超过临界值时容易发生Ribbing', params: [
+           { symbol: 'Ca_{critical}', desc: '临界毛细数 (与间隙比G/H有关)' }
+        ] },
         { type: 'tip', tipType: 'info', content: '通常Ca < 0.1时涂布较稳定，G/H保持在1.5-2.5范围内。' }
       ]
     },

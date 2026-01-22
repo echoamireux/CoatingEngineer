@@ -167,7 +167,7 @@ Component({
            '\\ge': '≥', '\\pm': '±', '\\Delta': 'Δ',
            '\\epsilon': 'ε', '\\nu': 'ν', '\\omega': 'ω',
            '\\alpha': 'α', '\\beta': 'β', '\\tau': 'τ',
-           '\\phi': 'φ', '\\lambda': 'λ'
+           '\\phi': 'φ', '\\lambda': 'λ', '\\sum': '∑'
        };
 
        if (map[cmd]) {

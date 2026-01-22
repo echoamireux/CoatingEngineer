@@ -5,7 +5,7 @@
  */
 module.exports = {
   // Process Control Formulas
-  DIFFUSION: "D = D_0 \\cdot exp(-Ea/RT)",
+  DIFFUSION: "D = D_0 \\cdot exp(-\\frac{Ea}{RT})",
 
   AREA_DENSITY: "RPM = K \\cdot V \\cdot \\frac{Target}{Pump}",
 
@@ -24,7 +24,7 @@ module.exports = {
 
   GRAVURE_COATING: "W = V \\times \\rho \\times \\eta_t",
 
-  FOX_EQUATION: "1/Tg = \\sum (W_i/Tg_i)",
+  FOX_EQUATION: "\\frac{1}{Tg} = \\sum \\frac{W_i}{Tg_i}",
 
   // Testing & Quality Formulas (V5.0)
   SHEAR_RATE_ISO: "\\dot{\\gamma} = \\frac{V}{h}",

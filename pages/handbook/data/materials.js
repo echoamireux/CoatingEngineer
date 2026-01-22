@@ -104,11 +104,12 @@ module.exports = {
     'acrylic-tg': {
       sections: [
         { type: 'text', content: 'Tg（玻璃化转变温度）是压敏胶配方设计的核心参数，直接影响胶的粘弹性窗口和使用性能。' },
-        { type: 'formula', title: 'Fox方程', formula: '1/Tg = \\sum (W_i / Tg_i)', description: '用于预测共聚物的玻璃化转变温度', params: [
+        { type: 'formula', title: 'Fox方程', formula: '\\frac{1}{Tg} = \\sum \\frac{W_i}{Tg_i}', description: '用于预测共聚物的玻璃化转变温度', params: [
           { symbol: 'Tg', desc: '共聚物玻璃化转变温度 (K)' },
           { symbol: 'W_i', desc: '第i种单体的质量分数' },
           { symbol: 'Tg_i', desc: '第i种单体均聚物的Tg (K)' }
         ]},
+
         { type: 'table', title: '常用单体Tg参考值', headers: ['单体', '简称', 'Tg (°C)'], rows: [
           ['丙烯酸丁酯', 'BA', '-54'],
           ['丙烯酸-2-乙基己酯', '2-EHA', '-70'],
@@ -354,10 +355,10 @@ module.exports = {
     'surf-hsp': {
       sections: [
         { type: 'text', content: '汉森溶解度参数(HSP)用于预测溶剂对聚合物的溶解性及树脂间的相容性。' },
-        { type: 'formula', title: 'HSP距离公式', formula: 'Ra^2 = 4(\\delta d_1 - \\delta d_2)^2 + (\\delta p_1 - \\delta p_2)^2 + (\\delta h_1 - \\delta h_2)^2', description: 'Ra越小，相容性越好', params: [
-          { symbol: '\\delta d', desc: '色散力分量' },
-          { symbol: '\\delta p', desc: '极性力分量' },
-          { symbol: '\\delta h', desc: '氢键力分量' }
+        { type: 'formula', title: 'HSP距离公式', formula: 'Ra^2 = 4\\Delta_d^2 + \\Delta_p^2 + \\Delta_h^2', description: 'Ra < R0 (相互作用半径) 时判定为相容', params: [
+          { symbol: '\\Delta_d', desc: '色散力差值 (δd₁ - δd₂)' },
+          { symbol: '\\Delta_p', desc: '极性力差值 (δp₁ - δp₂)' },
+          { symbol: '\\Delta_h', desc: '氢键力差值 (δh₁ - δh₂)' }
         ]},
         { type: 'tip', tipType: 'info', content: '传统的“相似相溶”原理的量化版。Ra < R0 (溶解半径) 时判定为可溶。' }
       ]
