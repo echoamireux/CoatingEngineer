@@ -162,11 +162,23 @@
   align-items: center; /* 垂直居中 */
 }
 
-/* 智能列宽优化 (针对常见2-3列表格) */
-/* 第一列通常是名词，给少一点；后面是说明，给多一点 */
-.table-row .table-cell:first-child,
-.table-header .table-cell:first-child {
-  flex: 0 0 30%; /* 固定首列占比 */
+/* 智能列宽优化 */
+/* 默认情况：首列30% (适用于所有2-3列表格及非Testing模块的4列表格) */
+.section-table .table-row .table-cell:first-child,
+.section-table .table-header .table-cell:first-child {
+  flex: 0 0 30%;
+}
+
+/* 特殊列宽：仅针对 Testing 模块的4列宽表格 (测试方法表) */
+/* 收窄首列 (18%)，加宽设备列 (32%) */
+.category-testing .col-4 .table-row .table-cell:first-child,
+.category-testing .col-4 .table-header .table-cell:first-child {
+  flex: 0 0 18%;
+}
+
+.category-testing .col-4 .table-row .table-cell:nth-child(2),
+.category-testing .col-4 .table-header .table-cell:nth-child(2) {
+  flex: 0 0 32%;
 }
 
 /* 剩下的列自动平分剩余70% */

@@ -1,4 +1,4 @@
-<view class="page-container {{theme}}">
+<view class="page-container {{theme}} category-{{category}}">
   <!-- 固定头部 - 统一单行设计 -->
   <view class="detail-header" style="padding-top: {{statusBarHeight}}px;">
     <!-- 导航行：按钮 + 标题 -->
@@ -35,8 +35,8 @@
         </view>
 
         <!-- 表格内容 -->
-        <view class="section-table" wx:if="{{item.type === 'table'}}">
-          <scroll-view class="table-scroll" scroll-x>
+        <view class="section-table col-{{item.headers.length}}" wx:if="{{item.type === 'table'}}">
+          <scroll-view scroll-x class="table-scroll" enable-flex>
             <view class="table-inner">
               <view class="table-header">
                 <text class="table-cell" wx:for="{{item.headers}}" wx:key="*this" wx:for-item="header">{{header}}</text>

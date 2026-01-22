@@ -101,3 +101,17 @@
     margin-top: 0.2em;
     padding-left: 2rpx;
 }
+
+/* 顶部符号 (如 dot) */
+.latex-over {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 2rpx;
+}
+
+.latex-over-symbol {
+  font-size: 20rpx;
+  line-height: 1;
+  margin-bottom: -6rpx; /* 紧贴下方内容 */
+}

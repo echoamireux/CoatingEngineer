@@ -56,5 +56,12 @@
        </view>
     </block>
 
+    <!-- 顶部符号 (如 \dot) -->
+    <block wx:elif="{{node.type === 'over'}}">
+      <view class="latex-over">
+        <text class="latex-over-symbol">{{node.symbol}}</text>
+        <latex-formula nodes="{{node.content}}" />
+      </view>
+    </block>
   </block>
 </view>

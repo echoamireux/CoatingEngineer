@@ -148,13 +148,26 @@ Component({
            return { type: 'sqrt', content: content };
        }
 
+       if (cmd === '\\dot') {
+           const content = this.parseGroup(tokens);
+           // ˙ (U+02D9) Dot Above
+           return { type: 'over', symbol: '˙', content: content };
+       }
+
+       if (['\\cos', '\\sin', '\\tan', '\\log', '\\ln', '\\exp'].includes(cmd)) {
+           return { type: 'text', content: cmd.slice(1), style: 'normal' };
+       }
+
        // 希腊字母与符号映射
        const map = {
            '\\mu': 'μ', '\\sigma': 'σ', '\\rho': 'ρ',
            '\\eta': 'η', '\\theta': 'θ', '\\gamma': 'γ',
            '\\delta': 'δ', '\\pi': 'π', '\\times': '×',
            '\\cdot': '·', '\\approx': '≈', '\\le': '≤',
-           '\\ge': '≥', '\\pm': '±', '\\Delta': 'Δ'
+           '\\ge': '≥', '\\pm': '±', '\\Delta': 'Δ',
+           '\\epsilon': 'ε', '\\nu': 'ν', '\\omega': 'ω',
+           '\\alpha': 'α', '\\beta': 'β', '\\tau': 'τ',
+           '\\phi': 'φ', '\\lambda': 'λ'
        };
 
        if (map[cmd]) {
