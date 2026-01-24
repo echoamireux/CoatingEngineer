@@ -336,9 +336,18 @@ Page({
     if (!this._validateGlue(['glue_v', 'glue_W', 'glue_S', 'glue_rho_wet', 'glue_Dp'], isSilent)) return;
     const m_dry = this._getMDry();
     const d = this.data;
-    const Q = (parseFloat(d.glue_v) * parseFloat(d.glue_W) * m_dry) / (10 * parseFloat(d.glue_S) * parseFloat(d.glue_rho_wet));
 
-    const showVal = formatNumber(Q / parseFloat(d.glue_Dp));
+    // 除零保护
+    const S = parseFloat(d.glue_S);
+    const rhoWet = parseFloat(d.glue_rho_wet);
+    const Dp = parseFloat(d.glue_Dp);
+    if (S <= 0 || rhoWet <= 0 || Dp <= 0) {
+      if (!isSilent) wx.showToast({ title: '固含量/密度/排量需>0', icon: 'none' });
+      return;
+    }
+
+    const Q = (parseFloat(d.glue_v) * parseFloat(d.glue_W) * m_dry) / (10 * S * rhoWet);
+    const showVal = formatNumber(Q / Dp);
     this.setData({ result_pump_speed: showVal });
   },
 
@@ -347,8 +356,15 @@ Page({
     if (!this._validateGlue(['glue_L', 'glue_W', 'glue_S'], isSilent)) return;
     const m_dry = this._getMDry();
     const d = this.data;
-    const M = (m_dry * parseFloat(d.glue_L) * parseFloat(d.glue_W)) / (10000 * parseFloat(d.glue_S));
 
+    // 除零保护
+    const S = parseFloat(d.glue_S);
+    if (S <= 0) {
+      if (!isSilent) wx.showToast({ title: '固含量必须大于0', icon: 'none' });
+      return;
+    }
+
+    const M = (m_dry * parseFloat(d.glue_L) * parseFloat(d.glue_W)) / (10000 * S);
     const showM = formatNumber(M);
     this.setData({ result_wet_weight: showM });
   },

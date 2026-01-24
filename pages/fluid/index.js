@@ -332,15 +332,35 @@ Page({
     else { K = parseFloat(d.viscosity) / 1000; n = 1; }
     const Q = parseFloat(d.pipe_Q) / 60000;
 
+    // 全局除零保护
+    if (n <= 0 || K <= 0) {
+      wx.showToast({ title: '流变参数需>0', icon: 'none' });
+      return;
+    }
+
     let p_dp = 0, p_re = 0, p_visc = 0, p_shear = 0, p_turb = false;
     if (mode === 'pipe' || mode === 'total') {
       const D = parseFloat(d.pipe_D) / 1000;
       const L = parseFloat(d.pipe_L);
       const dz = parseFloat(d.pipe_dz);
       const Kl = parseFloat(d.pipe_K_loss);
+
+      // 管径除零保护
+      if (D <= 0) {
+        wx.showToast({ title: '管径必须大于0', icon: 'none' });
+        return;
+      }
+
       const factor = (3 * n + 1) / (4 * n);
       const shear = factor * (32 * Q) / (Math.PI * Math.pow(D, 3));
-      const mu_eff = K * Math.pow(shear, n - 1);
+
+      // 剪切率保护（避免 mu_eff 计算异常）
+      const mu_eff = shear > 0 ? K * Math.pow(shear, n - 1) : K;
+      if (mu_eff <= 0 || !isFinite(mu_eff)) {
+        wx.showToast({ title: '有效粘度计算异常', icon: 'none' });
+        return;
+      }
+
       const v = Q / (Math.PI * Math.pow(D / 2, 2));
       const re = (rho * v * D) / mu_eff;
       const dp = (128 * mu_eff * L * Q) / (Math.PI * Math.pow(D, 4)) + rho * 9.81 * dz + Kl * 0.5 * rho * v * v;
@@ -352,9 +372,23 @@ Page({
       const W = parseFloat(d.slot_W) / 1000;
       const H = parseFloat(d.slot_H) / 1e6;
       const Ls = parseFloat(d.slot_Ls) / 1000;
+
+      // 模头尺寸除零保护
+      if (W <= 0 || H <= 0) {
+        wx.showToast({ title: '模头宽度/间隙须>0', icon: 'none' });
+        return;
+      }
+
       const factor = (2 * n + 1) / (3 * n);
       const shear = factor * (6 * Q) / (W * H * H);
-      const mu_eff = K * Math.pow(shear, n - 1);
+
+      // 剪切率保护
+      const mu_eff = shear > 0 ? K * Math.pow(shear, n - 1) : K;
+      if (mu_eff <= 0 || !isFinite(mu_eff)) {
+        wx.showToast({ title: '有效粘度计算异常', icon: 'none' });
+        return;
+      }
+
       const v = Q / (W * H);
       const re = (rho * v * (2 * H)) / mu_eff;
       const dp = (12 * mu_eff * Ls * Q) / (W * Math.pow(H, 3));

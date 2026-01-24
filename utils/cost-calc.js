@@ -72,8 +72,10 @@ function calcProcessCost({ machRate, laborRate, speed, orderLen, wasteLen, refWi
  * @returns {number} 折算后的成本
  */
 function applyYield(cost, yieldPercent) {
-    const y = parseFloat(yieldPercent) / 100;
-    if (y <= 0 || y > 100) return cost;
+    const yVal = parseFloat(yieldPercent);
+    // 先校验原始值（0-100范围），再转换
+    if (isNaN(yVal) || yVal <= 0 || yVal > 100) return cost;
+    const y = yVal / 100;
     return cost / y;
 }
 
