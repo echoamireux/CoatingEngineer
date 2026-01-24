@@ -113,26 +113,70 @@ Page({
     });
   },
 
-  openRPMModal() { this.setData({ showRPMModal: true }); },
+  openRPMModal() {
+    this.setData({
+      showRPMModal: true,
+      temp_rpm: '',
+      temp_disp: '',
+      rpmResult: ''
+    });
+  },
   closeRPMModal() { this.setData({ showRPMModal: false }); },
-  onRPMInput(e) { this.setData({ temp_rpm: e.detail.value }); },
-  onDispInput(e) { this.setData({ temp_disp: e.detail.value }); },
-  calcRPMToQ() {
+
+  // RPM 弹窗输入处理 - 实时计算
+  onRPMInput(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = e.detail.value;
+    this.setData({ [field]: value });
+    // 实时计算
+    this.calcRPMResult();
+  },
+
+  // RPM 弹窗焦点管理
+  onRPMFocus(e) {
+    const field = e.currentTarget.dataset.field;
+    const key = field === 'temp_disp' ? 'rpm_dp' : 'rpm_n';
+    this.setData({ [`focus.${key}`]: true });
+  },
+
+  onRPMBlur(e) {
+    const field = e.currentTarget.dataset.field;
+    const key = field === 'temp_disp' ? 'rpm_dp' : 'rpm_n';
+    this.setData({ [`focus.${key}`]: false });
+  },
+
+  preventBubble() {
+    // 阻止冒泡专用
+  },
+
+  // 实时计算流量结果
+  calcRPMResult() {
     const n = parseFloat(this.data.temp_rpm);
     const dp = parseFloat(this.data.temp_disp);
-    if (n && dp) {
-      // 1. 计算原始值
-      let val = n * dp / 1000;
-
-      // 🌟 优化显示：保留6位有效数字
-      // parseFloat(...) 会自动去掉 .toPrecision 生成的字符串末尾多余的 "0"
-      // 效果：0.0042 -> 0.0042 (而不是0.00);  150.00 -> 150 (而不是150.00)
-      let showVal = parseFloat(val.toPrecision(6)).toString();
-
-      this.setData({ pipe_Q: showVal, 'errors.pipe_Q': false });
-      this.closeRPMModal();
+    if (!isNaN(n) && !isNaN(dp) && n > 0 && dp > 0) {
+      const val = dp * n / 1000;
+      const showVal = parseFloat(val.toPrecision(6)).toString();
+      this.setData({ rpmResult: showVal });
+    } else {
+      this.setData({ rpmResult: '' });
     }
   },
+
+  // 应用结果到表单
+  applyRPMResult() {
+    if (this.data.rpmResult) {
+      this.setData({
+        pipe_Q: this.data.rpmResult,
+        'errors.pipe_Q': false,
+        showRPMModal: false
+      });
+      wx.showToast({ title: '已应用', icon: 'success' });
+    }
+  },
+
+  // 保留旧方法兼容性
+  onDispInput(e) { this.setData({ temp_disp: e.detail.value }); this.calcRPMResult(); },
+  calcRPMToQ() { this.applyRPMResult(); },
 
   openKModal() { this.setData({ showKModal: true }); },
   closeKModal() { this.setData({ showKModal: false }); },

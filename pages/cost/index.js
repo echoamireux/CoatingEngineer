@@ -190,6 +190,32 @@ Page({
     this.setData({ [`focus.${key}`]: false });
   },
 
+  // 弹窗输入框焦点状态管理
+  onModalFocus(e) {
+    const { modal, field } = e.currentTarget.dataset;
+    const key = `${modal}_${field}`;
+    this.setData({ [`focus.${key}`]: true });
+  },
+
+  onModalBlur(e) {
+    const { modal, field } = e.currentTarget.dataset;
+    const key = `${modal}_${field}`;
+    this.setData({ [`focus.${key}`]: false });
+  },
+
+  // 配方弹窗输入框焦点管理
+  onMixFocus(e) {
+    const { index, field } = e.currentTarget.dataset;
+    const key = `mix_${index}_${field}`;
+    this.setData({ [`focus.${key}`]: true });
+  },
+
+  onMixBlur(e) {
+    const { index, field } = e.currentTarget.dataset;
+    const key = `mix_${index}_${field}`;
+    this.setData({ [`focus.${key}`]: false });
+  },
+
   preventBubble() {
     // 阻止冒泡专用
   },

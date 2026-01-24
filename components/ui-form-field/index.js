@@ -1,4 +1,7 @@
 Component({
+  options: {
+    multipleSlots: true
+  },
   properties: {
     label: { type: String, value: '' },
     value: { type: String, optionalTypes: [Number], value: '' },

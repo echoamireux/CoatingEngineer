@@ -91,7 +91,7 @@
                   </view>
 
                   <view class="stage-del-btn" catchtap="removeStage" data-index="{{sIdx}}"
-                     wx:if="{{sIdx>0 && !stage.folded}}">🗑️</view>
+                     wx:if="{{sIdx>0 && !stage.folded}}"><ui-icon name="trash" size="32" color="var(--text-sub)" /></view>
                </view>
             </view>
 
@@ -391,20 +391,37 @@
          </view>
          <scroll-view scroll-y class="mix-body">
             <view class="mix-head-row">
-               <text style="flex:1.2">组分</text> <text style="flex:0.8">比例</text> <text style="flex:1.4">单价(元/kg)</text>
-               <text style="flex:0.8">固含(%)</text> <text style="width:40rpx"></text>
+               <view style="flex:1.4" class="mix-head-cell">组分</view>
+               <view style="flex:0.6" class="mix-head-cell">比例</view>
+               <view style="flex:1.5" class="mix-head-cell">单价</view>
+               <view style="flex:0.8" class="mix-head-cell">固含</view>
+               <view style="width:40rpx"></view>
             </view>
             <block wx:for="{{mixList}}" wx:key="index">
                <view class="mix-row">
-                  <input class="mix-inp" style="flex:1.2" value="{{item.name}}" bindinput="onMixInput"
-                     data-index="{{index}}" data-field="name" />
-                  <input class="mix-inp" style="flex:0.8" type="digit" value="{{item.ratio}}" bindinput="onMixInput"
-                     data-index="{{index}}" data-field="ratio" />
-                  <input class="mix-inp" style="flex:1.4" type="digit" value="{{item.price}}" bindinput="onMixInput"
-                     data-index="{{index}}" data-field="price" />
-                  <input class="mix-inp" style="flex:0.8" type="digit" value="{{item.solid}}" bindinput="onMixInput"
-                     data-index="{{index}}" data-field="solid" />
-                  <view class="mix-del" bindtap="removeMixItem" data-index="{{index}}">×</view>
+                  <view class="input-wrap mix {{focus['mix_'+index+'_name'] ? 'focused' : ''}}" style="flex:1.4">
+                     <input class="inp-inner" value="{{item.name}}" bindinput="onMixInput"
+                        bindfocus="onMixFocus" bindblur="onMixBlur"
+                        data-index="{{index}}" data-field="name" placeholder="名称" />
+                  </view>
+                  <view class="input-wrap mix {{focus['mix_'+index+'_ratio'] ? 'focused' : ''}}" style="flex:0.6">
+                     <input class="inp-inner" type="digit" value="{{item.ratio}}" bindinput="onMixInput"
+                        bindfocus="onMixFocus" bindblur="onMixBlur"
+                        data-index="{{index}}" data-field="ratio" placeholder="0" />
+                  </view>
+                  <view class="input-wrap mix {{focus['mix_'+index+'_price'] ? 'focused' : ''}}" style="flex:1.5">
+                     <input class="inp-inner" type="digit" value="{{item.price}}" bindinput="onMixInput"
+                        bindfocus="onMixFocus" bindblur="onMixBlur"
+                        data-index="{{index}}" data-field="price" placeholder="0" />
+                     <text class="unit-suffix">元/kg</text>
+                  </view>
+                  <view class="input-wrap mix {{focus['mix_'+index+'_solid'] ? 'focused' : ''}}" style="flex:0.8">
+                     <input class="inp-inner" type="digit" value="{{item.solid}}" bindinput="onMixInput"
+                        bindfocus="onMixFocus" bindblur="onMixBlur"
+                        data-index="{{index}}" data-field="solid" placeholder="0" />
+                     <text class="unit-suffix">%</text>
+                  </view>
+                  <view class="mix-del" bindtap="removeMixItem" data-index="{{index}}"><ui-icon name="close" size="28" color="var(--text-sub)" /></view>
                </view>
             </block>
             <button class="btn-add-mix" bindtap="addMixItem">+ 添加组分</button>
@@ -433,7 +450,7 @@
                   <text class="li-name">{{item.name}}</text>
                   <text class="li-price">¥{{item.price}}</text>
                </view>
-               <view class="li-del" catchtap="requestDeleteRecipe" data-index="{{index}}">🗑️</view>
+               <view class="li-del" catchtap="requestDeleteRecipe" data-index="{{index}}"><ui-icon name="trash" size="32" color="var(--text-sub)" /></view>
             </view>
          </scroll-view>
          <view class="cc-btns">
@@ -445,8 +462,11 @@
    <view class="modal-mask" wx:if="{{showSaveModal}}" bindtap="closeSaveModal">
       <view class="modal-card clear-card" catchtap="preventBubble">
          <view class="cc-title">保存配方</view>
-         <input class="save-inp" placeholder="请输入配方名称" value="{{tempRecipeName}}" bindinput="onInput"
-            data-type="save_name" />
+         <view class="input-wrap save {{focus.save_name ? 'focused' : ''}}">
+            <input class="inp-inner" placeholder="请输入配方名称" value="{{tempRecipeName}}"
+               bindinput="onInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+               data-modal="save" data-field="name" />
+         </view>
          <view class="cc-btns">
             <button class="btn-ghost" bindtap="closeSaveModal">取消</button>
             <button class="btn-primary" bindtap="doSaveRecipe">确认</button>
@@ -550,9 +570,12 @@
                   <text class="f-sub">含设备折旧、房租、管理分摊</text>
                </view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{machCalc.fixCost}}" bindinput="onMachInput"
-                     data-field="fixCost" />
-                  <text class="f-unit">元/月</text>
+                  <view class="input-wrap modal {{focus.mach_fixCost ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{machCalc.fixCost}}"
+                        bindinput="onMachInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="mach" data-field="fixCost" placeholder="0" />
+                     <text class="unit-suffix">元/月</text>
+                  </view>
                </view>
             </view>
             <view class="modal-field-row">
@@ -561,9 +584,12 @@
                   <text class="f-sub">若是车间总开销，填总线数</text>
                </view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{machCalc.lines}}" bindinput="onMachInput"
-                     data-field="lines" />
-                  <text class="f-unit">条</text>
+                  <view class="input-wrap modal {{focus.mach_lines ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{machCalc.lines}}"
+                        bindinput="onMachInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="mach" data-field="lines" placeholder="0" />
+                     <text class="unit-suffix">条</text>
+                  </view>
                </view>
             </view>
             <view class="fc-divider"></view>
@@ -571,17 +597,23 @@
             <view class="modal-field-row">
                <view class="field-col"><text class="f-label">D 月工作天数</text></view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{machCalc.days}}" bindinput="onMachInput"
-                     data-field="days" />
-                  <text class="f-unit">天</text>
+                  <view class="input-wrap modal {{focus.mach_days ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{machCalc.days}}"
+                        bindinput="onMachInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="mach" data-field="days" placeholder="0" />
+                     <text class="unit-suffix">天</text>
+                  </view>
                </view>
             </view>
             <view class="modal-field-row">
                <view class="field-col"><text class="f-label">H 日排班小时</text></view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{machCalc.hours}}" bindinput="onMachInput"
-                     data-field="hours" />
-                  <text class="f-unit">h</text>
+                  <view class="input-wrap modal {{focus.mach_hours ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{machCalc.hours}}"
+                        bindinput="onMachInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="mach" data-field="hours" placeholder="0" />
+                     <text class="unit-suffix">h</text>
+                  </view>
                </view>
             </view>
             <view class="modal-field-row">
@@ -590,9 +622,12 @@
                   <text class="f-sub">有效生产时间占比</text>
                </view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{machCalc.util}}" bindinput="onMachInput"
-                     data-field="util" />
-                  <text class="f-unit">%</text>
+                  <view class="input-wrap modal {{focus.mach_util ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{machCalc.util}}"
+                        bindinput="onMachInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="mach" data-field="util" placeholder="0" />
+                     <text class="unit-suffix">%</text>
+                  </view>
                </view>
             </view>
             <view class="fc-divider"></view>
@@ -603,9 +638,12 @@
                   <text class="f-sub">开机状态下的电费+气费</text>
                </view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{machCalc.runCost}}" bindinput="onMachInput"
-                     data-field="runCost" />
-                  <text class="f-unit">元/h</text>
+                  <view class="input-wrap modal {{focus.mach_runCost ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{machCalc.runCost}}"
+                        bindinput="onMachInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="mach" data-field="runCost" placeholder="0" />
+                     <text class="unit-suffix">元/h</text>
+                  </view>
                </view>
             </view>
 
@@ -636,9 +674,12 @@
                   <text class="f-sub">机长+主手+辅助+调胶等</text>
                </view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{laborCalc.headcount}}" bindinput="onLaborInput"
-                     data-field="headcount" />
-                  <text class="f-unit">人</text>
+                  <view class="input-wrap modal {{focus.labor_headcount ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{laborCalc.headcount}}"
+                        bindinput="onLaborInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="labor" data-field="headcount" placeholder="0" />
+                     <text class="unit-suffix">人</text>
+                  </view>
                </view>
             </view>
             <view class="modal-field-row">
@@ -647,9 +688,12 @@
                   <text class="f-sub">含工资、社保、食宿福利等</text>
                </view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{laborCalc.salary}}" bindinput="onLaborInput"
-                     data-field="salary" />
-                  <text class="f-unit">元/月</text>
+                  <view class="input-wrap modal {{focus.labor_salary ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{laborCalc.salary}}"
+                        bindinput="onLaborInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="labor" data-field="salary" placeholder="0" />
+                     <text class="unit-suffix">元/月</text>
+                  </view>
                </view>
             </view>
             <view class="fc-divider"></view>
@@ -657,17 +701,23 @@
             <view class="modal-field-row">
                <view class="field-col"><text class="f-label">D 月工作天数</text></view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{laborCalc.days}}" bindinput="onLaborInput"
-                     data-field="days" />
-                  <text class="f-unit">天</text>
+                  <view class="input-wrap modal {{focus.labor_days ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{laborCalc.days}}"
+                        bindinput="onLaborInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="labor" data-field="days" placeholder="0" />
+                     <text class="unit-suffix">天</text>
+                  </view>
                </view>
             </view>
             <view class="modal-field-row">
                <view class="field-col"><text class="f-label">H 日排班小时</text></view>
                <view class="field-col right">
-                  <input class="mix-inp" type="digit" value="{{laborCalc.hours}}" bindinput="onLaborInput"
-                     data-field="hours" />
-                  <text class="f-unit">h</text>
+                  <view class="input-wrap modal {{focus.labor_hours ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{laborCalc.hours}}"
+                        bindinput="onLaborInput" bindfocus="onModalFocus" bindblur="onModalBlur"
+                        data-modal="labor" data-field="hours" placeholder="0" />
+                     <text class="unit-suffix">h</text>
+                  </view>
                </view>
             </view>
 

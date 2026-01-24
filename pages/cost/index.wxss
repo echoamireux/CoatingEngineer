@@ -297,10 +297,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 8rpx;
-  margin-left: 8rpx;
-  border-left: 1px solid var(--border);
+  width: 56rpx;
+  height: 56rpx;
+  margin-left: 12rpx;
+  margin-right: -12rpx;
   opacity: 0.8;
+  position: relative;
+}
+
+/* 计算器按钮左侧竖线 */
+.calc-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 32rpx;
+  width: 1px;
+  background: var(--border);
 }
 
 .inp {
@@ -401,6 +415,48 @@
 .input-wrap.mini .unit-suffix {
   font-size: 22rpx;
   margin-left: 6rpx;
+}
+
+/* 弹窗版输入框容器 - 用于机台费和人工费弹窗 */
+.input-wrap.modal {
+  width: 200rpx;
+  height: 64rpx;
+  padding: 0 20rpx;
+}
+
+.input-wrap.modal .inp-inner {
+  font-size: 28rpx;
+  font-weight: 500;
+  text-align: left;
+}
+
+.input-wrap.modal .unit-suffix {
+  font-size: 22rpx;
+  margin-left: 8rpx;
+}
+
+/* 配方弹窗输入框容器 */
+.input-wrap.mix {
+  height: 64rpx;
+  padding: 0 16rpx;
+  min-width: 0;
+}
+
+.input-wrap.mix .inp-inner {
+  font-size: 26rpx;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* 保存弹窗输入框容器 */
+.input-wrap.save {
+  height: 72rpx;
+  padding: 0 24rpx;
+  margin-bottom: 40rpx;
+}
+
+.input-wrap.save .inp-inner {
+  font-size: 30rpx;
 }
 
 .yield-inp.error {
@@ -754,10 +810,20 @@
 }
 
 .rc-refresh {
-  font-size: 32rpx;
-  opacity: 0.8;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10rpx;
   margin-left: 15rpx;
-  color: var(--text);
+  transition: all 0.2s;
+}
+
+.rc-refresh:active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.95);
 }
 
 .stage-footer {
@@ -976,25 +1042,31 @@
   font-size: 24rpx;
   color: var(--text-sub);
   margin-bottom: 15rpx;
+  gap: 10rpx;
+  padding-right: 40rpx;
+}
+
+.mix-head-cell {
+  padding-left: 16rpx;
 }
 
 .mix-row {
   display: flex;
-  gap: 15rpx;
-  margin-bottom: 20rpx;
+  gap: 10rpx;
+  margin-bottom: 16rpx;
   align-items: center;
 }
 
 .mix-inp {
   background: var(--input-bg, rgba(255, 255, 255, 0.05));
   border: 1px solid var(--border);
-  height: 72rpx;
-  font-size: 30rpx;
-  font-weight: 600;
-  padding: 0 20rpx;
-  border-radius: 16rpx;
+  height: 64rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  padding: 0 16rpx;
+  border-radius: 12rpx;
   color: var(--text);
-  text-align: right;
+  text-align: left;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -1002,6 +1074,22 @@
   border-color: var(--primary);
   box-shadow: 0 0 0 4rpx rgba(16, 185, 129, 0.2);
   background: var(--card, #1f2937);
+}
+
+/* 配方弹窗删除按钮 - 轻量级 */
+.mix-del {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.mix-del:active {
+  opacity: 1;
 }
 
 .btn-add-mix {
@@ -1346,13 +1434,21 @@
 
 .save-inp {
   border: 1px solid var(--border);
-  background: var(--input-bg);
-  height: 80rpx;
-  border-radius: 12rpx;
-  padding: 0 20rpx;
+  background: var(--input-bg, rgba(255, 255, 255, 0.05));
+  height: 72rpx;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
   margin-bottom: 40rpx;
   color: var(--text);
   text-align: left;
+  font-size: 30rpx;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-inp:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx rgba(16, 185, 129, 0.2);
+  background: var(--card, #1f2937);
 }
 
 .load-list {
@@ -1405,7 +1501,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 16rpx;
+  min-height: 56rpx;
 }
 
 .field-col {
@@ -1415,7 +1512,7 @@
 
 .field-col.right {
   align-items: flex-end;
-  min-width: 40%;
+  flex-shrink: 0;
 }
 
 .f-label {

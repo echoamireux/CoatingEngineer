@@ -335,34 +335,55 @@
   <confirm-modal show="{{showResetModal}}" title="清空确认" content="确定要清空当前页面的所有输入数据吗？此操作无法撤销。" confirmDanger="{{true}}"
     bind:confirm="confirmClear" bind:cancel="cancelClear" />
 
-  <!-- 干涂量→干厚转换工具弹窗 -->
-  <view class="modal-mask center-modal" wx:if="{{showConvertModal}}" bindtap="closeConvertModal">
-    <view class="modal-card convert-card" catchtap="true">
-      <view class="mc-head">干涂量 → 干厚 转换</view>
-      <view class="convert-formula">t_dry = m_dry / ρ_dry</view>
+  <!-- 干涂量→干厚转换工具弹窗 - 重新设计 -->
+  <view class="modal-mask" wx:if="{{showConvertModal}}" bindtap="closeConvertModal">
+    <view class="modal-card conv-modal" catchtap="preventBubble">
+      <!-- 标题栏 -->
+      <view class="conv-head">
+        <text class="conv-title">干涂量 → 干厚 转换</text>
+        <view class="close-icon" bindtap="closeConvertModal">×</view>
+      </view>
 
-      <view class="convert-inputs">
-        <view class="input-row-inline">
-          <view class="input-col">
-            <text class="label">m_dry (g/m²)</text>
-            <input class="input" type="digit" bindinput="bindConvertInput" data-field="convert_m_dry"
-              value="{{convert_m_dry}}" placeholder="干涂量" placeholder-class="input-placeholder" />
+      <!-- 公式展示 -->
+      <view class="conv-formula-box">
+        <text class="formula-label">计算公式</text>
+        <view class="formula-code">t_dry = m_dry / ρ_dry</view>
+      </view>
+
+      <!-- 输入区域 -->
+      <view class="conv-inputs">
+        <view class="conv-input-col">
+          <text class="conv-label">m_dry 干涂量</text>
+          <view class="input-native-wrapper {{focus.conv_m_dry ? 'focused' : ''}}">
+            <input class="native-input" type="digit"
+              bindinput="bindConvertInput" bindfocus="onConvInputFocus" bindblur="onConvInputBlur"
+              data-field="convert_m_dry" value="{{convert_m_dry}}" placeholder="0.0" />
+            <view class="unit-suffix-native">g/m²</view>
           </view>
-          <view class="input-col">
-            <text class="label">ρ_dry (g/cm³)</text>
-            <input class="input" type="digit" bindinput="bindConvertInput" data-field="convert_rho_dry"
-              value="{{convert_rho_dry}}" placeholder="干胶密度" placeholder-class="input-placeholder" />
+        </view>
+        <view class="conv-input-col">
+          <text class="conv-label">ρ_dry 干胶密度</text>
+          <view class="input-native-wrapper {{focus.conv_rho_dry ? 'focused' : ''}}">
+            <input class="native-input" type="digit"
+              bindinput="bindConvertInput" bindfocus="onConvInputFocus" bindblur="onConvInputBlur"
+              data-field="convert_rho_dry" value="{{convert_rho_dry}}" placeholder="0.0" />
+            <view class="unit-suffix-native">g/cm³</view>
           </view>
         </view>
       </view>
 
-      <view class="convert-result" wx:if="{{convertResult}}">
-        <text class="result-label">计算结果：</text>
-        <text class="result-value">t_dry = {{convertResult}} µm</text>
+      <!-- 计算结果 -->
+      <view class="conv-result-box" wx:if="{{convertResult}}">
+        <text class="conv-result-label">计算结果</text>
+        <view class="conv-result-value">
+          <text class="conv-result-num">{{convertResult}}</text>
+          <text class="conv-result-unit">µm</text>
+        </view>
       </view>
 
-      <view class="mc-foot">
-        <button class="btn-ghost" bindtap="closeConvertModal">关闭</button>
+      <!-- 底部按钮 -->
+      <view class="conv-foot">
+        <button class="btn-ghost" bindtap="closeConvertModal">取消</button>
         <button class="btn-primary" bindtap="applyConvertResult" wx:if="{{convertResult}}">应用到表单</button>
       </view>
     </view>

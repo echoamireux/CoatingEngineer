@@ -110,7 +110,6 @@ page {
   margin: 20rpx 0 16rpx 0;
   padding-left: 16rpx;
   border-left: 8rpx solid var(--primary);
-  text-transform: uppercase;
   letter-spacing: 1rpx;
   line-height: 1.2;
 }
@@ -949,4 +948,201 @@ page {
   font-weight: 300;
   padding-bottom: 4rpx;
   /* Slight visual correction for symbol baseline */
+}
+
+/* ========== 流量换算弹窗 - 蓝色主题 ========== */
+.conv-modal.fluid {
+  width: 90%;
+  max-width: 640rpx;
+  background: var(--card-bg, #1f2937);
+  border-radius: 24rpx;
+  padding: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.conv-modal.fluid .conv-head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 28rpx;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.conv-modal.fluid .conv-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.conv-modal.fluid .close-icon {
+  position: absolute;
+  right: 20rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40rpx;
+  color: var(--text-sub);
+  cursor: pointer;
+}
+
+.conv-modal.fluid .conv-formula-box {
+  margin: 20rpx 28rpx;
+  padding: 16rpx;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.conv-modal.fluid .formula-label {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  margin-bottom: 6rpx;
+  display: block;
+}
+
+.conv-modal.fluid .formula-code {
+  font-family: "DIN Alternate", "Courier New", monospace;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.conv-modal.fluid .conv-inputs {
+  display: flex;
+  gap: 16rpx;
+  padding: 0 28rpx;
+  margin-bottom: 20rpx;
+}
+
+.conv-modal.fluid .conv-input-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.conv-modal.fluid .conv-label {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+/* Fluid 主题输入框 - 基础样式补全 (Re-applied) */
+.input-native-wrapper {
+  height: 72rpx;
+  background: var(--input-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+.native-input {
+  flex: 1;
+  height: 100%;
+  font-size: 30rpx;
+  color: var(--text-main);
+  font-family: "DIN Alternate", "Roboto", monospace;
+  font-weight: 600;
+  line-height: 72rpx;
+  height: 72rpx;
+  min-height: 72rpx;
+}
+
+.unit-suffix-native {
+  font-size: 26rpx;
+  color: var(--text-sub);
+  margin-left: 12rpx;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.input-placeholder-native {
+  color: var(--text-sub);
+  opacity: 0.5;
+  font-weight: 400;
+}
+
+/* Fluid 主题输入框 - 蓝色边框 */
+.input-native-wrapper.fluid {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.input-native-wrapper.fluid.focused {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4rpx rgba(59, 130, 246, 0.2);
+  background: var(--card, #1f2937);
+}
+
+.conv-modal.fluid .conv-result-box {
+  margin: 0 28rpx 16rpx;
+  padding: 16rpx;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.04) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.conv-modal.fluid .conv-result-label {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.conv-modal.fluid .conv-result-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+.conv-modal.fluid .conv-result-num {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #3b82f6;
+  font-family: "DIN Alternate", monospace;
+}
+
+.conv-modal.fluid .conv-result-unit {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.conv-modal.fluid .conv-foot {
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx 28rpx 28rpx;
+  border-top: 1px solid var(--border);
+}
+
+.conv-modal.fluid .conv-foot .btn-ghost,
+.conv-modal.fluid .conv-foot .btn-primary {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.conv-modal.fluid .conv-foot .btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+}
+
+.conv-modal.fluid .conv-foot .btn-primary {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.85) 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 2rpx 8rpx rgba(59, 130, 246, 0.2);
 }

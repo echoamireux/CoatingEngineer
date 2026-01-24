@@ -74,14 +74,19 @@
   <ui-card>
     <view class="section-title">工艺与几何参数 (Process)</view>
 
-    <!-- 1. System Flow Q (Top Level) -->
-    <view class="form-group" style="margin-bottom: 20rpx;">
-       <ui-form-field label="系统总流量 Q" fieldName="pipe_Q" data-field="pipe_Q" value="{{pipe_Q}}" unit="L/min" placeholder="0.0"
-         bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_Q}}">
-         <view slot="right-icon" class="input-action" bindtap="openRPMModal" style="padding-left:12rpx; border-left:1px solid var(--border);">
-            <ui-icon name="calc" size="32" color="var(--primary)" />
-         </view>
-       </ui-form-field>
+    <view class="form-group" style="margin-bottom: 24rpx;">
+       <!-- Flex Layout for Input + Button -->
+       <view class="input-row-with-actions" style="display:flex; align-items:flex-end; gap:12rpx;">
+          <view style="flex:1">
+             <!-- customStyle 用于覆盖组件内部的 margin-bottom -->
+             <ui-form-field customStyle="margin-bottom:0;" label="系统总流量 Q" fieldName="pipe_Q" data-field="pipe_Q" value="{{pipe_Q}}" unit="L/min" placeholder="0.0"
+               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_Q}}" />
+          </view>
+          <!-- External Calc Button -->
+          <view class="tool-btn" bindtap="openRPMModal" style="height:72rpx; width:72rpx; border:1px solid var(--border); border-radius:16rpx;">
+             <ui-icon name="calc" size="40" color="var(--text-sub)" />
+          </view>
+       </view>
     </view>
 
     <!-- Divider -->
@@ -100,24 +105,23 @@
             <ui-form-field label="管道长度 L" fieldName="pipe_L" data-field="pipe_L" value="{{pipe_L}}" unit="m" placeholder="0.0"
               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_L}}" />
          </view>
-          <view class="form-group">
-            <ui-form-field label="高程差 Δz" fieldName="pipe_dz" data-field="pipe_dz" value="{{pipe_dz}}" unit="m" placeholder="±m"
+         <view class="form-group">
+            <ui-form-field label="管路高差 Δz" fieldName="pipe_dz" data-field="pipe_dz" value="{{pipe_dz}}" unit="m" placeholder="0.0"
               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_dz}}" />
          </view>
-          <view class="form-group">
-            <ui-form-field label="管件损耗 ΣK" fieldName="pipe_K_loss" data-field="pipe_K_loss" value="{{pipe_K_loss}}" placeholder="0.0"
+         <view class="form-group">
+            <ui-form-field label="管路损耗系数 ΣK" fieldName="pipe_K_loss" data-field="pipe_K_loss" value="{{pipe_K_loss}}" placeholder="0.0"
               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_K_loss}}">
               <view slot="right-icon" class="input-action" bindtap="openKModal" style="padding-left:12rpx; border-left:1px solid var(--border);">
-                  <ui-icon name="plus" size="32" color="var(--primary)" />
+                  <ui-icon name="list" size="32" color="var(--text-sub)" />
               </view>
             </ui-form-field>
          </view>
 
-         <!-- Pipe Calc Button (Restored) -->
+         <!-- Pipe Calc Button -->
          <view style="margin-top:auto; padding-top:12rpx;">
             <button class="btn-mini" bindtap="handleCalc" data-mode="pipe">计算管路</button>
          </view>
-
       </view>
 
       <!-- Vertical Divider -->
@@ -125,25 +129,24 @@
 
       <!-- Right Column: Slot -->
       <view class="split-col">
-         <view class="subsection-title">狭缝模头</view>
+         <view class="subsection-title">涂布模头</view>
          <view class="form-group">
-            <ui-form-field label="涂布幅宽 W" fieldName="slot_W" data-field="slot_W" value="{{slot_W}}" unit="mm" placeholder="0.0"
-              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_W}}" />
-         </view>
-          <view class="form-group">
-            <ui-form-field label="垫片厚度 H" fieldName="slot_H" data-field="slot_H" value="{{slot_H}}" unit="µm" placeholder="0.0"
+            <ui-form-field label="模头间隙 H" fieldName="slot_H" data-field="slot_H" value="{{slot_H}}" unit="µm" placeholder="0.0"
               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_H}}" />
          </view>
-          <view class="form-group">
-            <ui-form-field label="模唇陆长 Ls" fieldName="slot_Ls" data-field="slot_Ls" value="{{slot_Ls}}" unit="mm" placeholder="0.0"
-              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_Ls}}" />
+         <view class="form-group">
+            <ui-form-field label="涂布幅宽 W" fieldName="slot_W" data-field="slot_W" value="{{slot_W}}" unit="mm" placeholder="0.0"
+               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_W}}" />
+         </view>
+         <view class="form-group">
+           <ui-form-field label="模唇陆长 Ls" fieldName="slot_Ls" data-field="slot_Ls" value="{{slot_Ls}}" unit="mm" placeholder="0.0"
+             bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_Ls}}" />
          </view>
 
-         <!-- Slot Calc Button (Restored) -->
+         <!-- Slot Calc Button -->
          <view style="margin-top:auto; padding-top:12rpx;">
             <button class="btn-mini" bindtap="handleCalc" data-mode="slot">计算模头</button>
          </view>
-
       </view>
     </view>
 
@@ -389,15 +392,57 @@
 
   </ui-card>
 
-  <view class="modal-mask center-modal" wx:if="{{showRPMModal}}">
-    <view class="modal-card small">
-      <view class="mc-head highlight">转速换算</view>
-      <view class="field"><text class="label">泵转速 N (rpm)</text><input class="inp" type="digit" value="{{temp_rpm}}"
-          bindinput="onRPMInput" /></view>
-      <view class="field"><text class="label">泵排量 Dp (cc/rev)</text><input class="inp" type="digit"
-          value="{{temp_disp}}" bindinput="onDispInput" /></view>
-      <view class="mc-foot"><button bindtap="closeRPMModal">取消</button><button class="blue"
-          bindtap="calcRPMToQ">填入</button></view>
+  <!-- 流量换算弹窗 - 蓝色主题 -->
+  <view class="modal-mask" wx:if="{{showRPMModal}}" bindtap="closeRPMModal">
+    <view class="modal-card conv-modal fluid" catchtap="preventBubble">
+      <!-- 标题栏 -->
+      <view class="conv-head">
+        <text class="conv-title">泵转速 → 流量 换算</text>
+        <view class="close-icon" bindtap="closeRPMModal">×</view>
+      </view>
+
+      <!-- 公式展示 -->
+      <view class="conv-formula-box">
+        <text class="formula-label">计算公式</text>
+        <view class="formula-code">Q = Dp × N / 1000</view>
+      </view>
+
+      <!-- 输入区域 -->
+      <view class="conv-inputs">
+        <view class="conv-input-col">
+          <text class="conv-label">Dp 泵排量</text>
+          <view class="input-native-wrapper fluid {{focus.rpm_dp ? 'focused' : ''}}">
+            <input class="native-input" type="digit"
+              bindinput="onRPMInput" bindfocus="onRPMFocus" bindblur="onRPMBlur"
+              data-field="temp_disp" value="{{temp_disp}}" placeholder="0.0" />
+            <view class="unit-suffix-native">cc/rev</view>
+          </view>
+        </view>
+        <view class="conv-input-col">
+          <text class="conv-label">N 转速</text>
+          <view class="input-native-wrapper fluid {{focus.rpm_n ? 'focused' : ''}}">
+            <input class="native-input" type="digit"
+              bindinput="onRPMInput" bindfocus="onRPMFocus" bindblur="onRPMBlur"
+              data-field="temp_rpm" value="{{temp_rpm}}" placeholder="0.0" />
+            <view class="unit-suffix-native">rpm</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 计算结果 -->
+      <view class="conv-result-box" wx:if="{{rpmResult}}">
+        <text class="conv-result-label">计算结果</text>
+        <view class="conv-result-value">
+          <text class="conv-result-num">{{rpmResult}}</text>
+          <text class="conv-result-unit">L/min</text>
+        </view>
+      </view>
+
+      <!-- 底部按钮 -->
+      <view class="conv-foot">
+        <button class="btn-ghost" bindtap="closeRPMModal">取消</button>
+        <button class="btn-primary" bindtap="applyRPMResult" wx:if="{{rpmResult}}">应用到表单</button>
+      </view>
     </view>
   </view>
 

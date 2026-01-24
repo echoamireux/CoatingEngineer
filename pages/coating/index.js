@@ -419,6 +419,23 @@ Page({
     this.calcConversion();
   },
 
+  // 换算弹窗输入框焦点管理
+  onConvInputFocus(e) {
+    const field = e.currentTarget.dataset.field;
+    const key = field === 'convert_m_dry' ? 'conv_m_dry' : 'conv_rho_dry';
+    this.setData({ [`focus.${key}`]: true });
+  },
+
+  onConvInputBlur(e) {
+    const field = e.currentTarget.dataset.field;
+    const key = field === 'convert_m_dry' ? 'conv_m_dry' : 'conv_rho_dry';
+    this.setData({ [`focus.${key}`]: false });
+  },
+
+  preventBubble() {
+    // 阻止冒泡专用
+  },
+
   calcConversion() {
     const m_dry = parseFloat(this.data.convert_m_dry);
     const rho_dry = parseFloat(this.data.convert_rho_dry);
