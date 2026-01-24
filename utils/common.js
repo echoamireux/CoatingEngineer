@@ -45,21 +45,36 @@ function formatNumber(num, options = {}) {
 }
 
 /**
+ * 将数字转换为 Unicode 上标字符
+ * @param {number} num - 要转换的数字
+ * @returns {string} Unicode 上标字符串
+ */
+function toSuperscript(num) {
+    const superscriptMap = {
+        '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+        '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
+        '-': '⁻', '+': ''
+    };
+    return num.toString().split('').map(c => superscriptMap[c] || c).join('');
+}
+
+/**
  * 格式化数值 (返回对象，用于流体力学页面)
  * @param {number} num
- * @returns {object} {b: 基数, p: 指数, s: 是否科学计数法}
+ * @returns {object} {b: 基数, p: 指数, pSup: Unicode上标指数, s: 是否科学计数法}
  */
 function formatNumberObj(num) {
-    if (!isFinite(num) || isNaN(num)) return { b: '-', p: 0, s: false };
+    if (!isFinite(num) || isNaN(num)) return { b: '-', p: 0, pSup: '', s: false };
     const abs = Math.abs(num);
-    if (abs === 0) return { b: '0.00', p: 0, s: false };
+    if (abs === 0) return { b: '0.00', p: 0, pSup: '', s: false };
 
     if (abs > 10000 || abs < 0.01) {
         const str = num.toExponential(2);
         const parts = str.split('e');
-        return { b: parts[0], p: parseInt(parts[1]), s: true };
+        const exponent = parseInt(parts[1]);
+        return { b: parts[0], p: exponent, pSup: toSuperscript(exponent), s: true };
     }
-    return { b: num.toFixed(2), p: 0, s: false };
+    return { b: num.toFixed(2), p: 0, pSup: '', s: false };
 }
 
 /**

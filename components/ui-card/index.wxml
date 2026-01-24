@@ -1,4 +1,4 @@
-<view class="ui-card">
+<view class="ui-card" style="{{customStyle}}">
   <view class="card-header" wx:if="{{title || useHeaderSlot}}">
     <view class="ch-left">
       <text class="card-title" wx:if="{{title}}">{{title}}</text>

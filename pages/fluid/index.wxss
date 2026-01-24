@@ -7,6 +7,11 @@ page {
   box-sizing: border-box;
 }
 
+/* Compact bottom padding for cards with no trailing content */
+.compact-bottom {
+  padding-bottom: 12rpx !important;
+}
+
 .page-container {
   min-height: 100vh;
   background-color: var(--bg);
@@ -376,15 +381,23 @@ page {
 }
 
 .sup {
-  font-size: 16rpx; /* Scale down */
-  vertical-align: super;
-  margin-left: 1rpx;
-  font-weight: 500;
+  font-size: 14rpx;
+  font-weight: 600;
   color: #3b82f6;
   position: relative;
-  top: -8rpx;
-  opacity: 0.9;
+  top: -0.6em; /* Use em unit for proportional positioning - moves to upper right */
+  margin-left: 2rpx;
+  opacity: 0.95;
   font-family: "DIN Alternate", sans-serif;
+  line-height: 1;
+  /* Remove vertical-align as we use position:relative for control */
+}
+
+/* Override for Total Result Header - larger exponent */
+.result-total-header .sup {
+  font-size: 32rpx; /* Larger for big text */
+  top: -0.5em; /* Proportional offset */
+  margin-left: 4rpx;
 }
 
 .unit {

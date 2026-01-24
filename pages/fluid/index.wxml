@@ -27,7 +27,7 @@
     </view>
   </view>
 
-  <ui-card>
+  <ui-card customStyle="{{isPowerLaw ? 'padding-bottom: 12rpx;' : ''}}">
     <!-- Custom Header with Switch -->
     <view class="card-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12rpx;">
        <view class="section-title" style="margin:0;">流体属性 (Fluid)</view>
@@ -58,12 +58,11 @@
 
     <!-- Row 2: Power Law Index (only if Power Law) -->
     <block wx:if="{{isPowerLaw}}">
-      <view class="form-row">
+      <view class="form-row" style="margin-bottom: 0;">
         <view class="form-col">
            <ui-form-field label="幂律指数 n" fieldName="n_val" data-field="n_val" value="{{n_val}}" placeholder="0.0"
              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.n_val}}" />
         </view>
-        <view class="form-col"></view> <!-- Spacer -->
       </view>
     </block>
 
@@ -167,7 +166,7 @@
                    <view class="rs-label">系统总压降 Total Pressure</view>
                    <view class="rs-val-row">
                        <block wx:if="{{result.total_dp.s}}">
-                          <text class="rs-val">{{result.total_dp.b}}</text><text class="rs-times">×</text>10<text class="rs-sup">{{result.total_dp.p}}</text>
+                          <text class="rs-val">{{result.total_dp.b}}</text><text class="rs-times">×</text>10<text class="rs-sup">{{result.total_dp.pSup}}</text>
                        </block>
                        <block wx:else>
                           <text class="rs-val">{{result.total_dp.b}}</text>
@@ -194,7 +193,7 @@
         <text class="rt-label">系统总压降</text>
         <view class="rt-val-group">
             <block wx:if="{{result.total_dp.s}}">
-                <text class="rt-val">{{result.total_dp.b}}</text><text class="rt-times">×</text><text class="sci-base">10</text><text class="rt-sup">{{result.total_dp.p}}</text>
+                <text class="rt-val">{{result.total_dp.b}}</text><text class="rt-times">×</text><text class="sci-base">10{{result.total_dp.pSup}}</text>
             </block>
             <block wx:else>
                 <text class="rt-val">{{result.total_dp.b}}</text>
@@ -218,7 +217,7 @@
                    <text class="res-label">压降 ΔP</text>
                    <view class="res-val-group">
                       <block wx:if="{{result.p_dp.s}}">
-                         <text class="sci-base">{{result.p_dp.b}}</text><text class="sci-times">×</text><text class="sci-base">10</text><text class="sup">{{result.p_dp.p}}</text>
+                         <text class="sci-base">{{result.p_dp.b}}</text><text class="sci-times">×</text><text class="sci-base">10{{result.p_dp.pSup}}</text>
                       </block>
                       <block wx:else><text class="sci-base">{{result.p_dp.b}}</text></block>
                       <text class="unit">kPa</text>
@@ -229,7 +228,7 @@
                    <text class="res-label">雷诺数 Re</text>
                    <view class="res-val-group">
                       <block wx:if="{{result.p_re.s}}">
-                         <text class="sci-base">{{result.p_re.b}}</text><text class="sci-times">×</text><text class="sci-base">10</text><text class="sup">{{result.p_re.p}}</text>
+                         <text class="sci-base">{{result.p_re.b}}</text><text class="sci-times">×</text><text class="sci-base">10{{result.p_re.pSup}}</text>
                       </block>
                       <block wx:else><text class="sci-base">{{result.p_re.b}}</text></block>
                    </view>
@@ -240,7 +239,7 @@
                    <view class="res-val-group">
                       <block wx:if="{{result.p_visc.s}}">
                          <text class="sci-base">{{result.p_visc.b}}</text><text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.p_visc.p}}</text>
+<text class="sci-base">10{{result.p_visc.pSup}}</text>
                       </block>
                       <block wx:else><text class="sci-base">{{result.p_visc.b}}</text></block>
                       <text class="unit">cP</text>
@@ -252,7 +251,7 @@
                    <view class="res-val-group">
                       <block wx:if="{{result.p_shear.s}}">
                          <text class="sci-base">{{result.p_shear.b}}</text><text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.p_shear.p}}</text>
+<text class="sci-base">10{{result.p_shear.pSup}}</text>
                       </block>
                       <block wx:else><text class="sci-base">{{result.p_shear.b}}</text></block>
                       <text class="unit">s⁻¹</text>
@@ -274,7 +273,7 @@
                    <view class="res-val-group">
                       <block wx:if="{{result.s_dp.s}}">
                          <text class="sci-base">{{result.s_dp.b}}</text><text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.s_dp.p}}</text>
+<text class="sci-base">10{{result.s_dp.pSup}}</text>
                       </block>
                       <block wx:else><text class="sci-base">{{result.s_dp.b}}</text></block>
                       <text class="unit">kPa</text>
@@ -286,7 +285,7 @@
                    <view class="res-val-group">
                       <block wx:if="{{result.s_re.s}}">
                          <text class="sci-base">{{result.s_re.b}}</text><text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.s_re.p}}</text>
+<text class="sci-base">10{{result.s_re.pSup}}</text>
                       </block>
                       <block wx:else><text class="sci-base">{{result.s_re.b}}</text></block>
                    </view>
@@ -297,7 +296,7 @@
                    <view class="res-val-group">
                       <block wx:if="{{result.s_visc.s}}">
                          <text class="sci-base">{{result.s_visc.b}}</text><text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.s_visc.p}}</text>
+<text class="sci-base">10{{result.s_visc.pSup}}</text>
                       </block>
                       <block wx:else><text class="sci-base">{{result.s_visc.b}}</text></block>
                       <text class="unit">cP</text>
@@ -309,7 +308,7 @@
                    <view class="res-val-group">
                       <block wx:if="{{result.s_shear.s}}">
                          <text class="sci-base">{{result.s_shear.b}}</text><text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.s_shear.p}}</text>
+<text class="sci-base">10{{result.s_shear.pSup}}</text>
                       </block>
                       <block wx:else><text class="sci-base">{{result.s_shear.b}}</text></block>
                       <text class="unit">s⁻¹</text>
@@ -333,7 +332,7 @@
                       <block wx:if="{{result.layoutMode === 'single-pipe' ? result.p_dp.s : result.s_dp.s}}">
                          <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_dp.b : result.s_dp.b}}</text>
                          <text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.layoutMode === 'single-pipe' ? result.p_dp.p : result.s_dp.p}}</text>
+<text class="sci-base">10{{result.layoutMode === 'single-pipe' ? result.p_dp.pSup : result.s_dp.pSup}}</text>
                       </block>
                       <block wx:else>
                          <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_dp.b : result.s_dp.b}}</text>
@@ -348,7 +347,7 @@
                       <block wx:if="{{result.layoutMode === 'single-pipe' ? result.p_re.s : result.s_re.s}}">
                          <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_re.b : result.s_re.b}}</text>
                          <text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.layoutMode === 'single-pipe' ? result.p_re.p : result.s_re.p}}</text>
+<text class="sci-base">10{{result.layoutMode === 'single-pipe' ? result.p_re.pSup : result.s_re.pSup}}</text>
                       </block>
                       <block wx:else>
                          <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_re.b : result.s_re.b}}</text>
@@ -362,7 +361,7 @@
                       <block wx:if="{{result.layoutMode === 'single-pipe' ? result.p_visc.s : result.s_visc.s}}">
                          <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_visc.b : result.s_visc.b}}</text>
                          <text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.layoutMode === 'single-pipe' ? result.p_visc.p : result.s_visc.p}}</text>
+<text class="sci-base">10{{result.layoutMode === 'single-pipe' ? result.p_visc.pSup : result.s_visc.pSup}}</text>
                       </block>
                       <block wx:else>
                          <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_visc.b : result.s_visc.b}}</text>
@@ -377,7 +376,7 @@
                       <block wx:if="{{result.layoutMode === 'single-pipe' ? result.p_shear.s : result.s_shear.s}}">
                          <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_shear.b : result.s_shear.b}}</text>
                          <text class="sci-times">×</text>
-<text class="sci-base">10</text><text class="sup">{{result.layoutMode === 'single-pipe' ? result.p_shear.p : result.s_shear.p}}</text>
+<text class="sci-base">10{{result.layoutMode === 'single-pipe' ? result.p_shear.pSup : result.s_shear.pSup}}</text>
                       </block>
                       <block wx:else>
                          <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_shear.b : result.s_shear.b}}</text>
