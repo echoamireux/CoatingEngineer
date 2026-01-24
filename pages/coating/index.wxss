@@ -796,6 +796,61 @@ button.btn-ghost {
   gap: 6rpx;
 }
 
+
+/* Result Split Layout (New Dashboard Style) */
+.result-split-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 24rpx 0;
+  min-height: 140rpx; /* Ensure enough height for vertical centering */
+}
+
+.res-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.res-divider-v {
+  width: 1px;
+  height: 60rpx; /* Height of the separator */
+  background: var(--border);
+  opacity: 0.5;
+}
+
+.res-label {
+  font-size: 22rpx; /* Slightly smaller for better contrast */
+  color: var(--text-sub);
+  margin-bottom: 4rpx; /* Reduced margin to move title up */
+  font-weight: 500;
+}
+
+.res-val-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 6rpx;
+}
+
+.res-val-big {
+  font-size: 56rpx; /* Enlarged for prominence */
+  font-weight: bold;
+  font-family: "DIN Alternate", sans-serif;
+  color: var(--text-main);
+}
+
+.res-val-big.highlight {
+  color: var(--primary);
+}
+
+.res-unit-small {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
 .conv-result-num {
   font-size: 44rpx;
   font-weight: bold;
@@ -972,6 +1027,13 @@ button.btn-ghost {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
   border-bottom: 1px solid var(--border) !important;
   border-top: 1px solid var(--border) !important;
+  /* Override ui-card's default padding for full centering control */
+  padding: 0 !important;
+  /* Flex centering for content */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-height: 180rpx !important; /* Minimum height for proper centering */
 }
 
 /* Section & Titles - Standardized to Fluid Module */

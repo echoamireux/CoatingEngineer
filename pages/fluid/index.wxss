@@ -250,7 +250,8 @@ page {
   background: rgba(128, 128, 128, 0.05); /* Neutral Transparent */
   border: 1px solid rgba(128, 128, 128, 0.1);
   border-radius: 16rpx;
-  padding: 24rpx; /* REVERT TO COMPACT */
+  border-radius: 16rpx;
+  padding: 16rpx; /* Reduced padding to give more space for text */
   min-width: 0;
 }
 
@@ -261,7 +262,7 @@ page {
   font-size: 24rpx;
   font-weight: 700;
   color: #94a3b8; /* Slate-400 (Neutral) */
-  text-transform: uppercase;
+  /* text-transform removed */
   letter-spacing: 1.5rpx;
   text-align: center;
   margin-bottom: 24rpx;
@@ -294,10 +295,10 @@ page {
 }
 
 .rt-val {
-  font-size: 48rpx;
-  font-weight: 800;
+  font-size: 56rpx;
+  font-weight: 600;
   color: #3b82f6;
-  font-family: ui-monospace, SFMono-Regular, "DIN Alternate", monospace;
+  font-family: "DIN Alternate", sans-serif; /* Start with DIN explicitly */
   font-variant-numeric: tabular-nums;
 }
 
@@ -318,15 +319,15 @@ page {
   align-items: center;
   padding-bottom: 0;
   border-bottom: none;
+  flex-wrap: wrap; /* Allow wrapping */
 }
 
 .res-label {
-  font-size: 26rpx;
+  font-size: 24rpx; /* Unifying with value size as requested */
   color: #64748b; /* Slate-500 (Context) */
   font-weight: 500;
   flex: 1;
-  white-space: nowrap; /* NO WRAPPING */
-  overflow: visible; /* Allow spill if needed, or hidden with ellipsis? User wants single line. Visible is safer for now or min-width. */
+  overflow: visible;
   margin-right: 16rpx;
 }
 
@@ -334,7 +335,7 @@ page {
   display: flex;
   align-items: baseline;
   justify-content: flex-end;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  /* font-family removed to inherit DIN Alternate from Page */
   color: #fff;
   text-align: right;
   flex: 1; /* Allow growing */
@@ -345,29 +346,45 @@ page {
 
 /* Scientific Notation */
 /* Scientific Notation */
+/* Scientific Notation */
+/* Scientific Notation */
 .sci-base, .sci-val {
-  font-size: 34rpx;
-  font-weight: 700;
+  font-size: 22rpx; /* Reduced to 22rpx to visually match CJK 24rpx label height */
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
-  color: #3b82f6; /* Blue-500 (Primary Brand Color) */
+  color: #3b82f6;
+  font-family: "DIN Alternate", sans-serif;
+}
+
+/* Specific override for Total Result Scientific Base */
+.result-total-header .sci-base {
+  font-size: 56rpx; /* Match rt-val EXACTLY */
+  font-weight: 600; /* Matching rt-val */
+}
+
+.result-total-header .sci-times {
+  font-size: 56rpx; /* Match base */
+  margin: 0 8rpx;
 }
 
 .sci-times {
   margin: 0 4rpx;
-  font-size: 26rpx;
-  color: #3b82f6; /* Blue (Unify with Base) */
+  font-size: 22rpx; /* Match new base size */
+  color: #3b82f6;
   opacity: 0.8;
+  font-family: "DIN Alternate", sans-serif;
 }
 
 .sup {
-  font-size: 20rpx;
+  font-size: 16rpx; /* Scale down */
   vertical-align: super;
   margin-left: 1rpx;
-  font-weight: 600;
-  color: #3b82f6; /* Blue (Unify with Base) */
+  font-weight: 500;
+  color: #3b82f6;
   position: relative;
   top: -8rpx;
   opacity: 0.9;
+  font-family: "DIN Alternate", sans-serif;
 }
 
 .unit {

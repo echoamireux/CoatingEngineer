@@ -24,13 +24,13 @@
                <ui-icon name="trash" size="32" color="var(--text-sub)" />
             </view>
             <view class="form-group" style="margin-bottom:20rpx;">
-               <ui-form-field label="干胶密度 ρ (Dry Density)" field="density" value="{{density}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="density" right-slot="g/cm³" placeholder="0.0" />
+               <ui-form-field label="干胶密度 ρ (Dry Density)" field="density" value="{{density}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="density" unit="g/cm³" placeholder="0.0" />
             </view>
             <view class="form-group" style="margin-bottom:20rpx;">
-               <ui-form-field label="干涂量 (GSM)" field="gsm" value="{{gsm}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="gsm" right-slot="g/m²" placeholder="0.0" />
+               <ui-form-field label="干涂量 (GSM)" field="gsm" value="{{gsm}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="gsm" unit="g/m²" placeholder="0.0" />
             </view>
             <view class="form-group" style="margin-bottom:20rpx;">
-               <ui-form-field label="干膜厚度 (T)" field="thick" value="{{thick}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="thick" right-slot="μm" placeholder="0.0" />
+               <ui-form-field label="干膜厚度 (T)" field="thick" value="{{thick}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="thick" unit="μm" placeholder="0.0" />
             </view>
          </ui-card>
       </view>
@@ -44,7 +44,7 @@
              <view class="unit-list">
                 <block wx:for="{{unitList}}" wx:key="index">
                    <view class="unit-row" style="margin-bottom:20rpx;">
-                      <ui-form-field label="{{item.name}}{{item.isSI?' (SI)':''}}" value="{{item.val}}" type="digit" bind:input="onUnitInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-index="{{index}}" right-slot="{{item.unit}}" placeholder="0.0" style="width:100%" />
+                      <ui-form-field label="{{item.name}}{{item.isSI?' (SI)':''}}" value="{{item.val}}" type="digit" bind:input="onUnitInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-index="{{index}}" unit="{{item.unit}}" placeholder="0.0" style="width:100%" />
                    </view>
                 </block>
              </view>

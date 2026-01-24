@@ -12,7 +12,7 @@
 
     <view class="toolbar-row">
       <view class="tool-btn" bindtap="handleToggleFormula" hover-class="tool-hover">
-        <ui-icon name="calc" />
+        <ui-icon name="sigma" />
       </view>
       <view class="tool-btn" bindtap="openHistory" hover-class="tool-hover">
         <ui-icon name="history" />
@@ -141,20 +141,23 @@
       </view>
     </ui-card>
 
-    <!-- Result Surface -->
-    <ui-card class="result-surface" title="计算结果">
-      <view class="result-row">
-        <text class="result-key">收卷卷径 D</text>
-        <view>
-           <text class="result-val highlight">{{result_diameter}}</text><text class="result-unit">mm</text>
-        </view>
-      </view>
-      <view class="result-row">
-        <text class="result-key">材料总重 M</text>
-         <view>
-           <text class="result-val highlight">{{result_weight}}</text><text class="result-unit">kg</text>
-        </view>
-      </view>
+    <!-- Result Surface Refactored (Split Layout) -->
+    <ui-card class="result-surface">
+       <view class="result-split-layout">
+           <view class="res-col">
+               <text class="res-label">收卷卷径 D</text>
+               <view class="res-val-wrapper">
+                   <text class="res-val-big highlight">{{result_diameter}}</text><text class="res-unit-small">mm</text>
+               </view>
+           </view>
+           <view class="res-divider-v"></view>
+           <view class="res-col">
+               <text class="res-label">材料总重 M</text>
+               <view class="res-val-wrapper">
+                   <text class="res-val-big highlight">{{result_weight}}</text><text class="res-unit-small">kg</text>
+               </view>
+           </view>
+       </view>
     </ui-card>
   </view>
 
@@ -231,20 +234,23 @@
       </view>
     </ui-card>
 
-    <!-- Result Surface -->
-    <ui-card class="result-surface" title="计算结果">
-       <view class="result-row">
-        <text class="result-key">供液泵转速 N</text>
-        <view>
-           <text class="result-val highlight">{{result_pump_speed}}</text><text class="result-unit">rpm</text>
-        </view>
-      </view>
-       <view class="result-row">
-        <text class="result-key">湿胶重量 Mw</text>
-        <view>
-           <text class="result-val highlight">{{result_wet_weight}}</text><text class="result-unit">kg</text>
-        </view>
-      </view>
+    <!-- Result Surface Refactored (Split Layout) -->
+    <ui-card class="result-surface">
+       <view class="result-split-layout">
+           <view class="res-col">
+               <text class="res-label">泵转速 N</text>
+               <view class="res-val-wrapper">
+                   <text class="res-val-big highlight">{{result_pump_speed}}</text><text class="res-unit-small">rpm</text>
+               </view>
+           </view>
+           <view class="res-divider-v"></view>
+           <view class="res-col">
+               <text class="res-label">湿胶重量 Mw</text>
+               <view class="res-val-wrapper">
+                   <text class="res-val-big highlight">{{result_wet_weight}}</text><text class="res-unit-small">kg</text>
+               </view>
+           </view>
+       </view>
     </ui-card>
   </view>
 
