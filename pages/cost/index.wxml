@@ -91,7 +91,7 @@
                   </view>
 
                   <view class="stage-del-btn" catchtap="removeStage" data-index="{{sIdx}}"
-                     wx:if="{{sIdx>0 && !stage.folded}}"><ui-icon name="trash" size="32" color="var(--text-sub)" /></view>
+                     wx:if="{{sIdx>0 && !stage.folded}}"><ui-icon name="trash" size="32" color="#ef4444" /></view>
                </view>
             </view>
 

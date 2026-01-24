@@ -624,7 +624,7 @@
   opacity: 0.6;
   padding: 10rpx;
   margin-left: 5rpx;
-  border-left: 1px solid var(--border);
+  /* border-left: 1px solid var(--border); removed */
 }
 
 .fold-btn {
