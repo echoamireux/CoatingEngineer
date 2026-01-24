@@ -26,6 +26,8 @@ Page({
     showDeleteModal: false,
     showOverwriteModal: false,
     pendingSaveName: '',
+    pendingDeleteType: '', // 'history' | 'stage' | 'material' | 'recipe'
+    pendingDeleteTarget: null,
 
     showHistoryModal: false,
     localHistory: [],
@@ -50,7 +52,7 @@ Page({
   onLoad() {
     initTheme(this);
     this.loadRecipesFromStorage();
-    if (this.data.stages.length === 0) this.addStage('涂布工序');
+    if (this.data.stages.length === 0) this.addStage('');
     // 获取状态栏高度
     const systemInfo = wx.getSystemInfoSync();
     this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
@@ -85,24 +87,41 @@ Page({
     if (id) {
       this.setData({
         showDeleteModal: true,
-        pendingDeleteId: id
+        pendingDeleteType: 'history',
+        pendingDeleteTarget: { id }
       });
     }
   },
 
   confirmDelete() {
-    const id = this.data.pendingDeleteId;
-    if (id) {
-      deleteHistory(id);
-      this.loadLocalHistory();
-      if (wx.vibrateShort) wx.vibrateShort();
-      wx.showToast({ title: '已删除', icon: 'success' });
-    }
-    this.setData({ showDeleteModal: false, pendingDeleteId: null });
-  },
+    const type = this.data.pendingDeleteType;
+    const target = this.data.pendingDeleteTarget;
+    if (!type || !target) return;
 
+    if (type === 'history') {
+      deleteHistory(target.id);
+      this.loadLocalHistory();
+      wx.showToast({ title: '已删除', icon: 'success' });
+    } else if (type === 'stage') {
+      const list = this.data.stages;
+      list.splice(target.stageIdx, 1);
+      this.setData({ stages: list });
+    } else if (type === 'material') {
+      const { stageIdx, matIdx } = target;
+      const list = this.data.stages;
+      list[stageIdx].materials.splice(matIdx, 1);
+      this.setData({ stages: list });
+      // 重新计算该工序的小计
+      this.calculateAll(); // 简单起见，重新触发全量计算
+    } else if (type === 'recipe') {
+      this.doDeleteRecipe(target.index);
+      return;
+    }
+
+    this.setData({ showDeleteModal: false, pendingDeleteType: '', pendingDeleteTarget: null });
+  },
   cancelDelete() {
-    this.setData({ showDeleteModal: false, pendingDeleteId: null });
+    this.setData({ showDeleteModal: false, pendingDeleteType: '', pendingDeleteTarget: null });
   },
 
   restoreHistory(e) {
@@ -798,7 +817,7 @@ Page({
     const list = this.data.stages;
     list.forEach(s => s.folded = true);
     list.push({
-      name: typeof name === 'string' ? name : `工序 ${list.length + 1}`,
+      name: typeof name === 'string' ? name : '',
       yield: '', materials: [], process: { speed: '', machRate: '', laborRate: '', orderLen: '', wasteLen: '' },
       stageMatCost: 0, stageProcCost: 0, stageTotalCost: 0, accumCost: 0,
       folded: false, matFolded: false, procFolded: false
@@ -806,7 +825,17 @@ Page({
     this.setData({ stages: list });
     this.addMaterialToStage(list.length - 1, 'film');
   },
-  removeStage(e) { const list = this.data.stages; list.splice(e.currentTarget.dataset.index, 1); this.setData({ stages: list }); },
+  removeStage(e) {
+    const idx = e.currentTarget.dataset.index;
+    if (this.data.stages.length <= 1) {
+       return wx.showToast({ title: '至少保留一道工序', icon: 'none' });
+    }
+    this.setData({
+      showDeleteModal: true,
+      pendingDeleteType: 'stage',
+      pendingDeleteTarget: { stageIdx: idx }
+    });
+  },
   addMaterial(e) { this.addMaterialToStage(e.currentTarget.dataset.stage, e.currentTarget.dataset.type); },
   addMaterialToStage(sIdx, type) {
     const list = this.data.stages;
@@ -822,11 +851,10 @@ Page({
 
   removeMaterial(e) {
     const { stage, index } = e.currentTarget.dataset;
-    const list = this.data.stages;
-    list[stage].materials.splice(index, 1);
-    this.setData({ stages: list }, () => {
-      // 删除材料后，也立即更新小计
-      this._updateStageMatSum(stage);
+    this.setData({
+      showDeleteModal: true,
+      pendingDeleteType: 'material',
+      pendingDeleteTarget: { stageIdx: stage, matIdx: index }
     });
   },
 
@@ -877,9 +905,35 @@ Page({
   reCalcMix(list) { let tr = 0, wp = 0, ws = 0; list.forEach(i => { const r = parseFloat(i.ratio) || 0; tr += r; wp += r * (parseFloat(i.price) || 0); ws += r * (parseFloat(i.solid) || 0); }); this.setData({ mixList: list, mixResultPrice: tr ? (wp / tr).toFixed(2) : 0, mixResultSolid: tr ? (ws / tr).toFixed(2) : 0 }); },
   openLoadModal() { if (!this.data.savedRecipeList.length) return wx.showToast({ title: '无保存记录', icon: 'none' }); this.setData({ showLoadModal: true }); },
   closeLoadModal() { this.setData({ showLoadModal: false }); },
-  requestDeleteRecipe(e) { const idx = e.currentTarget.dataset.index; this.setData({ showDeleteModal: true, deleteTargetIndex: idx }); },
-  closeDeleteModal() { this.setData({ showDeleteModal: false }); },
-  doDeleteRecipe() { const idx = this.data.deleteTargetIndex; const list = this.data.savedRecipeList; list.splice(idx, 1); wx.setStorageSync('my_recipes', list); this.setData({ savedRecipeList: list, showDeleteModal: false }); if (list.length === 0) this.setData({ showLoadModal: false }); wx.showToast({ title: '已删除', icon: 'none' }); },
+  requestDeleteRecipe(e) {
+    const idx = e.currentTarget.dataset.index;
+    this.setData({
+      showDeleteModal: true,
+      pendingDeleteType: 'recipe',
+      pendingDeleteTarget: { index: idx }
+    });
+  },
+
+  closeDeleteModal() {
+    this.setData({ showDeleteModal: false, pendingDeleteType: '', pendingDeleteTarget: null });
+  },
+
+  doDeleteRecipe(idx) {
+    const list = this.data.savedRecipeList;
+    if (idx !== undefined && idx >= 0 && idx < list.length) {
+      list.splice(idx, 1);
+      wx.setStorageSync('my_recipes', list);
+      this.setData({ savedRecipeList: list });
+      if (list.length === 0) this.setData({ showLoadModal: false });
+      wx.showToast({ title: '已删除', icon: 'none' });
+    }
+    // 关闭 Modal 交给 confirmDelete 统一处理，或者这里处理
+    // Note: confirmDelete returns early for recipe, so we must reset state here if modal wasn't closed by confirmDelete?
+    // Wait, confirmDelete logic: } else if (type === 'recipe') { this.doDeleteRecipe(target.index); return; }
+    // So confirmDelete Returns! It does NOT clear state.
+    // So doDeleteRecipe MUST clear state.
+    this.setData({ showDeleteModal: false, pendingDeleteType: '', pendingDeleteTarget: null });
+  },
   doLoadRecipe(e) { const idx = e.currentTarget.dataset.index; const s = this.data.savedRecipeList[idx]; let newList = []; if (s.details && s.details.length > 0) { newList = JSON.parse(JSON.stringify(s.details)); } else { newList = [{ name: s.name, ratio: '100', price: s.price, solid: s.solid }]; } this.setData({ mixList: newList, showLoadModal: false, currentRecipeName: s.name }); this.reCalcMix(newList); wx.showToast({ title: '数据已回填', icon: 'none' }); },
   openSaveModal() {
     // ★★★ 新增：保存前的最后一道安检
@@ -961,7 +1015,7 @@ Page({
   closeFormula() { this.setData({ showFormulaModal: false }); },
   openClearModal() { this.setData({ showClearModal: true }); },
   closeClearModal() { this.setData({ showClearModal: false }); },
-  doClearAll() { this.setData({ stages: [], res_final_cost: '-', final_yield: '-', errors: {}, showClearModal: false }); this.addStage('涂布工序'); wx.showToast({ title: '已重置', icon: 'none' }); },
+  doClearAll() { this.setData({ stages: [], res_final_cost: '-', final_yield: '-', errors: {}, showClearModal: false }); this.addStage(''); wx.showToast({ title: '已重置', icon: 'none' }); },
   openMachCal(e) { const idx = e.currentTarget.dataset.stage; this.setData({ showMachModal: true, machCalcTargetIdx: idx, machCalc: { fixCost: '', lines: '1', days: '26', hours: '24', util: '80', runCost: '', result: '-' } }); },
   closeMachModal() { this.setData({ showMachModal: false }); },
   onMachInput(e) {

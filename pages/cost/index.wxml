@@ -111,18 +111,23 @@
                      <block wx:for="{{stage.materials}}" wx:key="index">
                         <view class="mat-item">
                            <view class="mat-head">
-                              <input class="mat-name" value="{{item.name}}" placeholder="材料名" bindinput="onInput"
-                                 data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="name" />
+                              <view class="input-suffix-wrapper">
+                                 <input class="mat-name" value="{{item.name}}" placeholder="材料名" bindinput="onInput"
+                                    data-type="material" data-stage="{{sIdx}}" data-index="{{index}}" data-field="name" />
+                                 <view wx:if="{{item.type==='glue'}}" class="suffix-btn" bindtap="openMixCal"
+                                    data-stage="{{sIdx}}" data-index="{{index}}">
+                                    <ui-icon name="flask" size="32" color="var(--primary)" />
+                                 </view>
+                              </view>
+
                               <view class="mat-acts">
-                                 <view wx:if="{{item.type==='glue'}}" class="btn-tiny" bindtap="openMixCal"
-                                    data-stage="{{sIdx}}" data-index="{{index}}">配方</view>
                                  <view class="arrow-btn" catchtap="moveMaterial" data-stage="{{sIdx}}"
-                                    data-index="{{index}}" data-dir="{{-1}}" wx:if="{{index>0}}"><ui-icon name="arrow-up" size="28" color="var(--text-sub)" /></view>
+                                    data-index="{{index}}" data-dir="{{-1}}" wx:if="{{index>0}}"><ui-icon name="line-arrow-up" size="32" color="var(--text-sub)" /></view>
                                  <view class="arrow-btn" catchtap="moveMaterial" data-stage="{{sIdx}}"
                                     data-index="{{index}}" data-dir="{{1}}" wx:if="{{index<stage.materials.length-1}}">
-                                    <ui-icon name="arrow-down" size="28" color="var(--text-sub)" /></view>
+                                    <ui-icon name="line-arrow-down" size="32" color="var(--text-sub)" /></view>
                                  <view class="btn-del" bindtap="removeMaterial" data-stage="{{sIdx}}"
-                                    data-index="{{index}}"><ui-icon name="close" size="36" color="#ef4444" /></view>
+                                    data-index="{{index}}"><ui-icon name="trash" size="36" color="#ef4444" /></view>
                               </view>
                            </view>
 
