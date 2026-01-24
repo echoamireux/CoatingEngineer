@@ -81,7 +81,7 @@
                   </view>
 
                   <view class="fold-btn" bindtap="toggleStageFold" data-index="{{sIdx}}">
-                     {{stage.folded ? '▼' : '▲'}}
+                     <ui-icon name="{{stage.folded ? 'arrow-down' : 'arrow-up'}}" size="32" color="var(--text-sub)" />
                   </view>
 
                   <view class="stage-del-btn" catchtap="removeStage" data-index="{{sIdx}}"
@@ -161,7 +161,7 @@
                                  <view class="rc-right">
                                     <text class="rc-val">¥ {{ (item.cost !== undefined && item.cost !== null) ?
                                        item.cost : '-' }}<text class="unit">/m²</text></text>
-                                    <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--primary)" /></view>
+                                    <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--text-sub)" /></view>
                                  </view>
                               </view>
                            </block>
@@ -200,7 +200,7 @@
                                  <view class="rc-right">
                                     <text class="rc-val">¥ {{ (item.cost !== undefined && item.cost !== null) ?
                                        item.cost : '-' }}<text class="unit">/m²</text></text>
-                                    <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--primary)" /></view>
+                                    <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--text-sub)" /></view>
                                  </view>
                               </view>
                            </block>
@@ -256,7 +256,7 @@
                                  <input class="inp {{errors['s'+sIdx+'_proc_machRate']?'error':''}}" type="digit"
                                     value="{{stage.process.machRate}}" bindinput="onInput" data-type="process"
                                     data-stage="{{sIdx}}" data-field="machRate" placeholder="必填" />
-                                 <view class="calc-btn" bindtap="openMachCal" data-stage="{{sIdx}}"><ui-icon name="calc" size="36" color="#d97706" /></view>
+                                 <view class="calc-btn" bindtap="openMachCal" data-stage="{{sIdx}}"><ui-icon name="calc" size="36" color="var(--text-sub)" /></view>
                               </view>
                            </view>
                            <view class="field">
@@ -265,7 +265,7 @@
                                  <input class="inp {{errors['s'+sIdx+'_proc_laborRate']?'error':''}}" type="digit"
                                     value="{{stage.process.laborRate}}" bindinput="onInput" data-type="process"
                                     data-stage="{{sIdx}}" data-field="laborRate" placeholder="必填" />
-                                 <view class="calc-btn" bindtap="openLaborCal" data-stage="{{sIdx}}"><ui-icon name="calc" size="36" color="#d97706" /></view>
+                                 <view class="calc-btn" bindtap="openLaborCal" data-stage="{{sIdx}}"><ui-icon name="calc" size="36" color="var(--text-sub)" /></view>
                               </view>
                            </view>
                         </view>
@@ -279,7 +279,7 @@
                            <view class="rc-right">
                               <text class="rc-val">¥ {{ (stage.stageProcCost && stage.stageProcCost!=0) ?
                                  stage.stageProcCost : '-' }}<text class="unit">/m²</text></text>
-                              <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--primary)" /></view>
+                              <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--text-sub)" /></view>
                            </view>
                         </view>
                      </view>
@@ -296,7 +296,7 @@
                      <view class="rc-right">
                         <text class="rc-val">¥ {{ (stage.stageTotalCost && stage.stageTotalCost!=0) ?
                            stage.stageTotalCost : '-' }}<text class="unit">/m²</text></text>
-                        <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--primary)" /></view>
+                        <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--text-sub)" /></view>
                      </view>
                   </view>
                   <view class="res-card-block accum" bindtap="calcAccumCost" data-stage="{{sIdx}}">
@@ -308,6 +308,7 @@
                      <view class="rc-right">
                         <text class="rc-val" style="color:#10b981">¥ {{ (stage.accumCost && stage.accumCost!=0) ?
                            stage.accumCost : '-' }}<text class="unit">/m²</text></text>
+                        <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--text-sub)" /></view>
                      </view>
                   </view>
                </view>
