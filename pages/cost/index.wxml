@@ -37,9 +37,13 @@
                   </view>
                </view>
                <view class="gc-item">
-                  <text class="label">增值税(%)</text>
-                  <input class="inp tiny" type="digit" value="{{vatRate}}" bindinput="onInput" data-field="vatRate"
-                     data-type="global" />
+                  <text class="label">增值税</text>
+                  <view class="input-wrap mini {{focus.vatRate ? 'focused' : ''}}">
+                     <input class="inp-inner" type="digit" value="{{vatRate}}" bindinput="onInput"
+                        bindfocus="onInputFocus" bindblur="onInputBlur"
+                        data-field="vatRate" data-type="global" placeholder="0" />
+                     <text class="unit-suffix">%</text>
+                  </view>
                </view>
             </view>
          </view>
@@ -74,10 +78,12 @@
 
                   <view class="sh-inputs" wx:else catchtap="preventBubble">
                      <text class="yield-label">良率</text>
-                     <input class="yield-inp {{errors['s'+sIdx+'_yield']?'error':''}}" type="digit"
-                        value="{{stage.yield}}" placeholder="必填" bindinput="onInput" data-type="stage_yield"
-                        data-stage="{{sIdx}}" />
-                     <text class="yield-unit">%</text>
+                     <view class="input-wrap mini {{focus['s'+sIdx+'_yield'] ? 'focused' : ''}} {{errors['s'+sIdx+'_yield'] ? 'error' : ''}}">
+                        <input class="inp-inner" type="digit" value="{{stage.yield}}"
+                           bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                           data-type="stage_yield" data-stage="{{sIdx}}" data-field="yield" placeholder="0" />
+                        <text class="unit-suffix">%</text>
+                     </view>
                   </view>
 
                   <view class="fold-btn" bindtap="toggleStageFold" data-index="{{sIdx}}">
@@ -123,32 +129,46 @@
                            <block wx:if="{{item.type==='glue'}}">
                               <view class="row-Grid three-col">
                                  <view class="field">
-                                    <view class="label">单价 P<text class="sub">wet</text> (元/kg)</view>
-                                    <input class="inp {{errors['s'+sIdx+'_m'+index+'_price']?'error':''}}" type="digit"
-                                       value="{{item.price}}" bindinput="onInput" data-type="material"
-                                       data-stage="{{sIdx}}" data-index="{{index}}" data-field="price"
-                                       placeholder="必填" />
+                                    <view class="label">单价 P<text class="sub">wet</text></view>
+                                    <view class="input-wrap {{focus['s'+sIdx+'_m'+index+'_price'] ? 'focused' : ''}} {{errors['s'+sIdx+'_m'+index+'_price'] ? 'error' : ''}}">
+                                       <input class="inp-inner" type="digit" value="{{item.price}}"
+                                          bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                          data-type="material" data-stage="{{sIdx}}" data-index="{{index}}"
+                                          data-field="price" placeholder="0" />
+                                       <text class="unit-suffix">元/kg</text>
+                                    </view>
                                  </view>
                                  <view class="field">
-                                    <view class="label">固含 S (%)</view>
-                                    <input class="inp {{errors['s'+sIdx+'_m'+index+'_solid']?'error':''}}" type="digit"
-                                       value="{{item.solid}}" bindinput="onInput" data-type="material"
-                                       data-stage="{{sIdx}}" data-index="{{index}}" data-field="solid"
-                                       placeholder="必填" />
+                                    <view class="label">固含 S</view>
+                                    <view class="input-wrap {{focus['s'+sIdx+'_m'+index+'_solid'] ? 'focused' : ''}} {{errors['s'+sIdx+'_m'+index+'_solid'] ? 'error' : ''}}">
+                                       <input class="inp-inner" type="digit" value="{{item.solid}}"
+                                          bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                          data-type="material" data-stage="{{sIdx}}" data-index="{{index}}"
+                                          data-field="solid" placeholder="0" />
+                                       <text class="unit-suffix">%</text>
+                                    </view>
                                  </view>
                                  <view class="field">
-                                    <view class="label">利用率 η (%)</view>
-                                    <input class="inp {{errors['s'+sIdx+'_m'+index+'_eff']?'error':''}}" type="digit"
-                                       value="{{item.eff}}" bindinput="onInput" data-type="material"
-                                       data-stage="{{sIdx}}" data-index="{{index}}" data-field="eff" placeholder="必填" />
+                                    <view class="label">利用率 η</view>
+                                    <view class="input-wrap {{focus['s'+sIdx+'_m'+index+'_eff'] ? 'focused' : ''}} {{errors['s'+sIdx+'_m'+index+'_eff'] ? 'error' : ''}}">
+                                       <input class="inp-inner" type="digit" value="{{item.eff}}"
+                                          bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                          data-type="material" data-stage="{{sIdx}}" data-index="{{index}}"
+                                          data-field="eff" placeholder="0" />
+                                       <text class="unit-suffix">%</text>
+                                    </view>
                                  </view>
                               </view>
                               <view class="row-Grid">
                                  <view class="field compact-row">
-                                    <text class="label">干涂量 GSM (g/m²)</text>
-                                    <input class="inp {{errors['s'+sIdx+'_m'+index+'_gsm']?'error':''}}" type="digit"
-                                       value="{{item.gsm}}" bindinput="onInput" data-type="material"
-                                       data-stage="{{sIdx}}" data-index="{{index}}" data-field="gsm" placeholder="必填" />
+                                    <text class="label">干涂量 GSM</text>
+                                    <view class="input-wrap {{focus['s'+sIdx+'_m'+index+'_gsm'] ? 'focused' : ''}} {{errors['s'+sIdx+'_m'+index+'_gsm'] ? 'error' : ''}}">
+                                       <input class="inp-inner" type="digit" value="{{item.gsm}}"
+                                          bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                          data-type="material" data-stage="{{sIdx}}" data-index="{{index}}"
+                                          data-field="gsm" placeholder="0" />
+                                       <text class="unit-suffix">g/m²</text>
+                                    </view>
                                  </view>
                               </view>
                               <view class="res-card-block mat" bindtap="calcMaterialItem" data-stage="{{sIdx}}"
@@ -169,25 +189,34 @@
                            <block wx:else>
                               <view class="row-Grid three-col">
                                  <view class="field">
-                                    <view class="label">单价 P<text class="sub">area</text> (元/m²)</view>
-                                    <input class="inp {{errors['s'+sIdx+'_m'+index+'_price']?'error':''}}" type="digit"
-                                       value="{{item.price}}" bindinput="onInput" data-type="material"
-                                       data-stage="{{sIdx}}" data-index="{{index}}" data-field="price"
-                                       placeholder="必填" />
+                                    <view class="label">单价 P<text class="sub">area</text></view>
+                                    <view class="input-wrap {{focus['s'+sIdx+'_m'+index+'_price'] ? 'focused' : ''}} {{errors['s'+sIdx+'_m'+index+'_price'] ? 'error' : ''}}">
+                                       <input class="inp-inner" type="digit" value="{{item.price}}"
+                                          bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                          data-type="material" data-stage="{{sIdx}}" data-index="{{index}}"
+                                          data-field="price" placeholder="0" />
+                                       <text class="unit-suffix">元/m²</text>
+                                    </view>
                                  </view>
                                  <view class="field">
-                                    <view class="label">膜宽 W<text class="sub">film</text> (mm)</view>
-                                    <input class="inp {{errors['s'+sIdx+'_m'+index+'_widthRaw']?'error':''}}"
-                                       type="digit" value="{{item.widthRaw}}" bindinput="onInput" data-type="material"
-                                       data-stage="{{sIdx}}" data-index="{{index}}" data-field="widthRaw"
-                                       placeholder="必填" />
+                                    <view class="label">膜宽 W<text class="sub">film</text></view>
+                                    <view class="input-wrap {{focus['s'+sIdx+'_m'+index+'_widthRaw'] ? 'focused' : ''}} {{errors['s'+sIdx+'_m'+index+'_widthRaw'] ? 'error' : ''}}">
+                                       <input class="inp-inner" type="digit" value="{{item.widthRaw}}"
+                                          bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                          data-type="material" data-stage="{{sIdx}}" data-index="{{index}}"
+                                          data-field="widthRaw" placeholder="0" />
+                                       <text class="unit-suffix">mm</text>
+                                    </view>
                                  </view>
                                  <view class="field">
-                                    <view class="label">涂宽 W<text class="sub">coat</text> (mm)</view>
-                                    <input class="inp {{errors['s'+sIdx+'_m'+index+'_widthValid']?'error':''}}"
-                                       type="digit" value="{{item.widthValid}}" bindinput="onInput" data-type="material"
-                                       data-stage="{{sIdx}}" data-index="{{index}}" data-field="widthValid"
-                                       placeholder="必填" />
+                                    <view class="label">涂宽 W<text class="sub">coat</text></view>
+                                    <view class="input-wrap {{focus['s'+sIdx+'_m'+index+'_widthValid'] ? 'focused' : ''}} {{errors['s'+sIdx+'_m'+index+'_widthValid'] ? 'error' : ''}}">
+                                       <input class="inp-inner" type="digit" value="{{item.widthValid}}"
+                                          bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                          data-type="material" data-stage="{{sIdx}}" data-index="{{index}}"
+                                          data-field="widthValid" placeholder="0" />
+                                       <text class="unit-suffix">mm</text>
+                                    </view>
                                  </view>
                               </view>
                               <view class="res-card-block mat" bindtap="calcMaterialItem" data-stage="{{sIdx}}"
@@ -230,41 +259,52 @@
                      <view class="proc-item">
                         <view class="row-Grid three-col">
                            <view class="field">
-                              <view class="label">速度 V (m/min)</view>
-                              <input class="inp {{errors['s'+sIdx+'_proc_speed']?'error':''}}" type="digit"
-                                 value="{{stage.process.speed}}" bindinput="onInput" data-type="process"
-                                 data-stage="{{sIdx}}" data-field="speed" placeholder="必填" />
+                              <view class="label">速度 V</view>
+                              <view class="input-wrap {{focus['s'+sIdx+'_proc_speed'] ? 'focused' : ''}} {{errors['s'+sIdx+'_proc_speed'] ? 'error' : ''}}">
+                                 <input class="inp-inner" type="digit" value="{{stage.process.speed}}"
+                                    bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                    data-type="process" data-stage="{{sIdx}}" data-field="speed" placeholder="0" />
+                                 <text class="unit-suffix">m/min</text>
+                              </view>
                            </view>
                            <view class="field">
-                              <view class="label">排产长度 L<text class="sub">odr</text> (m)</view>
-                              <input class="inp {{errors['s'+sIdx+'_proc_orderLen']?'error':''}}" type="digit"
-                                 value="{{stage.process.orderLen}}" bindinput="onInput" data-type="process"
-                                 data-stage="{{sIdx}}" data-field="orderLen" placeholder="必填" />
+                              <view class="label">排产长度 L<text class="sub">odr</text></view>
+                              <view class="input-wrap {{focus['s'+sIdx+'_proc_orderLen'] ? 'focused' : ''}} {{errors['s'+sIdx+'_proc_orderLen'] ? 'error' : ''}}">
+                                 <input class="inp-inner" type="digit" value="{{stage.process.orderLen}}"
+                                    bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                    data-type="process" data-stage="{{sIdx}}" data-field="orderLen" placeholder="0" />
+                                 <text class="unit-suffix">m</text>
+                              </view>
                            </view>
                            <view class="field">
-                              <view class="label">调机损耗 L<text class="sub">wst</text> (m)</view>
-                              <input class="inp {{errors['s'+sIdx+'_proc_wasteLen']?'error':''}}" type="digit"
-                                 value="{{stage.process.wasteLen}}" bindinput="onInput" data-type="process"
-                                 data-stage="{{sIdx}}" data-field="wasteLen" placeholder="无损耗请填0" />
+                              <view class="label">调机损耗 L<text class="sub">wst</text></view>
+                              <view class="input-wrap {{focus['s'+sIdx+'_proc_wasteLen'] ? 'focused' : ''}} {{errors['s'+sIdx+'_proc_wasteLen'] ? 'error' : ''}}">
+                                 <input class="inp-inner" type="digit" value="{{stage.process.wasteLen}}"
+                                    bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                    data-type="process" data-stage="{{sIdx}}" data-field="wasteLen" placeholder="0" />
+                                 <text class="unit-suffix">m</text>
+                              </view>
                            </view>
                         </view>
 
                         <view class="row-Grid">
                            <view class="field">
-                              <view class="label">机台费 R<text class="sub">m</text> (元/h)</view>
-                              <view class="input-with-calc">
-                                 <input class="inp {{errors['s'+sIdx+'_proc_machRate']?'error':''}}" type="digit"
-                                    value="{{stage.process.machRate}}" bindinput="onInput" data-type="process"
-                                    data-stage="{{sIdx}}" data-field="machRate" placeholder="必填" />
+                              <view class="label">机台费 R<text class="sub">m</text></view>
+                              <view class="input-wrap {{focus['s'+sIdx+'_proc_machRate'] ? 'focused' : ''}} {{errors['s'+sIdx+'_proc_machRate'] ? 'error' : ''}}">
+                                 <input class="inp-inner" type="digit" value="{{stage.process.machRate}}"
+                                    bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                    data-type="process" data-stage="{{sIdx}}" data-field="machRate" placeholder="0" />
+                                 <text class="unit-suffix">元/h</text>
                                  <view class="calc-btn" bindtap="openMachCal" data-stage="{{sIdx}}"><ui-icon name="calc" size="36" color="var(--text-sub)" /></view>
                               </view>
                            </view>
                            <view class="field">
-                              <view class="label">人工费 R<text class="sub">l</text> (元/h)</view>
-                              <view class="input-with-calc">
-                                 <input class="inp {{errors['s'+sIdx+'_proc_laborRate']?'error':''}}" type="digit"
-                                    value="{{stage.process.laborRate}}" bindinput="onInput" data-type="process"
-                                    data-stage="{{sIdx}}" data-field="laborRate" placeholder="必填" />
+                              <view class="label">人工费 R<text class="sub">l</text></view>
+                              <view class="input-wrap {{focus['s'+sIdx+'_proc_laborRate'] ? 'focused' : ''}} {{errors['s'+sIdx+'_proc_laborRate'] ? 'error' : ''}}">
+                                 <input class="inp-inner" type="digit" value="{{stage.process.laborRate}}"
+                                    bindinput="onInput" bindfocus="onInputFocus" bindblur="onInputBlur"
+                                    data-type="process" data-stage="{{sIdx}}" data-field="laborRate" placeholder="0" />
+                                 <text class="unit-suffix">元/h</text>
                                  <view class="calc-btn" bindtap="openLaborCal" data-stage="{{sIdx}}"><ui-icon name="calc" size="36" color="var(--text-sub)" /></view>
                               </view>
                            </view>

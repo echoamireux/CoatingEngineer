@@ -9,6 +9,7 @@ Page({
     theme: 'dark',
     statusBarHeight: 44,
     errors: {},
+    focus: {},
 
     showFormulaModal: false,
     formulaTitle: '',
@@ -159,6 +160,34 @@ Page({
       delete newErr[key];
       this.setData({ errors: newErr });
     }
+  },
+
+  // 输入框焦点状态管理
+  onInputFocus(e) {
+    const { type, stage, index, field } = e.currentTarget.dataset;
+    let key = field;
+    if (type === 'material') {
+      key = `s${stage}_m${index}_${field}`;
+    } else if (type === 'process') {
+      key = `s${stage}_proc_${field}`;
+    } else if (type === 'stage_yield') {
+      key = `s${stage}_yield`;
+    }
+    // global 类型直接使用 field 作为 key
+    this.setData({ [`focus.${key}`]: true });
+  },
+
+  onInputBlur(e) {
+    const { type, stage, index, field } = e.currentTarget.dataset;
+    let key = field;
+    if (type === 'material') {
+      key = `s${stage}_m${index}_${field}`;
+    } else if (type === 'process') {
+      key = `s${stage}_proc_${field}`;
+    } else if (type === 'stage_yield') {
+      key = `s${stage}_yield`;
+    }
+    this.setData({ [`focus.${key}`]: false });
   },
 
   preventBubble() {
