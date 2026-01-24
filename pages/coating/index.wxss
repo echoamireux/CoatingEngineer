@@ -1,32 +1,17 @@
-/* Coating 页面样式 - 继承全局主题变量 */
-page {
-  /* 变量映射：将旧变量名映射到全局变量 */
-  --bg-base: var(--bg);
-  --card-bg: var(--card);
-  --text-main: var(--text);
-  /* --text-sub 已在全局定义 */
-  /* --border 已在全局定义 */
-  --input-bg: var(--card);
-  --success: var(--primary);
-  --ph-color: rgba(255, 255, 255, 0.1);
+@import "../../styles/form.wxss";
+@import "../../styles/icon.wxss";
 
+/* Coating 页面样式 */
+page {
   font-family: "DIN Alternate", "Roboto", Helvetica, sans-serif;
   box-sizing: border-box;
 }
 
-/* 白天模式的映射 */
-.page-container.light {
-  --bg-base: var(--bg);
-  --card-bg: var(--card);
-  --text-main: var(--text);
-  --input-bg: var(--card);
-  --ph-color: rgba(0, 0, 0, 0.1);
-}
-
+/* 页面容器 */
 .page-container {
   min-height: 100vh;
-  background-color: var(--bg-base);
-  color: var(--text-main);
+  background-color: var(--bg);
+  color: var(--text);
   padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -36,9 +21,10 @@ page {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--bg-base); /* 沉浸式：与页面背景一致 */
-  /* 移除border-bottom，沉浸式设计 */
+  background: var(--bg); /* 沉浸式：与页面背景一致 */
   box-sizing: border-box;
+  padding-bottom: 12rpx; /* Add breathing room for tabs */
+  /* box-shadow removed as per user request for flat look */
 }
 
 /* 导航栏 - 第一行 */
@@ -151,183 +137,140 @@ page {
   opacity: 0.8;
 }
 
-/* Tabs */
+/* Panel Container */
+.panel {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Minimal Add Button (Text Only) */
+.add-btn-minimal {
+  display: flex;
+  align-items: center;
+  color: var(--text-sub);
+  opacity: 0.8;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  transition: opacity 0.2s;
+  background: transparent !important; /* Force remove any inherited background */
+  border: none !important;
+}
+
+.btn-hover-text {
+  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.05); /* Very subtle hover */
+}
+/* Professional Sticky Tabs (Integrated) */
 .tabs {
   display: flex;
-  background: rgba(255, 255, 255, 0.05);
-  /* Lighter than input-bg */
-  padding: 8rpx;
-  border-radius: 20rpx;
-  margin: 20rpx 30rpx;
-  border: none;
-  transition: all 0.3s;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02); /* Very subtle transparency */
+  padding: 0;
+  margin: 8rpx 24rpx 16rpx 24rpx; /* Compact margins */
+  border-radius: 100rpx; /* Full rounded strip */
+  border: 1px solid var(--border);
+  height: 56rpx; /* Compact Height (Professional) */
+  position: relative;
+  /* Removed sticky here as parent header is sticky */
 }
+
 
 .tab-item {
   flex: 1;
   text-align: center;
-  padding: 20rpx 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-sub);
-  font-size: 28rpx;
-  font-weight: 600;
-  border-radius: 14rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  border-radius: 100rpx;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
 }
 
 .tab-item.active {
-  color: var(--primary);
-  background-color: var(--accent-dim);
-  border: 1px solid var(--primary);
-  box-shadow: none;
-  /* Removed heavy shadow */
-  font-weight: 800;
-}
-
-/* Panel 容器 */
-.panel {
-  padding: 0 30rpx;
-}
-
-/* Card */
-.card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 24rpx;
-  padding: 24rpx;
-  margin-bottom: 20rpx;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s, border-color 0.3s;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 32rpx;
-  right: 32rpx;
-  height: 2rpx;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-}
-
-.section-title {
-  font-size: 28rpx;
+  color: var(--bg); /* Inverted Text */
+  background-color: var(--primary); /* Solid Primary (Yellow) */
   font-weight: 700;
-  margin-bottom: 20rpx;
-  color: var(--primary);
-  /* Switched from accent to primary for better readability if needed, or keep accent */
-  display: flex;
-  align-items: center;
-  text-transform: uppercase;
-  letter-spacing: 1rpx;
+  box-shadow: 0 4rpx 12rpx rgba(245, 158, 11, 0.3);
 }
 
-.convert-btn {
-  margin-left: 20rpx;
-  font-size: 32rpx;
-  display: inline-block;
-}
-
-.tool-btn {
-  font-size: 24rpx;
-  color: var(--text-main);
-  background: var(--accent-dim);
-  padding: 6rpx 16rpx;
-  border-radius: 8rpx;
-  border: 1px solid var(--border);
-}
-
-.tool-btn:active {
-  opacity: 0.6;
-}
-
-.btn-text-plain {
-  font-size: 28rpx;
-  color: var(--text-sub);
-}
-
-.btn-text-plain:active {
-  opacity: 0.7;
-}
-
-.divider {
-  height: 1px;
-  background-color: var(--border);
-  margin: 20rpx 0;
+.tab-divider {
+  width: 1px;
+  height: 24rpx;
+  background: var(--border);
   opacity: 0.5;
 }
 
-/* Inputs */
-.input-row {
-  margin-bottom: 20rpx;
-}
-
-.label-row {
+/* Input Row for Core ID: Bottom Alignment is Critical */
+.input-row-with-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14rpx;
-}
-
-.label {
-  font-size: 26rpx;
-  color: var(--text-sub);
-  font-weight: 500;
-  margin-bottom: 8rpx;
-  display: block;
-}
-
-.input {
-  background-color: var(--input-bg);
-  border: 1px solid var(--border);
-  color: var(--text-main);
-  height: 64rpx;
-  padding: 0 24rpx;
-  border-radius: 12rpx;
-  width: 100%;
-  box-sizing: border-box;
-  font-size: 28rpx;
-  font-family: monospace;
-  transition: all 0.2s;
-}
-
-.input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-dim);
-}
-
-.input-placeholder {
-  color: var(--ph-color);
-  font-size: 22rpx;
-}
-
-/* Tags & Layouts */
-.tags {
-  display: flex;
-  gap: 16rpx;
-}
-
-.tag {
-  font-size: 22rpx;
-  color: var(--accent);
-  background: var(--accent-dim);
-  padding: 8rpx 20rpx;
-  border-radius: 8rpx;
-  border: 1px solid var(--border);
-}
-
-.flex-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16rpx;
-  margin-bottom: 20rpx;
-}
-
-.flex-item {
-  flex: 1;
+  align-items: center; /* ALIGN CENTER (Elements are same height) */
+  gap: 12rpx;
   margin-bottom: 0;
 }
 
+.input-main {
+  flex: 1;
+  /* ui-form-field handles its own layout, we just contain it */
+}
+
+/* Native Input Styles for Perfect Alignment */
+.input-native-wrapper {
+  height: 72rpx; /* Strict Height Match */
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 16rpx; /* Match Buttons */
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  box-sizing: border-box; /* CRITICAL */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+.input-native-wrapper.focused {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx rgba(245, 158, 11, 0.2); /* Theme Primary Glow */
+  background: var(--card-bg);
+}
+
+.input-native-wrapper.error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.native-input {
+  flex: 1;
+  height: 100%;
+  font-size: 30rpx;
+  color: var(--text-main);
+  font-family: "DIN Alternate", "Roboto", monospace;
+  font-weight: 600;
+  line-height: 72rpx; /* Force vertical center */
+  height: 72rpx;
+  min-height: 72rpx;
+}
+
+.input-placeholder-native {
+  color: var(--text-sub);
+  opacity: 0.5;
+  font-size: 28rpx;
+  font-weight: normal;
+}
+
+.unit-suffix-native {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-left: 16rpx;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* Inputs - Superseded by form.wxss but keeping grid logic */
 .grid-2 {
   display: flex;
   gap: 24rpx;
@@ -342,7 +285,7 @@ page {
   gap: 16rpx;
 }
 
-.grid-3 .input-group {
+.grid-3 .form-col {
   flex: 1;
   min-width: 0;
 }
@@ -358,64 +301,8 @@ page {
 .layer-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 16rpx;
-}
-
-/* Result */
-.result-row {
-  margin-bottom: 36rpx;
-}
-
-.result-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 16rpx;
-}
-
-.label-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.result-label {
-  font-size: 28rpx;
-  color: var(--text-sub);
-}
-
-.result-unit-sub {
-  font-size: 22rpx;
-  color: var(--text-sub);
-  margin-top: 4rpx;
-  opacity: 0.8;
-}
-
-.formula-box {
-  font-size: 20rpx;
-  color: var(--text-sub);
-  font-family: monospace;
-  background: var(--input-bg);
-  padding: 8rpx 16rpx;
-  border-radius: 8rpx;
-  border: 1px solid var(--border);
-}
-
-.result-val {
-  display: block;
-  font-size: 64rpx;
-  /* Bigger */
-  font-weight: 700;
-  color: var(--accent);
-  background: transparent;
-  /* Clean */
-  padding: 10rpx 0;
-  /* Minimal padding */
-  border-radius: 0;
-  text-align: right;
-  border: none;
-  /* No border */
-  letter-spacing: 2rpx;
-  font-family: monospace;
 }
 
 /* Buttons */
@@ -755,37 +642,31 @@ button.btn-ghost {
   font-size: 36rpx;
 }
 
-/* 核心输入框优化 */
-.input-row-split {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.input-half {
-  flex: 1;
-}
-
+/* Cleaned up old alignment classes */
+/* Quick Actions Group - Bottom Aligned */
 .quick-btn-group {
   display: flex;
   gap: 12rpx;
+  height: 72rpx; /* MATCH STANDARD INPUT HEIGHT (72rpx) */
+  align-items: center;
 }
 
 .q-btn {
+  height: 72rpx; /* STRICT MATCH */
+  margin: 0;
   background: var(--accent-dim);
   color: var(--accent);
   border: 1px solid var(--border);
   font-size: 26rpx;
   font-family: monospace;
   font-weight: bold;
-  height: 64rpx;
-  /* 与输入框等高 */
   padding: 0 24rpx;
-  border-radius: 12rpx;
+  border-radius: 16rpx; /* Match Input Radius */
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
+  box-sizing: border-box; /* CRITICAL: Include border in 72rpx height */
 }
 
 .q-btn.icon {
@@ -1007,12 +888,168 @@ button.btn-ghost {
   border: 1px solid var(--border);
 }
 
-.f-box .ft {
-  color: var(--accent);
-  font-size: 24rpx; /* Scaled down */
-  font-weight: bold;
-  margin-bottom: 8rpx;
+
+/* Result Surface Overrides */
+/* Result Surface Overrides */
+.result-surface::before {
+  /* Restore yellow bar */
+  display: block !important;
 }
+
+.result-surface {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-top: 1px solid var(--border) !important;
+}
+
+/* Section & Titles - Standardized to Fluid Module */
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20rpx 0 16rpx 0;
+  padding-bottom: 8rpx;
+  min-height: 48rpx;
+}
+
+.section-title {
+  font-size: 30rpx !important; /* Fluid Standard */
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0; /* Remove vertical margin as row handles it */
+  padding-left: 16rpx;
+  border-left: 8rpx solid var(--primary); /* Thick Vertical Bar */
+  text-transform: uppercase;
+  letter-spacing: 1rpx;
+  line-height: 1.2;
+}
+
+.bracket-info {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  font-weight: 400;
+  margin-left: 8rpx;
+  text-transform: none; /* Keep english subtitle natural */
+}
+
+/* Grid Layout for Perfect Alignment */
+.grid-2-align {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.align-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input Row with External Actions (V23) */
+.input-row-with-actions {
+  display: flex;
+  align-items: flex-end; /* Align bottom to match input box */
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.input-main {
+  flex: 1; /* Input takes remaining space */
+}
+
+/* Ghost Add Button (Visual De-noise) */
+.add-layer-btn-ghost {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 8rpx 20rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100rpx;
+  transition: all 0.2s;
+}
+
+.add-layer-btn-ghost:active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(0.95);
+}
+
+.ghost-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+/* Convert Link - Minimal */
+.convert-link {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 24rpx;
+  color: var(--text-sub);
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.convert-link:active {
+  background: var(--bg-hover);
+  opacity: 0.8;
+}
+
+/* Add Layer Button Style */
+.add-layer-btn {
+  background: var(--primary);
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+
+.add-layer-btn:active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+/* Delete Layer Button */
+.del-layer-btn {
+  padding: 8rpx;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make Result Row Compact */
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.result-row:last-child {
+  border-bottom: none;
+}
+
+.result-key {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+.result-val {
+  font-size: 32rpx;
+  font-weight: bold;
+  font-family: monospace;
+}
+
 
 .fm-row {
   font-family: "Times New Roman", serif;
@@ -1076,8 +1113,134 @@ button.btn-ghost {
   transform: translateY(4rpx); /* Fine-tune vertical position */
 }
 
+
 .sqrt-content {
   border-top: 1.5px solid currentColor; /* Thicker line */
   padding-top: 2rpx;
   margin-top: 0.12em; /* Lower line slightly to meet V tip */
+}
+
+/* ========================================= */
+/* COMPACT MODE OVERRIDES (Single Page View) */
+/* ========================================= */
+
+/* 1. Global Spacing Compression */
+.page-container {
+  padding-bottom: 20rpx; /* Minimal bottom padding */
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* No gap between cards if any */
+}
+
+/* Cards: Reduce padding */
+.ui-card {
+  padding: 20rpx !important;
+  margin-bottom: 16rpx !important;
+}
+
+/* 2. Compact Form Groups */
+.form-group {
+  margin-bottom: 12rpx !important; /* Halved from 24rpx */
+}
+
+.form-label {
+  margin-bottom: 6rpx !important;
+  font-size: 24rpx !important; /* Slightly smaller labels */
+}
+
+/* 3. Compact Input Heights (The Core Change) */
+.input-container {
+  height: 64rpx !important; /* Reduced from 80rpx -> Dense Pro Look */
+  min-height: 64rpx !important;
+}
+
+.form-input {
+  font-size: 26rpx !important; /* Adjusted for smaller height */
+}
+
+.input-placeholder {
+  font-size: 24rpx !important;
+}
+
+.unit-suffix {
+  font-size: 22rpx !important;
+}
+
+/* Legacy compact styles removed to respect main 72rpx standard */
+
+/* 5. Tighter Layer List */
+.layer-item {
+  padding: 12rpx !important;
+  margin-bottom: 8rpx !important;
+  border-radius: 12rpx !important;
+}
+
+.layer-header {
+  margin-bottom: 8rpx !important;
+}
+
+.layer-idx {
+  font-size: 24rpx !important;
+}
+
+/* 6. Compact Section Titles */
+.section-title, .sec-title {
+  margin: 16rpx 0 8rpx 0 !important;
+  font-size: 26rpx !important;
+}
+
+.divider {
+  margin: 16rpx 0 !important;
+}
+
+/* 7. Compact Action Buttons */
+.btn-grid {
+  margin-top: 16rpx !important;
+  gap: 10rpx !important;
+}
+
+.btn {
+  padding: 0 !important;
+  height: 72rpx !important;
+  font-size: 26rpx !important;
+  border-radius: 12rpx !important;
+}
+
+.btn-secondary {
+  font-size: 24rpx !important;
+}
+
+.hint-text {
+  display: none;
+}
+
+/* 8. Compact Result Surface */
+.result-surface {
+  padding: 16rpx 24rpx !important;
+  margin-top: 0 !important;
+}
+
+.result-row {
+  margin-bottom: 8rpx !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-key {
+  font-size: 26rpx !important;
+}
+
+.result-val.highlight {
+  font-size: 36rpx !important;
+}
+
+/* Adjust Add Layer Button to be smaller */
+.add-layer-btn {
+  padding: 4rpx 12rpx !important;
+  /* background: rgba(255,255,255,0.1); REMOVED to fix Light Mode visibility */
+  border-radius: 8rpx;
 }

@@ -1,0 +1,209 @@
+/* ==========================================
+   Antigravity Design System - Form Tokens
+   Style: Industrial Precision (UI/UX Pro Max)
+   ========================================== */
+
+/* --- 1. Design Tokens --- */
+page {
+  /* Dimensions */
+  --form-input-height: 72rpx;  /* Standard touch target */
+  --form-radius: 16rpx;        /* Modern rounded corners */
+  --form-spacing: 24rpx;       /* Standard vertical flow */
+
+  /* Colors (Dark Mode Logic) */
+  --form-bg: var(--input-bg);
+  --form-border: rgba(255, 255, 255, 0.1);
+  --form-border-focus: var(--primary); /* Inherit from page theme */
+  --form-text: var(--text);
+  --form-label: var(--text-sub);
+  --form-placeholder: rgba(255, 255, 255, 0.15);
+
+  /* Feedback */
+  --glow-focus: 0 0 0 4rpx rgba(99, 102, 241, 0.2); /* Default Indigo glow */
+  --glow-error: 0 0 0 4rpx rgba(239, 68, 68, 0.2);
+  --anim-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Mode Overrides */
+.page-container.light {
+  --form-bg: rgba(0, 0, 0, 0.03);
+  --form-border: rgba(0, 0, 0, 0.1);
+  --form-placeholder: rgba(0, 0, 0, 0.25);
+  --glow-focus: 0 0 0 4rpx rgba(99, 102, 241, 0.15);
+}
+
+/* --- 2. Layout Containers --- */
+
+/* Standard Form Group */
+.form-group {
+  margin-bottom: var(--form-spacing);
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+/* Horizontal Split (50/50) */
+.form-row {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: var(--form-spacing);
+}
+
+.form-col {
+  flex: 1;
+  min-width: 0; /* Prevent overflow */
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+/* Label */
+.form-label {
+  font-size: 24rpx;
+  color: var(--form-label);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- 3. Input Components --- */
+
+/* The Precision Input Wrapper */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  height: var(--form-input-height);
+  background: var(--form-bg);
+  border: 1px solid var(--form-border);
+  border-radius: var(--form-radius);
+  transition: all 0.2s var(--anim-ease);
+  display: flex;
+  align-items: center;
+}
+
+/* Interaction States */
+.input-wrapper:active {
+  background: rgba(255,255,255,0.06);
+}
+
+.input-wrapper.focus {
+  border-color: var(--form-border-focus);
+  box-shadow: var(--glow-focus);
+  background: var(--card); /* Slightly lighter on focus */
+}
+
+.input-wrapper.error {
+  border-color: #ef4444;
+  box-shadow: var(--glow-error);
+  animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* The Native Input */
+.form-input {
+  flex: 1;
+  height: 100%;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  font-family: "DIN Alternate", "Roboto", monospace; /* Industrial Font */
+  color: var(--form-text);
+  background: transparent;
+}
+
+.form-input-placeholder {
+  color: var(--form-placeholder);
+  font-size: 26rpx;
+  font-family: -apple-system, sans-serif; /* Standard font for placeholder */
+  letter-spacing: 0;
+}
+
+/* Unit Suffix (Inside Input) */
+.unit-suffix {
+  padding-right: 24rpx;
+  font-size: 24rpx;
+  color: var(--text-sub);
+  opacity: 0.7;
+  font-weight: 500;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* Quick Actions (Inside Input) */
+.input-action {
+  height: 100%;
+  padding: 0 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  opacity: 0.8;
+  font-weight: bold;
+  font-size: 32rpx;
+}
+.input-action:active {
+  opacity: 0.5;
+}
+
+/* --- 4. Result Cards (Data Surface) --- */
+.result-surface {
+  background: var(--form-bg);
+  border: 1px solid var(--form-border);
+  border-radius: var(--form-radius);
+  padding: 24rpx;
+  margin-top: 30rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.result-surface::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 6rpx;
+  background: var(--primary);
+  opacity: 0.8;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12rpx;
+}
+
+.result-row:last-child {
+  margin-bottom: 0;
+}
+
+.result-key {
+  font-size: 26rpx;
+  color: var(--text-sub);
+}
+
+.result-val {
+  font-family: "DIN Alternate", monospace;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.result-val.highlight {
+  color: var(--primary);
+}
+
+.result-unit {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-left: 8rpx;
+  font-family: -apple-system, sans-serif;
+  font-weight: normal;
+}
+
+/* --- 5. Animations --- */
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}

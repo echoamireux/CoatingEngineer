@@ -1,17 +1,15 @@
 <view class="page-container {{theme}}">
   <!-- 固定头部 - 统一单行设计 -->
-  <view class="category-header" style="padding-top: {{statusBarHeight}}px;">
-    <!-- 导航行：按钮 + 标题 -->
-    <view class="nav-bar">
-      <view class="header-left">
-        <view class="header-back" bindtap="goBack">
-          <text class="back-icon">←</text>
-        </view>
-        <view class="header-home" bindtap="goHome">
-          <text class="home-icon">🏠</text>
-        </view>
+  <view class="page-header sticky-header" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 导航行 -->
+    <view class="nav-row">
+      <view class="back-btn" bindtap="goBack">
+         <ui-icon name="back" size="50" />
       </view>
-      <text class="header-title">{{title}}</text>
+      <view class="tool-btn" bindtap="goHome" style="margin-left: -4rpx; margin-right: 4rpx;">
+         <ui-icon name="home" size="44" />
+      </view>
+      <text class="page-title">{{title}}</text>
     </view>
 
     <!-- 搜索框 (Sticky inside header) -->

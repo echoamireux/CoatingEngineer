@@ -3,204 +3,391 @@
   <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
     <!-- 第一行：标题栏 -->
     <view class="nav-row">
-      <view class="back-btn" bindtap="goBack">←</view>
+      <view class="back-btn" bindtap="goBack">
+         <ui-icon name="back" size="50" />
+      </view>
       <text class="page-title">流体力学计算</text>
     </view>
 
     <!-- 第二行：纯图标工具栏 -->
+
     <view class="toolbar-row">
       <view class="tool-btn" bindtap="toggleFormula" hover-class="tool-hover">
-        <text class="icon">📐</text>
+        <ui-icon name="calc" />
       </view>
       <view class="tool-btn" bindtap="openHistoryModal" hover-class="tool-hover">
-        <text class="icon">📜</text>
+        <ui-icon name="history" />
       </view>
       <view class="tool-btn" bindtap="saveHistory" wx:if="{{result.hasResult}}" hover-class="tool-hover">
-        <text class="icon" style="color:var(--primary)">💾</text>
+        <ui-icon name="save" color="var(--primary)" />
       </view>
       <view class="tool-btn" bindtap="confirmReset" hover-class="tool-hover">
-        <text class="icon">🧹</text>
+         <ui-icon name="trash" />
       </view>
-    </view>
-  </view>
-  <view class="card fluid-card compact">
-    <view class="card-head">流体属性 (Fluid Properties)</view>
-    <view class="fluid-grid-container {{isPowerLaw ? 'grid-2x2' : 'grid-1x2'}}">
-      <view class="field {{errors.rho_wet?'err':''}}"><text class="label">湿胶密度 ρ (g/cm³)</text><input class="inp"
-          type="digit" placeholder="请输入" value="{{rho_wet}}" bindinput="onInput" data-field="rho_wet"
-          placeholder-class="ph" /></view>
-      <view class="switch-wrap"><text class="label">非牛顿流体</text>
-        <switch checked="{{isPowerLaw}}" bindchange="toggleModel" color="#3b82f6" style="transform: scale(0.7);" />
-      </view>
-      <block wx:if="{{!isPowerLaw}}">
-        <view class="field grid-span-2 {{errors.viscosity?'err':''}}">
-          <text class="label">有效粘度 η_eff (cP)</text>
-          <input class="inp" type="digit" placeholder="请输入" value="{{viscosity}}" bindinput="onInput"
-            data-field="viscosity" placeholder-class="ph" />
-          <text class="tip-text">* 牛顿流体：稠度系数K = 有效粘度η_eff = 旋转粘度计读数，幂律指数n=1</text>
-        </view>
-      </block>
-      <block wx:else>
-        <view class="field {{errors.K_val?'err':''}}"><text class="label">稠度系数 K (Pa·sⁿ)</text><input class="inp"
-            type="digit" placeholder="请输入" value="{{K_val}}" bindinput="onInput" data-field="K_val"
-            placeholder-class="ph" /></view>
-        <view class="field {{errors.n_val?'err':''}}"><text class="label">幂律指数 n</text><input class="inp" type="digit"
-            placeholder="请输入" value="{{n_val}}" bindinput="onInput" data-field="n_val" placeholder-class="ph" />
-        </view>
-      </block>
     </view>
   </view>
 
-  <view class="card main-card">
-    <view class="flow-row">
-      <view class="field full {{errors.pipe_Q?'err':''}}">
-        <view class="label-row"><text class="label highlight">系统总流量 Q (L/min)</text></view>
-        <view class="flow-inline"><input class="inp" type="digit" placeholder="请输入" value="{{pipe_Q}}"
-            bindinput="onInput" data-field="pipe_Q" placeholder-class="ph" />
-          <view class="rpm-btn" bindtap="openRPMModal">🧮 转速换算</view>
+  <ui-card>
+    <!-- Custom Header with Switch -->
+    <view class="card-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12rpx;">
+       <view class="section-title" style="margin:0;">流体属性 (Fluid)</view>
+       <view style="display:flex; align-items:center;">
+          <text style="font-size:22rpx; color:var(--text-sub); margin-right:8rpx">非牛顿流体</text>
+          <switch checked="{{isPowerLaw}}" bindchange="toggleModel" color="#3b82f6" style="transform: scale(0.65);" />
+       </view>
+    </view>
+
+    <!-- Row 1: Density | Viscosity or K -->
+    <view class="form-row">
+       <view class="form-col">
+          <ui-form-field label="湿胶密度 ρ" fieldName="rho_wet" data-field="rho_wet" value="{{rho_wet}}" unit="g/cm³" placeholder="0.0"
+            bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.rho_wet}}" />
+       </view>
+
+       <view class="form-col">
+          <block wx:if="{{!isPowerLaw}}">
+             <ui-form-field label="有效粘度 η" fieldName="viscosity" data-field="viscosity" value="{{viscosity}}" unit="cP" placeholder="0.0"
+                bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.viscosity}}" />
+          </block>
+          <block wx:else>
+             <ui-form-field label="稠度系数 K" fieldName="K_val" data-field="K_val" value="{{K_val}}" unit="Pa·sⁿ" placeholder="0.0"
+               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.K_val}}" />
+          </block>
+       </view>
+    </view>
+
+    <!-- Row 2: Power Law Index (only if Power Law) -->
+    <block wx:if="{{isPowerLaw}}">
+      <view class="form-row">
+        <view class="form-col">
+           <ui-form-field label="幂律指数 n" fieldName="n_val" data-field="n_val" value="{{n_val}}" placeholder="0.0"
+             bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.n_val}}" />
         </view>
+        <view class="form-col"></view> <!-- Spacer -->
+      </view>
+    </block>
+
+    <text wx:if="{{!isPowerLaw}}" class="hint-text" style="text-align:left; margin-top:4rpx; display:block; font-size: 20rpx; color: var(--text-sub);">* 牛顿流体：稠度系数K = 有效粘度η_eff = 旋转粘度计读数，幂律指数n=1</text>
+  </ui-card>
+
+  <!-- 工艺与几何参数 (Merged Card) -->
+  <ui-card>
+    <view class="section-title">工艺与几何参数 (Process)</view>
+
+    <!-- 1. System Flow Q (Top Level) -->
+    <view class="form-group" style="margin-bottom: 20rpx;">
+       <ui-form-field label="系统总流量 Q" fieldName="pipe_Q" data-field="pipe_Q" value="{{pipe_Q}}" unit="L/min" placeholder="0.0"
+         bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_Q}}">
+         <view slot="right-icon" class="input-action" bindtap="openRPMModal" style="padding-left:12rpx; border-left:1px solid var(--border);">
+            <ui-icon name="calc" size="32" color="var(--primary)" />
+         </view>
+       </ui-form-field>
+    </view>
+
+    <!-- Divider -->
+    <view class="divider" style="margin: 12rpx 0;"></view>
+
+    <!-- 2. Split Columns (Pipe | Slot) -->
+    <view class="split-layout">
+      <!-- Left Column: Pipe -->
+      <view class="split-col">
+         <view class="subsection-title">供液管路</view>
+         <view class="form-group">
+            <ui-form-field label="管道内径 D" fieldName="pipe_D" data-field="pipe_D" value="{{pipe_D}}" unit="mm" placeholder="0.0"
+              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_D}}" />
+         </view>
+         <view class="form-group">
+            <ui-form-field label="管道长度 L" fieldName="pipe_L" data-field="pipe_L" value="{{pipe_L}}" unit="m" placeholder="0.0"
+              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_L}}" />
+         </view>
+          <view class="form-group">
+            <ui-form-field label="高程差 Δz" fieldName="pipe_dz" data-field="pipe_dz" value="{{pipe_dz}}" unit="m" placeholder="±m"
+              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_dz}}" />
+         </view>
+          <view class="form-group">
+            <ui-form-field label="管件损耗 ΣK" fieldName="pipe_K_loss" data-field="pipe_K_loss" value="{{pipe_K_loss}}" placeholder="0.0"
+              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_K_loss}}">
+              <view slot="right-icon" class="input-action" bindtap="openKModal" style="padding-left:12rpx; border-left:1px solid var(--border);">
+                  <ui-icon name="plus" size="32" color="var(--primary)" />
+              </view>
+            </ui-form-field>
+         </view>
+
+         <!-- Pipe Calc Button (Restored) -->
+         <view style="margin-top:auto; padding-top:12rpx;">
+            <button class="btn-mini" bindtap="handleCalc" data-mode="pipe">计算管路</button>
+         </view>
+
+      </view>
+
+      <!-- Vertical Divider -->
+      <view class="v-divider" style="width:1px; background:var(--border); margin:0 8rpx;"></view>
+
+      <!-- Right Column: Slot -->
+      <view class="split-col">
+         <view class="subsection-title">狭缝模头</view>
+         <view class="form-group">
+            <ui-form-field label="涂布幅宽 W" fieldName="slot_W" data-field="slot_W" value="{{slot_W}}" unit="mm" placeholder="0.0"
+              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_W}}" />
+         </view>
+          <view class="form-group">
+            <ui-form-field label="垫片厚度 H" fieldName="slot_H" data-field="slot_H" value="{{slot_H}}" unit="µm" placeholder="0.0"
+              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_H}}" />
+         </view>
+          <view class="form-group">
+            <ui-form-field label="模唇陆长 Ls" fieldName="slot_Ls" data-field="slot_Ls" value="{{slot_Ls}}" unit="mm" placeholder="0.0"
+              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_Ls}}" />
+         </view>
+
+         <!-- Slot Calc Button (Restored) -->
+         <view style="margin-top:auto; padding-top:12rpx;">
+            <button class="btn-mini" bindtap="handleCalc" data-mode="slot">计算模头</button>
+         </view>
+
       </view>
     </view>
-    <view class="split-box">
-      <view class="col left">
-        <view class="col-title highlight">供液管路</view>
-        <view class="field {{errors.pipe_D?'err':''}}"><text class="label">管道内径 D (mm)</text><input class="inp"
-            type="digit" placeholder="请输入" value="{{pipe_D}}" bindinput="onInput" data-field="pipe_D"
-            placeholder-class="ph" /></view>
-        <view class="field {{errors.pipe_L?'err':''}}"><text class="label">管道长度 L (m)</text><input class="inp"
-            type="digit" placeholder="请输入" value="{{pipe_L}}" bindinput="onInput" data-field="pipe_L"
-            placeholder-class="ph" /></view>
-        <view class="field {{errors.pipe_dz?'err':''}}"><text class="label">高程差 Δz (上正下负)</text><input class="inp"
-            type="digit" placeholder="请输入" value="{{pipe_dz}}" bindinput="onInput" data-field="pipe_dz"
-            placeholder-class="ph" /></view>
-        <view class="field {{errors.pipe_K_loss?'err':''}}">
-          <view class="label-row"><text class="label">管件损耗 ΣK</text>
-            <view class="add-btn" bindtap="openKModal">+</view>
-          </view><input class="inp" type="digit" placeholder="请输入" value="{{pipe_K_loss}}" bindinput="onInput"
-            data-field="pipe_K_loss" placeholder-class="ph" />
-        </view>
-        <view class="col-footer"><button class="sub-btn" bindtap="handleCalc" data-mode="pipe">计算管路</button>
-          <view class="err-txt">{{pipeMissingText}}</view>
-        </view>
-      </view>
-      <view class="v-line"></view>
-      <view class="col right">
-        <view class="col-title highlight">狭缝模头</view>
-        <view class="field {{errors.slot_W?'err':''}}"><text class="label">涂布幅宽 W (mm)</text><input class="inp"
-            type="digit" placeholder="请输入" value="{{slot_W}}" bindinput="onInput" data-field="slot_W"
-            placeholder-class="ph" /></view>
-        <view class="field {{errors.slot_H?'err':''}}"><text class="label">垫片厚度 H (μm)</text><input class="inp"
-            type="digit" placeholder="请输入" value="{{slot_H}}" bindinput="onInput" data-field="slot_H"
-            placeholder-class="ph" /></view>
-        <view class="field {{errors.slot_Ls?'err':''}}"><text class="label">模唇陆长 Ls (mm)</text><input class="inp"
-            type="digit" placeholder="请输入" value="{{slot_Ls}}" bindinput="onInput" data-field="slot_Ls"
-            placeholder-class="ph" /></view>
-        <view class="field spacer"></view>
-        <view class="col-footer"><button class="sub-btn" bindtap="handleCalc" data-mode="slot">计算模头</button>
-          <view class="err-txt">{{slotMissingText}}</view>
-        </view>
-      </view>
+
+    <view style="margin-top:24rpx;">
+        <button class="btn btn-primary" style="width:100%;" bindtap="handleCalc" data-mode="total">计算全部</button>
     </view>
-    <view class="main-action"><button class="main-btn" bindtap="handleCalc" data-mode="total">一键计算全部</button>
-    </view>
+  </ui-card>
+
+  <!-- Main Action (Standard Layout) -->
+
+
+  <!-- Sticky Footer Action (Hidden) -->
+  <view class="sticky-footer" style="display:none">
+      <view class="footer-stack">
+          <!-- V3 Result Bar (Stacked Above Button) -->
+            <view class="result-summary-bar" wx:if="{{result.hasResult}}">
+               <view class="rs-left">
+                   <view class="rs-label">系统总压降 Total Pressure</view>
+                   <view class="rs-val-row">
+                       <block wx:if="{{result.total_dp.s}}">
+                          <text class="rs-val">{{result.total_dp.b}}</text><text class="rs-times">×</text>10<text class="rs-sup">{{result.total_dp.p}}</text>
+                       </block>
+                       <block wx:else>
+                          <text class="rs-val">{{result.total_dp.b}}</text>
+                       </block>
+                       <text class="rs-unit">kPa</text>
+                   </view>
+               </view>
+
+               <!-- Integrated Ghost Action (Right Side) -->
+               <view class="rs-right" bindtap="handleCalc" data-mode="total" hover-class="btn-hover-effect">
+                  <view class="btn-recalc-ghost">
+                      <text class="icon-refresh">🔄</text> 重算
+                  </view>
+               </view>
+            </view>
+
+
+      </view>
   </view>
 
-  <view class="card result-card" wx:if="{{result.hasResult}}">
-    <view class="res-action-bar">
-      <view class="res-title">计算结果</view>
+  <ui-card class="result-card" wx:if="{{result.hasResult}}">
+    <!-- Integrated Total Result (moved from footer) -->
+    <view class="result-total-header">
+        <text class="rt-label">系统总压降</text>
+        <view class="rt-val-group">
+            <block wx:if="{{result.total_dp.s}}">
+                <text class="rt-val">{{result.total_dp.b}}</text><text class="rt-times">×</text><text class="sci-base">10</text><text class="rt-sup">{{result.total_dp.p}}</text>
+            </block>
+            <block wx:else>
+                <text class="rt-val">{{result.total_dp.b}}</text>
+            </block>
+            <text class="rt-unit">kPa</text>
+        </view>
     </view>
+    <view class="h-divider" style="margin: 24rpx 0; border-bottom: 1px dashed rgba(255,255,255,0.1);"></view>
 
     <view class="warn-bar" wx:if="{{result.p_turb || result.s_turb}}">⚠️ 检测到湍流 (Re>2300)，压降参考价值较低</view>
+
+    <!-- DUAL COLUMN LAYOUT -->
     <block wx:if="{{result.layoutMode === 'dual'}}">
-      <view class="res-head-row align-center"><text class="rh highlight">供液管路 (Pipe)</text><text
-          class="rh highlight">狭缝模头 (Slot)</text></view>
-      <view class="res-split">
-        <view class="rc">
-          <view class="ri"><text class="k">压降 ΔP</text>
-            <view class="v">{{result.p_dp.b}}<text wx:if="{{result.p_dp.s}}" class="sci-box">×10<text
-                  class="sup">{{result.p_dp.p}}</text></text> kPa</view>
+       <view class="split-layout">
+          <!-- PIPE COLUMN -->
+          <view class="split-col">
+             <text class="col-header">供液管路 (Pipe)</text>
+             <view class="res-table">
+                <!-- DP -->
+                <view class="res-row">
+                   <text class="res-label">压降 ΔP</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.p_dp.s}}">
+                         <text class="sci-base">{{result.p_dp.b}}</text><text class="sci-times">×</text><text class="sci-base">10</text><text class="sup">{{result.p_dp.p}}</text>
+                      </block>
+                      <block wx:else><text class="sci-val">{{result.p_dp.b}}</text></block>
+                      <text class="unit">kPa</text>
+                   </view>
+                </view>
+                <!-- Re -->
+                <view class="res-row">
+                   <text class="res-label">雷诺数 Re</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.p_re.s}}">
+                         <text class="sci-base">{{result.p_re.b}}</text><text class="sci-times">×</text><text class="sci-base">10</text><text class="sup">{{result.p_re.p}}</text>
+                      </block>
+                      <block wx:else><text class="sci-val">{{result.p_re.b}}</text></block>
+                   </view>
+                </view>
+                <!-- Viscosity -->
+                <view class="res-row">
+                   <text class="res-label">有效粘度 η</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.p_visc.s}}">
+                         <text class="sci-base">{{result.p_visc.b}}</text><text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.p_visc.p}}</text>
+                      </block>
+                      <block wx:else><text class="sci-val">{{result.p_visc.b}}</text></block>
+                      <text class="unit">cP</text>
+                   </view>
+                </view>
+                <!-- Shear Rate -->
+                <view class="res-row">
+                   <text class="res-label">剪切速率 γ̇</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.p_shear.s}}">
+                         <text class="sci-base">{{result.p_shear.b}}</text><text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.p_shear.p}}</text>
+                      </block>
+                      <block wx:else><text class="sci-val">{{result.p_shear.b}}</text></block>
+                      <text class="unit">s⁻¹</text>
+                   </view>
+                </view>
+             </view>
           </view>
-          <view class="ri"><text class="k">雷诺数 Re</text>
-            <view class="v {{result.p_turb?'red':''}}">{{result.p_re.b}}<text wx:if="{{result.p_re.s}}"
-                class="sci-box">×10<text class="sup">{{result.p_re.p}}</text></text></view>
+
+          <!-- VERTICAL DIVIDER -->
+          <view class="v-divider"></view>
+
+          <!-- SLOT COLUMN -->
+          <view class="split-col">
+             <text class="col-header">狭缝模头 (Slot)</text>
+             <view class="res-table">
+                <!-- DP -->
+                <view class="res-row">
+                   <text class="res-label">压降 ΔP</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.s_dp.s}}">
+                         <text class="sci-base">{{result.s_dp.b}}</text><text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.s_dp.p}}</text>
+                      </block>
+                      <block wx:else><text class="sci-val">{{result.s_dp.b}}</text></block>
+                      <text class="unit">kPa</text>
+                   </view>
+                </view>
+                <!-- Re -->
+                <view class="res-row">
+                   <text class="res-label">雷诺数 Re</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.s_re.s}}">
+                         <text class="sci-base">{{result.s_re.b}}</text><text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.s_re.p}}</text>
+                      </block>
+                      <block wx:else><text class="sci-val">{{result.s_re.b}}</text></block>
+                   </view>
+                </view>
+                <!-- Viscosity -->
+                <view class="res-row">
+                   <text class="res-label">有效粘度 η</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.s_visc.s}}">
+                         <text class="sci-base">{{result.s_visc.b}}</text><text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.s_visc.p}}</text>
+                      </block>
+                      <block wx:else><text class="sci-val">{{result.s_visc.b}}</text></block>
+                      <text class="unit">cP</text>
+                   </view>
+                </view>
+                <!-- Shear Rate -->
+                <view class="res-row">
+                   <text class="res-label">剪切速率 γ̇</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.s_shear.s}}">
+                         <text class="sci-base">{{result.s_shear.b}}</text><text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.s_shear.p}}</text>
+                      </block>
+                      <block wx:else><text class="sci-val">{{result.s_shear.b}}</text></block>
+                      <text class="unit">s⁻¹</text>
+                   </view>
+                </view>
+             </view>
           </view>
-          <view class="ri"><text class="k">有效粘度 η_eff</text>
-            <view class="v">{{result.p_visc.b}}<text wx:if="{{result.p_visc.s}}" class="sci-box">×10<text
-                  class="sup">{{result.p_visc.p}}</text></text> cP</view>
-          </view>
-          <view class="ri"><text class="k">剪切速率 γ</text>
-            <view class="v">{{result.p_shear.b}}<text wx:if="{{result.p_shear.s}}" class="sci-box">×10<text
-                  class="sup">{{result.p_shear.p}}</text></text> s⁻¹</view>
-          </view>
-        </view>
-        <view class="v-div"></view>
-        <view class="rc">
-          <view class="ri"><text class="k">压降 ΔP</text>
-            <view class="v">{{result.s_dp.b}}<text wx:if="{{result.s_dp.s}}" class="sci-box">×10<text
-                  class="sup">{{result.s_dp.p}}</text></text> kPa</view>
-          </view>
-          <view class="ri"><text class="k">雷诺数 Re</text>
-            <view class="v {{result.s_turb?'red':''}}">{{result.s_re.b}}<text wx:if="{{result.s_re.s}}"
-                class="sci-box">×10<text class="sup">{{result.s_re.p}}</text></text></view>
-          </view>
-          <view class="ri"><text class="k">有效粘度 η_eff</text>
-            <view class="v">{{result.s_visc.b}}<text wx:if="{{result.s_visc.s}}" class="sci-box">×10<text
-                  class="sup">{{result.s_visc.p}}</text></text> cP</view>
-          </view>
-          <view class="ri"><text class="k">剪切速率 γ</text>
-            <view class="v">{{result.s_shear.b}}<text wx:if="{{result.s_shear.s}}" class="sci-box">×10<text
-                  class="sup">{{result.s_shear.p}}</text></text> s⁻¹</view>
-          </view>
-        </view>
-      </view>
-      <view class="total-box"><text class="tl highlight">系统总压降 Total Pressure</text>
-        <view class="tv">{{result.total_dp.b}}<text wx:if="{{result.total_dp.s}}" class="sci-box-big">×10<text
-              class="sup-big">{{result.total_dp.p}}</text></text> kPa</view>
-      </view>
+       </view>
     </block>
-    <block wx:elif="{{result.layoutMode === 'single-pipe'}}">
-      <view class="single-res">
-        <view class="s-t highlight">供液管路 (Pipe Result)</view>
-        <view class="s-big">{{result.p_dp.b}}<text wx:if="{{result.p_dp.s}}" class="sci-box-big">×10<text
-              class="sup-big">{{result.p_dp.p}}</text></text> <text class="unit-big">kPa</text></view>
-        <view class="s-grid">
-          <view class="si"><text class="sk">雷诺数 Re</text>
-            <view class="sv {{result.p_turb?'red':''}}">{{result.p_re.b}}<text wx:if="{{result.p_re.s}}"
-                class="sci-box">×10<text class="sup">{{result.p_re.p}}</text></text></view>
+
+    <block wx:else>
+       <!-- SINGLE MODE CENTERED -->
+       <view class="split-layout single-centered">
+          <view class="split-col">
+             <text class="col-header">{{result.layoutMode === 'single-pipe' ? '供液管路 (Pipe)' : '狭缝模头 (Slot)'}}</text>
+             <view class="res-table">
+                <!-- DP -->
+                <view class="res-row">
+                   <text class="res-label">压降 ΔP</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.layoutMode === 'single-pipe' ? result.p_dp.s : result.s_dp.s}}">
+                         <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_dp.b : result.s_dp.b}}</text>
+                         <text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.layoutMode === 'single-pipe' ? result.p_dp.p : result.s_dp.p}}</text>
+                      </block>
+                      <block wx:else>
+                         <text class="sci-val">{{result.layoutMode === 'single-pipe' ? result.p_dp.b : result.s_dp.b}}</text>
+                      </block>
+                      <text class="unit">kPa</text>
+                   </view>
+                </view>
+                 <!-- Re -->
+                <view class="res-row">
+                   <text class="res-label">雷诺数 Re</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.layoutMode === 'single-pipe' ? result.p_re.s : result.s_re.s}}">
+                         <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_re.b : result.s_re.b}}</text>
+                         <text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.layoutMode === 'single-pipe' ? result.p_re.p : result.s_re.p}}</text>
+                      </block>
+                      <block wx:else>
+                         <text class="sci-val">{{result.layoutMode === 'single-pipe' ? result.p_re.b : result.s_re.b}}</text>
+                      </block>
+                   </view>
+                </view>
+                 <!-- Viscosity -->
+                <view class="res-row">
+                   <text class="res-label">有效粘度 η</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.layoutMode === 'single-pipe' ? result.p_visc.s : result.s_visc.s}}">
+                         <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_visc.b : result.s_visc.b}}</text>
+                         <text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.layoutMode === 'single-pipe' ? result.p_visc.p : result.s_visc.p}}</text>
+                      </block>
+                      <block wx:else>
+                         <text class="sci-val">{{result.layoutMode === 'single-pipe' ? result.p_visc.b : result.s_visc.b}}</text>
+                      </block>
+                      <text class="unit">cP</text>
+                   </view>
+                </view>
+                 <!-- Shear -->
+                <view class="res-row">
+                   <text class="res-label">剪切速率 γ̇</text>
+                   <view class="res-val-group">
+                      <block wx:if="{{result.layoutMode === 'single-pipe' ? result.p_shear.s : result.s_shear.s}}">
+                         <text class="sci-base">{{result.layoutMode === 'single-pipe' ? result.p_shear.b : result.s_shear.b}}</text>
+                         <text class="sci-times">×</text>
+<text class="sci-base">10</text><text class="sup">{{result.layoutMode === 'single-pipe' ? result.p_shear.p : result.s_shear.p}}</text>
+                      </block>
+                      <block wx:else>
+                         <text class="sci-val">{{result.layoutMode === 'single-pipe' ? result.p_shear.b : result.s_shear.b}}</text>
+                      </block>
+                      <text class="unit">s⁻¹</text>
+                   </view>
+                </view>
+             </view>
           </view>
-          <view class="si"><text class="sk">有效粘度 η_eff</text>
-            <view class="sv">{{result.p_visc.b}}<text wx:if="{{result.p_visc.s}}" class="sci-box">×10<text
-                  class="sup">{{result.p_visc.p}}</text></text> cP</view>
-          </view>
-          <view class="si"><text class="sk">剪切速率 γ</text>
-            <view class="sv">{{result.p_shear.b}}<text wx:if="{{result.p_shear.s}}" class="sci-box">×10<text
-                  class="sup">{{result.p_shear.p}}</text></text> s⁻¹</view>
-          </view>
-        </view>
-      </view>
+       </view>
     </block>
-    <block wx:elif="{{result.layoutMode === 'single-slot'}}">
-      <view class="single-res">
-        <view class="s-t highlight">狭缝模头 (Slot Result)</view>
-        <view class="s-big">{{result.s_dp.b}}<text wx:if="{{result.s_dp.s}}" class="sci-box-big">×10<text
-              class="sup-big">{{result.s_dp.p}}</text></text> <text class="unit-big">kPa</text></view>
-        <view class="s-grid">
-          <view class="si"><text class="sk">雷诺数 Re</text>
-            <view class="sv {{result.s_turb?'red':''}}">{{result.s_re.b}}<text wx:if="{{result.s_re.s}}"
-                class="sci-box">×10<text class="sup">{{result.s_re.p}}</text></text></view>
-          </view>
-          <view class="si"><text class="sk">有效粘度 η_eff</text>
-            <view class="sv">{{result.s_visc.b}}<text wx:if="{{result.s_visc.s}}" class="sci-box">×10<text
-                  class="sup">{{result.s_visc.p}}</text></text> cP</view>
-          </view>
-          <view class="si"><text class="sk">剪切速率 γ</text>
-            <view class="sv">{{result.s_shear.b}}<text wx:if="{{result.s_shear.s}}" class="sci-box">×10<text
-                  class="sup">{{result.s_shear.p}}</text></text> s⁻¹</view>
-          </view>
-        </view>
-      </view>
-    </block>
-  </view>
+
+  </ui-card>
 
   <view class="modal-mask center-modal" wx:if="{{showRPMModal}}">
     <view class="modal-card small">

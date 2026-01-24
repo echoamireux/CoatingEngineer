@@ -1,87 +1,55 @@
 <view class="page-container {{theme}} theme-tools">
-
-  <!-- 双排导航栏：专业紧凑设计 -->
   <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
-    <!-- Row 1: 标题栏 -->
     <view class="nav-row">
-      <view class="back-btn" bindtap="goBack">←</view>
+      <view class="back-btn" bindtap="goBack">
+         <ui-icon name="back" size="50" />
+      </view>
       <text class="page-title">单位换算器</text>
     </view>
-
-    <!-- Row 2: 工具行 (已移除) -->
-    <!-- <view class="toolbar-row"></view> -->
   </view>
 
   <view class="main-layout">
-
     <scroll-view scroll-y class="sidebar">
-      <view wx:for="{{tabs}}" wx:key="id" class="nav-item {{currentTab === index ? 'active' : ''}}" bindtap="switchTab"
-        data-index="{{index}}">
+      <view wx:for="{{tabs}}" wx:key="id" class="nav-item {{currentTab === index ? 'active' : ''}}" bindtap="switchTab" data-index="{{index}}">
         <view class="nav-icon">{{item.icon}}</view>
         <text>{{item.name}}</text>
       </view>
     </scroll-view>
 
     <scroll-view scroll-y class="content-panel">
-
-      <block wx:if="{{currentTab === 0}}">
-        <view class="card">
-          <view class="card-head-row">
-            <view class="head-title">涂布干重/厚度</view>
-            <!-- <view class="reset-link" bindtap="clearCoating">清空</view> -->
-          </view>
-
-          <view class="field">
-            <text class="label">干胶密度 ρ (Dry Density)</text>
-            <view class="input-box large">
-              <input class="inp center" type="digit" value="{{density}}" bindinput="onCoatingInput"
-                data-field="density" />
-              <text class="unit-tag">g/cm³</text>
+      <!-- 涂布专用计算 -->
+      <view wx:if="{{currentTab === 0}}">
+         <ui-card title="涂布干重/厚度">
+            <view slot="header-right" bindtap="handleClear">
+               <ui-icon name="trash" size="32" color="var(--text-sub)" />
             </view>
-          </view>
-
-          <view class="divider"></view>
-
-          <view class="field space-bottom">
-            <text class="label">干涂量 (GSM)</text>
-            <view class="input-box large">
-              <input class="inp center" type="digit" value="{{gsm}}" bindinput="onCoatingInput" data-field="gsm" />
-              <text class="unit-tag">g/m²</text>
+            <view class="form-group" style="margin-bottom:20rpx;">
+               <ui-form-field label="干胶密度 ρ (Dry Density)" field="density" value="{{density}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="density" right-slot="g/cm³" placeholder="0.0" />
             </view>
-          </view>
-
-          <view class="field">
-            <text class="label">干膜厚度 (T)</text>
-            <view class="input-box large">
-              <input class="inp center" type="digit" value="{{thick}}" bindinput="onCoatingInput" data-field="thick" />
-              <text class="unit-tag">μm</text>
+            <view class="form-group" style="margin-bottom:20rpx;">
+               <ui-form-field label="干涂量 (GSM)" field="gsm" value="{{gsm}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="gsm" right-slot="g/m²" placeholder="0.0" />
             </view>
-          </view>
-
-        </view>
-      </block>
-
-      <block wx:else>
-        <view class="card">
-          <view class="card-head-row">
-            <view class="head-title">{{tabs[currentTab].name}}换算</view>
-          </view>
-
-          <view class="unit-list">
-            <view class="unit-row" wx:for="{{unitList}}" wx:key="index">
-              <view class="u-meta">
-                <text class="u-name">{{item.name}}</text>
-                <view wx:if="{{item.isSI}}" class="si-tag">SI</view>
-              </view>
-              <view class="input-box right-align">
-                <input class="inp" type="digit" value="{{item.val}}" bindinput="onUnitInput" data-index="{{index}}" />
-                <text class="unit-tag fixed-w">{{item.unit}}</text>
-              </view>
+            <view class="form-group" style="margin-bottom:20rpx;">
+               <ui-form-field label="干膜厚度 (T)" field="thick" value="{{thick}}" type="digit" bind:input="onCoatingInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-field="thick" right-slot="μm" placeholder="0.0" />
             </view>
-          </view>
-        </view>
-      </block>
+         </ui-card>
+      </view>
 
+      <!-- 通用单位换算 -->
+      <view wx:else>
+         <ui-card title="{{tabs[currentTab].name}}换算">
+            <view slot="header-right" bindtap="handleClear">
+               <ui-icon name="trash" size="32" color="var(--text-sub)" />
+            </view>
+             <view class="unit-list">
+                <block wx:for="{{unitList}}" wx:key="index">
+                   <view class="unit-row" style="margin-bottom:20rpx;">
+                      <ui-form-field label="{{item.name}}{{item.isSI?' (SI)':''}}" value="{{item.val}}" type="digit" bind:input="onUnitInput" bind:focus="onInputFocus" bind:blur="onInputBlur" data-index="{{index}}" right-slot="{{item.unit}}" placeholder="0.0" style="width:100%" />
+                   </view>
+                </block>
+             </view>
+         </ui-card>
+      </view>
     </scroll-view>
   </view>
 </view>

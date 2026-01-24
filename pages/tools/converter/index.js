@@ -17,7 +17,8 @@ Page({
     ],
 
     density: '', gsm: '', thick: '',
-    unitList: []
+    unitList: [],
+    focus: {}
   },
 
   onLoad() {
@@ -45,6 +46,26 @@ Page({
       this.clearCommon();
     }
     wx.showToast({ title: '已清空', icon: 'none' });
+  },
+
+  onInputFocus(e) {
+    const field = e.currentTarget.dataset.field;
+    const index = e.currentTarget.dataset.index; // For unit list
+    if (field) {
+      this.setData({ [`focus.${field}`]: true });
+    } else if (index !== undefined) {
+      this.setData({ [`focus.unit_${index}`]: true });
+    }
+  },
+
+  onInputBlur(e) {
+    const field = e.currentTarget.dataset.field;
+    const index = e.currentTarget.dataset.index;
+    if (field) {
+      this.setData({ [`focus.${field}`]: false });
+    } else if (index !== undefined) {
+      this.setData({ [`focus.unit_${index}`]: false });
+    }
   },
 
   fmt(num) {
@@ -122,7 +143,7 @@ Page({
   // === 涂布计算 (保持 V2.4) ===
   /* 👇👇👇 找到 onCoatingInput 函数，整段替换 👇👇👇 */
   onCoatingInput(e) {
-    const field = e.currentTarget.dataset.field;
+    const field = e.detail.field || e.currentTarget.dataset.field;
     const val = e.detail.value;
     this.setData({ [field]: val });
 
@@ -144,11 +165,9 @@ Page({
       this.setData({ gsm: this.fmt(curVal * rho) });
     }
   },
-  /* 👆👆👆 替换结束 👆👆👆 */
 
   clearCoating() { this.setData({ density: '', gsm: '', thick: '' }); },
 
-  /* 👇👇👇 找到 onUnitInput 函数，整段替换 👇👇👇 */
   onUnitInput(e) {
     const valStr = e.detail.value;
     const idx = e.currentTarget.dataset.index;
@@ -176,7 +195,6 @@ Page({
 
     this.setData({ unitList: newList });
   },
-  /* 👆👆👆 替换结束 👆👆👆 */
 
   clearCommon() {
     const list = this.data.unitList.map(i => ({ ...i, val: '' }));

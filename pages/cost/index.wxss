@@ -486,14 +486,15 @@
   background: rgba(0, 0, 0, 0.02);
   padding: 15rpx;
   border-radius: 10rpx;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
 }
 
+/* Sub-section Header - Fixed Layout */
 .ss-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15rpx;
+  margin-bottom: 20rpx;
 }
 
 .ss-head-left {
@@ -508,10 +509,9 @@
 }
 
 .ss-title {
-  font-size: 24rpx;
-  color: var(--text-sub);
-  display: block;
+  font-size: 28rpx;
   font-weight: bold;
+  color: var(--text);
 }
 
 .ss-mini-cost {

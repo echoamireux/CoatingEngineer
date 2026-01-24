@@ -76,8 +76,21 @@ Page({
   toggleFormula() { this.setData({ showFormula: !this.data.showFormula }); },
 
   onInput(e) {
+    // For ui-form-field component, value is in e.detail.value
     const field = e.currentTarget.dataset.field;
-    this.setData({ [field]: e.detail.value, [`errors.${field}`]: false, pipeMissingText: '', slotMissingText: '' });
+    const value = e.detail.value;
+
+    this.setData({ [field]: value, [`errors.${field}`]: false, pipeMissingText: '', slotMissingText: '' });
+  },
+
+  onInputFocus(e) {
+    const field = e.currentTarget.dataset.field;
+    this.setData({ [`focus.${field}`]: true });
+  },
+
+  onInputBlur(e) {
+    const field = e.currentTarget.dataset.field;
+    this.setData({ [`focus.${field}`]: false });
   },
 
   fmt(num) {

@@ -1,0 +1,17 @@
+<view class="form-group" style="{{customStyle}}">
+  <text class="form-label" wx:if="{{label}}">{{label}}</text>
+  <view class="input-container {{isFocused ? 'focused' : ''}} {{isError ? 'error' : ''}}">
+    <input
+      class="form-input"
+      type="{{type}}"
+      value="{{value}}"
+      placeholder="{{placeholder}}"
+      placeholder-class="input-placeholder"
+      bindinput="onInput"
+      bindfocus="onFocus"
+      bindblur="onBlur"
+    />
+    <text class="unit-suffix" wx:if="{{unit}}">{{unit}}</text>
+    <slot name="right-icon"></slot> <!-- For calculation buttons etc -->
+  </view>
+</view>

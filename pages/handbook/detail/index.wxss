@@ -1,6 +1,7 @@
+@import "../../../styles/nav-header.wxss";
+
 /* 详情页样式 */
 
-/* 页面容器 */
 /* 页面容器 */
 .page-container {
   min-height: 100vh;
@@ -16,64 +17,6 @@
 .status-bar {
   width: 100%;
   flex-shrink: 0;
-}
-
-/* 固定头部 - 单行沉浸式设计 */
-.detail-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg); /* 沉浸式：与页面背景一致 */
-  /* 移除border-bottom */
-  box-sizing: border-box;
-}
-
-.nav-bar {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  padding: 0 16rpx; /* 减少左边距 */
-  gap: 12rpx;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  flex-shrink: 0;
-}
-
-/* 返回/首页按钮：专业轻量级设计 */
-.header-back, .header-home {
-  width: 44rpx;
-  height: 44rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* 移除背景和边框 */
-}
-
-.back-icon {
-  font-size: 36rpx;
-  color: var(--text-sub);
-  font-weight: 300;
-}
-
-.home-icon {
-  font-size: 24rpx;
-  opacity: 0.6;
-}
-
-.header-title {
-  flex: 1;
-  font-size: 32rpx;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* 内容滚动区 */

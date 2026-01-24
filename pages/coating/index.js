@@ -1,5 +1,5 @@
 const { initTheme, formatNumber, formatTime } = require('../../utils/common')
-const { saveHistory, getHistory, deleteHistory } = require('../../utils/history')
+const { saveHistory } = require('../../utils/history')
 
 Page({
   data: {
@@ -10,10 +10,7 @@ Page({
     // --- 悬浮公式条 ---
     showFormulaModal: false,
 
-    // --- 历史弹窗 ---
-    showHistoryModal: false,
-    historyList: [],
-    historyType: '',
+    showFormulaModal: false,
     // --- 确认弹窗 ---
     showResetModal: false,
     showDeleteModal: false,
@@ -54,6 +51,12 @@ Page({
 
   onShow() {
     this.restoreFromHistory();
+  },
+
+  openHistory() {
+    wx.navigateTo({
+      url: '/pages/history/index?type=coating'
+    });
   },
 
   restoreFromHistory() {
@@ -110,103 +113,57 @@ Page({
   },
 
   bindInput(e) {
-    const field = e.currentTarget.dataset.field;
-    this.setData({ [field]: e.detail.value, [`errors.${field}`]: false });
+    const field = e.detail.field || e.currentTarget.dataset.field;
+    const value = e.detail.value;
+    this.setData({ [field]: value, [`errors.${field}`]: false });
   },
 
-  // === 公式条 ===
-  toggleFormula() {
-    this.setData({
-      showFormulaModal: !this.data.showFormulaModal
-    });
+  onInputFocus(e) {
+    const field = e.detail.field || e.currentTarget.dataset.field;
+    this.setData({ [`focus.${field}`]: true });
   },
 
-  // === 历史记录 ===
-  // === 历史记录 ===
-  openHistory() {
-    wx.navigateTo({
-      url: '/pages/history/index?type=coating'
-    });
+  onInputBlur(e) {
+    const field = e.detail.field || e.currentTarget.dataset.field;
+    this.setData({ [`focus.${field}`]: false });
   },
 
-  closeHistory() { this.setData({ showHistoryModal: false }); },
+  // ... (toggleFormula, etc)
 
-  loadHistoryItem(e) {
-    const item = e.currentTarget.dataset.item;
-    const p = item.rawData;
-
-    if (this.data.historyType === 'composite') {
-      this.setData({
-        comp_i: p.comp_i, comp_c: p.comp_c, comp_L: p.comp_L,
-        layers: p.layers,
-        result_diameter: '-', result_weight: '-', errors: {}
-      }, () => {
-        this.calcCompDiameter(true);
-        this.calcCompWeight(true);
-      });
-    } else {
-      this.setData({
-        glueCalcType: p.glueCalcType,
-        glue_t_dry: p.glue_t_dry, glue_rho_dry: p.glue_rho_dry, glue_m_dry: p.glue_m_dry,
-        glue_S: p.glue_S, glue_rho_wet: p.glue_rho_wet, glue_W: p.glue_W,
-        glue_v: p.glue_v, glue_Dp: p.glue_Dp, glue_L: p.glue_L,
-        result_pump_speed: '-', result_wet_weight: '-', errors: {}
-      }, () => {
-        this.updateFormulas(p.glueCalcType);
-        this.calcGluePump(true);
-        this.calcGlueWetWeight(true);
-      });
-    }
-    this.setData({ showHistoryModal: false });
-    // vibrateSuccess();
-  },
-
-  deleteHistoryItem(e) {
-    const id = e.currentTarget.dataset.id;
-    this.setData({
-      showDeleteModal: true,
-      pendingDeleteId: id
-    });
-  },
-
-  confirmDelete() {
-    const id = this.data.pendingDeleteId;
-    if (id) {
-      deleteHistory(id);
-
-      // Refresh list
-      const tab = this.data.currentTab;
-      const all = getHistory('coating') || [];
-      const list = all.filter(item => item.type === tab);
-      this.setData({ historyList: list });
-      wx.showToast({ title: '已删除', icon: 'success', duration: 800 });
-    }
-    this.setData({ showDeleteModal: false, pendingDeleteId: null });
-  },
-
-  cancelDelete() {
-    this.setData({ showDeleteModal: false, pendingDeleteId: null });
-  },
-
-  // ================= 1. 复合卷材 =================
+  // ... (bindLayerInput)
   setCoreSize(e) {
-    const size = String(e.currentTarget.dataset.size);
-    this.setData({ comp_i: size === '0' ? '' : size, 'errors.comp_i': false });
+    const size = e.currentTarget.dataset.size;
+    if (size == 0) {
+      this.setData({ comp_i: '', ['errors.comp_i']: false });
+    } else {
+      this.setData({ comp_i: size, ['errors.comp_i']: false });
+    }
   },
+
   addLayer() {
     const l = this.data.layers;
     l.push({ width: '', thickness: '', density: '', err_w: false, err_t: false, err_d: false });
     this.setData({ layers: l });
   },
+
   removeLayer(e) {
+    const index = e.currentTarget.dataset.index;
     const l = this.data.layers;
-    if (l.length > 1) { l.splice(e.currentTarget.dataset.index, 1); this.setData({ layers: l }); }
+    if (l.length > 1) {
+      l.splice(index, 1);
+      this.setData({ layers: l });
+    } else {
+      wx.showToast({ title: '至少需要一层', icon: 'none' });
+    }
   },
+
   bindLayerInput(e) {
     const idx = e.currentTarget.dataset.index;
-    const field = e.currentTarget.dataset.field;
+    const field = e.detail.field || e.currentTarget.dataset.field;
+    const value = e.detail.value;
+
     const l = this.data.layers;
-    l[idx][field] = e.detail.value;
+    l[idx][field] = value;
     if (field === 'width') l[idx].err_w = false;
     if (field === 'thickness') l[idx].err_t = false;
     if (field === 'density') l[idx].err_d = false;

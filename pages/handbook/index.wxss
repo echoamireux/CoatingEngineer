@@ -14,62 +14,9 @@
   flex-direction: column;
 }
 
-/* 头部 - 单行沉浸式设计 */
-.handbook-header {
-  box-sizing: border-box;
-  background: var(--bg); /* 沉浸式：与页面背景一致 */
-  /* 移除border-bottom */
-}
+@import "../../styles/nav-header.wxss";
 
-.nav-bar {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  padding: 0 24rpx; /* 统一标准：24rpx */
-  gap: 12rpx;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* 返回按钮：专业轻量级设计（无背景） */
-.header-back {
-  width: 44rpx;
-  height: 44rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* 移除背景和边框 */
-  flex-shrink: 0;
-}
-
-.back-icon {
-  font-size: 36rpx;
-  color: var(--text-sub);
-  font-weight: 300;
-}
-
-/* 标题区域：包含主标题和副标题 */
-.header-title-wrap {
-  display: flex;
-  align-items: baseline;
-  gap: 12rpx;
-  flex: 1;
-}
-
-.header-title {
-  font-size: 34rpx;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.header-sub {
-  font-size: 20rpx;
-  color: var(--text-sub);
-  opacity: 0.8;
-}
+/* 页面容器 - 使用全局变量，不再定义局部主题 */
 
 /* 返回首页按钮占位 */
 .header-placeholder {

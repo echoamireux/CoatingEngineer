@@ -1,5 +1,6 @@
 {
   "usingComponents": {
-    "confirm-modal": "/components/confirm-modal/confirm-modal"
+    "confirm-modal": "/components/confirm-modal/confirm-modal",
+    "ui-icon": "/components/ui-icon/index"
   }
 }

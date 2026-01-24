@@ -1,0 +1,12 @@
+<view class="ui-card">
+  <view class="card-header" wx:if="{{title || useHeaderSlot}}">
+    <view class="ch-left">
+      <text class="card-title" wx:if="{{title}}">{{title}}</text>
+      <slot name="header-left" wx:else></slot>
+    </view>
+    <view class="ch-right">
+       <slot name="header-right"></slot>
+    </view>
+  </view>
+  <slot></slot>
+</view>

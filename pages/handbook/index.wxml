@@ -1,14 +1,12 @@
 <view class="page-container {{ theme }}">
   <!-- 页面头部 - 统一单行设计 -->
-  <view class="handbook-header" style="padding-top: {{statusBarHeight}}px;">
-    <!-- 导航行：返回按钮 + 标题 -->
-    <view class="nav-bar">
-      <view class="header-back" bindtap="goBack">
-        <text class="back-icon">←</text>
+  <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 导航行 -->
+    <view class="nav-row">
+      <view class="back-btn" bindtap="goBack">
+         <ui-icon name="back" size="50" />
       </view>
-      <view class="header-title-wrap">
-        <text class="header-title">涂布工程师手册</text>
-      </view>
+      <text class="page-title">涂布工程师手册</text>
     </view>
   </view>
 

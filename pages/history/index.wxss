@@ -6,8 +6,6 @@ page {
   --tag-coat: #6366f1;
 }
 
-/* 白天模式无需额外定义 */
-
 .page-container {
   min-height: 100vh;
   background: var(--bg);
@@ -24,35 +22,27 @@ page {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--bg); /* 沉浸式：使用页面背景色 */
-  /* 移除margin-bottom，解决空行问题 */
+  background: var(--bg);
 }
 
 /* 导航栏样式 - 沉浸式设计 */
 .page-header {
-  background: var(--bg); /* 沉浸式：与页面背景一致 */
-  /* 移除border-bottom */
+  background: var(--bg);
   box-sizing: border-box;
 }
 
 /* 导航栏 - 第一行 */
-/* 导航栏 - 第一行 */
 .nav-row {
   height: 44px;
   display: flex;
-  align-items: center; /* 纵向居中 */
-  justify-content: space-between; /* 左右分布 */
+  align-items: center;
   padding: 0 24rpx;
   gap: 12rpx;
   width: 100%;
   box-sizing: border-box;
 }
 
-.nav-left {
-  display: flex;
-  align-items: center;
-  flex: 1; /* 占据剩余空间 */
-}
+
 
 /* 嵌入在筛选栏右侧的清除按钮 */
 .clear-btn-inline {
@@ -61,27 +51,8 @@ page {
   justify-content: center;
   width: 50rpx;
   height: 50rpx;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  margin-left: 12rpx; /* 与最后一个Filter保持间距 */
+  margin-left: 12rpx;
   vertical-align: middle;
-}
-
-.clear-btn-inline .icon {
-  font-size: 28rpx;
-}
-
-/* 工具栏 - 第二行 (紧凑/无底色) */
-.toolbar-row {
-  height: 32px; /* 极度紧凑 */
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* 左对齐 */
-  padding: 0 24rpx;
-  gap: 40rpx; /* 图标间较大间距 */
-  background: transparent;
-  margin-bottom: 4rpx;
-  box-sizing: border-box;
 }
 
 /* Back Button */
@@ -91,9 +62,6 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36rpx;
-  color: var(--text-sub);
-  font-weight: 300;
   margin-right: 4rpx;
   flex-shrink: 0;
 }
@@ -105,85 +73,19 @@ page {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* Tool Button - Ghost Style */
-.tool-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  height: auto;
-  padding: 4rpx;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 8rpx;
-}
-
-.tool-hover {
-  opacity: 0.6;
-  transform: scale(0.95);
-}
-
-.tool-btn .icon {
-  font-size: 30rpx; /* 精致小图标 */
-  opacity: 0.7;
-  line-height: 1;
-}
-
-/* 移除旧样式 */
-/* .toolbar-row moved to nav-row integration */
-
-.nav-title {
-  font-size: 38rpx;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.actions {
-  display: flex;
-  gap: 20rpx;
-}
-
-/* 按钮 */
-.icon-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
-  width: 64rpx;
-  height: 64rpx;
-  border-radius: 16rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30rpx;
-}
-
-.icon-btn.danger {
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.3);
+  flex: 1;
 }
 
 /* 列表滚动区 */
 .history-list {
   flex: 1;
   overflow-y: auto;
-  padding: 0 30rpx;
+  padding: 24rpx 30rpx; /* Add top padding */
   width: 100%;
-  /* Ensure full width */
   box-sizing: border-box;
-  /* Prevent padding from causing overflow */
 }
 
-/* 历史卡片 */
-.h-card {
-  background: var(--card);
-  border-radius: 16rpx;
-  padding: 24rpx;
-  margin-bottom: 24rpx;
-  border: 1px solid var(--border);
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-}
-
+/* 历史卡片内容样式 (Container is now ui-card) */
 .hc-head {
   display: flex;
   justify-content: space-between;
@@ -194,7 +96,6 @@ page {
 }
 
 /* 标签样式 */
-/* 标签样式 */
 .hc-tag {
   font-size: 20rpx;
   color: #fff;
@@ -203,26 +104,10 @@ page {
   font-weight: bold;
 }
 
-.hc-tag.fluid {
-  background: #3b82f6;
-  /* Ocean */
-}
-
-.hc-tag.tools,
-.hc-tag.converter {
-  background: #8b5cf6;
-  /* Violet */
-}
-
-.hc-tag.coating {
-  background: #f59e0b;
-  /* Amber */
-}
-
-.hc-tag.cost {
-  background: #10b981;
-  /* Emerald */
-}
+.hc-tag.fluid { background: #3b82f6; }
+.hc-tag.tools, .hc-tag.converter { background: #8b5cf6; }
+.hc-tag.coating { background: #f59e0b; }
+.hc-tag.cost { background: #10b981; }
 
 .hc-time {
   font-size: 22rpx;
@@ -233,10 +118,9 @@ page {
 }
 
 .hc-del {
-  color: var(--text-sub);
-  font-size: 40rpx;
-  padding: 0 10rpx;
-  line-height: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0.6;
 }
 
@@ -253,9 +137,7 @@ page {
   font-size: 26rpx;
 }
 
-.hc-k {
-  color: var(--text-sub);
-}
+.hc-k { color: var(--text-sub); }
 
 .hc-v {
   color: var(--text);
@@ -263,73 +145,28 @@ page {
   font-family: monospace;
 }
 
+/* 回填提示 */
+.hc-hint {
+  margin-top: 16rpx;
+  padding-top: 12rpx;
+  border-top: 1px dashed var(--border);
+  font-size: 20rpx;
+  color: var(--text-sub);
+  text-align: center;
+  opacity: 0.7;
+  letter-spacing: 1rpx;
+}
+
 /* 空状态 */
 .empty-state {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
   color: var(--text-sub);
-  margin-top: 200rpx;
   font-size: 28rpx;
   opacity: 0.5;
-}
-
-/* 🔥 弹窗样式补充 🔥 */
-.modal-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-card {
-  background: var(--card);
-  width: 80%;
-  padding: 30rpx;
-  border-radius: 16rpx;
-  border: 1px solid var(--border);
-}
-
-.modal-card.small {
-  width: 55%;
-}
-
-.dark-theme-fix {
-  background: var(--card) !important;
-  color: var(--text) !important;
-  border-color: var(--border) !important;
-}
-
-.mc-head {
-  text-align: center;
-  font-weight: bold;
-  color: var(--text);
-  margin-bottom: 20rpx;
-  font-size: 30rpx;
-}
-
-.mc-foot {
-  display: flex;
-  gap: 20rpx;
-  margin-top: 30rpx;
-}
-
-.mc-foot button {
-  flex: 1;
-  font-size: 26rpx;
-  background: var(--border);
-  color: var(--text-sub);
-  border: none;
-}
-
-.mc-foot button.red {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 /* 模块筛选栏 */
@@ -365,53 +202,21 @@ page {
 }
 
 /* Module Specific Active Colors */
-.filter-item[data-module="cost"].active {
-  background: #10b981;
-  border-color: #10b981;
-}
+.filter-item[data-module="cost"].active { background: #10b981; border-color: #10b981; }
+.filter-item[data-module="fluid"].active { background: #3b82f6; border-color: #3b82f6; }
+.filter-item[data-module="coating"].active { background: #f59e0b; border-color: #f59e0b; }
+.filter-item[data-module="converter"].active { background: #8b5cf6; border-color: #8b5cf6; }
 
-.filter-item[data-module="fluid"].active {
-  background: #3b82f6;
-  border-color: #3b82f6;
-}
-
-.filter-item[data-module="coating"].active {
-  background: #f59e0b;
-  border-color: #f59e0b;
-}
-
-.filter-item[data-module="converter"].active {
-  background: #8b5cf6;
-  border-color: #8b5cf6;
-}
-
-/* 回填提示 - Professional Neutral Style */
-.hc-hint {
-  margin-top: 16rpx;
-  padding-top: 12rpx;
-  border-top: 1px dashed var(--border);
-  font-size: 20rpx;
-  color: var(--text-sub);
-  /* Grey instead of theme color */
-  text-align: center;
-  opacity: 0.7;
-  letter-spacing: 1rpx;
-}
-
-/* 空状态 */
-.empty-state {
+/* 弹窗样式 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 60vh;
-  /* Full viewport height minus headers */
-  color: var(--text-sub);
-  font-size: 28rpx;
-  opacity: 0.5;
-}
-
-/* 成本模块标签 */
-.hc-tag.cost {
-  background: #10b981;
+  justify-content: center;
 }

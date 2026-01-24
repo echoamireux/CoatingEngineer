@@ -32,9 +32,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--card);
+  background: transparent;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: none;
   font-size: 32rpx;
   color: var(--text);
   flex-shrink: 0;

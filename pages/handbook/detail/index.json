@@ -2,6 +2,7 @@
   "navigationBarTitleText": "内容详情",
   "navigationStyle": "custom",
   "usingComponents": {
+    "ui-icon": "/components/ui-icon/index",
     "latex-formula": "/components/latex-formula/index",
     "coating-window-chart": "/components/coating-window-chart/index",
     "standard-card": "/components/standard-card/index"

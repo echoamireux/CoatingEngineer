@@ -1,22 +1,26 @@
 <view class="page-container {{theme}} theme-cost">
    <!-- 双排导航栏 -->
    <!-- 单排导航栏：紧凑设计 -->
+   <!-- Fluid Style Header (Cloned) -->
    <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
-      <!-- Row 1: 导航行 -->
+      <!-- Row 1: Nav -->
       <view class="nav-row">
-         <view class="back-btn" bindtap="goBack">←</view>
+         <view class="back-btn" bindtap="goBack">
+            <ui-icon name="back" size="50" />
+         </view>
          <text class="page-title">成本工序流</text>
       </view>
-      <!-- Row 2: 工具行 (紧凑/纯图标) -->
+
+      <!-- Row 2: Toolbar (Icons Only) -->
       <view class="toolbar-row">
          <view class="tool-btn" bindtap="openHistoryModal" hover-class="tool-hover">
-            <text class="icon">📜</text>
+            <ui-icon name="history" />
          </view>
          <view class="tool-btn" bindtap="saveCostHistory" wx:if="{{res_final_cost !== '-'}}" hover-class="tool-hover">
-            <text class="icon" style="color:var(--primary)">💾</text>
+            <ui-icon name="save" color="var(--primary)" />
          </view>
          <view class="tool-btn" bindtap="openClearModal" hover-class="tool-hover">
-            <text class="icon">🧹</text>
+            <ui-icon name="trash" />
          </view>
       </view>
    </view>
@@ -93,7 +97,7 @@
                      </view>
                      <view class="ss-head-right">
                         <text class="ss-mini-cost" wx:if="{{stage.matFolded}}">¥ {{stage.stageMatCost || 0}}</text>
-                        <view class="fold-icon small">{{stage.matFolded ? '▼' : '▲'}}</view>
+                        <view class="fold-icon small"><ui-icon name="{{stage.matFolded ? 'arrow-down' : 'arrow-up'}}" size="32" color="var(--text-sub)" /></view>
                      </view>
                   </view>
 
@@ -107,12 +111,12 @@
                                  <view wx:if="{{item.type==='glue'}}" class="btn-tiny" bindtap="openMixCal"
                                     data-stage="{{sIdx}}" data-index="{{index}}">配方</view>
                                  <view class="arrow-btn" catchtap="moveMaterial" data-stage="{{sIdx}}"
-                                    data-index="{{index}}" data-dir="{{-1}}" wx:if="{{index>0}}">⬆️</view>
+                                    data-index="{{index}}" data-dir="{{-1}}" wx:if="{{index>0}}"><ui-icon name="arrow-up" size="28" color="var(--text-sub)" /></view>
                                  <view class="arrow-btn" catchtap="moveMaterial" data-stage="{{sIdx}}"
                                     data-index="{{index}}" data-dir="{{1}}" wx:if="{{index<stage.materials.length-1}}">
-                                    ⬇️</view>
+                                    <ui-icon name="arrow-down" size="28" color="var(--text-sub)" /></view>
                                  <view class="btn-del" bindtap="removeMaterial" data-stage="{{sIdx}}"
-                                    data-index="{{index}}">×</view>
+                                    data-index="{{index}}"><ui-icon name="close" size="36" color="#ef4444" /></view>
                               </view>
                            </view>
 
@@ -157,7 +161,7 @@
                                  <view class="rc-right">
                                     <text class="rc-val">¥ {{ (item.cost !== undefined && item.cost !== null) ?
                                        item.cost : '-' }}<text class="unit">/m²</text></text>
-                                    <view class="rc-refresh">🔄</view>
+                                    <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--primary)" /></view>
                                  </view>
                               </view>
                            </block>
@@ -196,7 +200,7 @@
                                  <view class="rc-right">
                                     <text class="rc-val">¥ {{ (item.cost !== undefined && item.cost !== null) ?
                                        item.cost : '-' }}<text class="unit">/m²</text></text>
-                                    <view class="rc-refresh">🔄</view>
+                                    <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--primary)" /></view>
                                  </view>
                               </view>
                            </block>
@@ -218,7 +222,7 @@
                      </view>
                      <view class="ss-head-right">
                         <text class="ss-mini-cost" wx:if="{{stage.procFolded}}">¥ {{stage.stageProcCost || 0}}</text>
-                        <view class="fold-icon small">{{stage.procFolded ? '▼' : '▲'}}</view>
+                        <view class="fold-icon small"><ui-icon name="{{stage.procFolded ? 'arrow-down' : 'arrow-up'}}" size="32" color="var(--text-sub)" /></view>
                      </view>
                   </view>
 
@@ -252,7 +256,7 @@
                                  <input class="inp {{errors['s'+sIdx+'_proc_machRate']?'error':''}}" type="digit"
                                     value="{{stage.process.machRate}}" bindinput="onInput" data-type="process"
                                     data-stage="{{sIdx}}" data-field="machRate" placeholder="必填" />
-                                 <view class="calc-btn" bindtap="openMachCal" data-stage="{{sIdx}}">🧮</view>
+                                 <view class="calc-btn" bindtap="openMachCal" data-stage="{{sIdx}}"><ui-icon name="calc" size="36" color="#d97706" /></view>
                               </view>
                            </view>
                            <view class="field">
@@ -261,7 +265,7 @@
                                  <input class="inp {{errors['s'+sIdx+'_proc_laborRate']?'error':''}}" type="digit"
                                     value="{{stage.process.laborRate}}" bindinput="onInput" data-type="process"
                                     data-stage="{{sIdx}}" data-field="laborRate" placeholder="必填" />
-                                 <view class="calc-btn" bindtap="openLaborCal" data-stage="{{sIdx}}">🧮</view>
+                                 <view class="calc-btn" bindtap="openLaborCal" data-stage="{{sIdx}}"><ui-icon name="calc" size="36" color="#d97706" /></view>
                               </view>
                            </view>
                         </view>
@@ -275,7 +279,7 @@
                            <view class="rc-right">
                               <text class="rc-val">¥ {{ (stage.stageProcCost && stage.stageProcCost!=0) ?
                                  stage.stageProcCost : '-' }}<text class="unit">/m²</text></text>
-                              <view class="rc-refresh">🔄</view>
+                              <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--primary)" /></view>
                            </view>
                         </view>
                      </view>
@@ -292,7 +296,7 @@
                      <view class="rc-right">
                         <text class="rc-val">¥ {{ (stage.stageTotalCost && stage.stageTotalCost!=0) ?
                            stage.stageTotalCost : '-' }}<text class="unit">/m²</text></text>
-                        <view class="rc-refresh">🔄</view>
+                        <view class="rc-refresh"><ui-icon name="refresh" size="32" color="var(--primary)" /></view>
                      </view>
                   </view>
                   <view class="res-card-block accum" bindtap="calcAccumCost" data-stage="{{sIdx}}">
@@ -304,7 +308,6 @@
                      <view class="rc-right">
                         <text class="rc-val" style="color:#10b981">¥ {{ (stage.accumCost && stage.accumCost!=0) ?
                            stage.accumCost : '-' }}<text class="unit">/m²</text></text>
-                        <view class="rc-refresh">🔄</view>
                      </view>
                   </view>
                </view>

@@ -1,4 +1,4 @@
-/* 分类页面样式 */
+@import "../../../styles/nav-header.wxss";
 
 /* 页面容器 */
 .page-container {
@@ -10,15 +10,6 @@
   color: var(--text);
   display: flex;
   flex-direction: column;
-}
-
-/* 固定头部 - 单行沉浸式设计 */
-.category-header {
-  /* Remove sticky here if header is sticky */
-  z-index: 90;
-  background: var(--bg); /* 沉浸式：与页面背景一致 */
-  /* 移除border-bottom */
-  box-sizing: border-box;
 }
 
 /* 搜索结果列表 (复用Handbook Index样式) */
@@ -100,53 +91,6 @@
   border-radius: 8rpx;
   white-space: nowrap;
   flex-shrink: 0;
-}
-.nav-bar {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  padding: 0 24rpx; /* 统一标准：24rpx */
-  gap: 12rpx;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  flex-shrink: 0;
-}
-
-/* 返回/首页按钮：专业轻量级设计 */
-.header-back, .header-home {
-  width: 44rpx;
-  height: 44rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* 移除背景和边框 */
-}
-
-.back-icon {
-  font-size: 36rpx;
-  color: var(--text-sub);
-  font-weight: 300;
-}
-
-.home-icon {
-  font-size: 24rpx;
-  opacity: 0.6;
-}
-
-.header-title {
-  flex: 1;
-  font-size: 34rpx;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* 搜索框 */
