@@ -392,6 +392,99 @@
 
   </ui-card>
 
+  <!-- 计算原理说明弹窗 (Restored) -->
+  <view class="modal-mask center-modal" wx:if="{{showFormula}}">
+    <view class="fm-card dark-theme-fix">
+      <view class="fm-head">
+        <view class="fm-title highlight">计算原理</view>
+        <view class="close-icon" bindtap="toggleFormula">×</view>
+      </view>
+      <scroll-view scroll-y class="fm-scroll">
+        <view class="f-box">
+          <view class="ft">1. 幂律模型 (Power Law)</view>
+          <view class="fm-row">η_eff = K·(γ_wall)<text class="sup">n-1</text></view>
+          <view class="legend-grid">
+            <view><text>K</text> 稠度系数 (Pa·sⁿ)</view>
+            <view><text>n</text> 幂律指数 (无)</view>
+            <view><text>γ_wall</text> 壁面剪切速率 (s⁻¹)</view>
+          </view>
+        </view>
+        <view class="f-box">
+          <view class="ft">2. 圆管压降 (Pipe ΔP)</view>
+          <view class="fm-row"><text>ΔP = </text>
+            <view class="frac">
+              <view class="n">128·η_eff·L·Q</view>
+              <view class="d">π·D⁴</view>
+            </view><text> + ρgΔz + ΣK·</text>
+            <view class="frac">
+              <view class="n">ρv²</view>
+              <view class="d">2</view>
+            </view>
+          </view>
+          <view class="fm-row-split">
+            <view class="fm-item"><text>γ_wall = </text>
+              <view class="frac">
+                <view class="n">3n+1</view>
+                <view class="d">4n</view>
+              </view><text> · </text>
+              <view class="frac">
+                <view class="n">32·Q</view>
+                <view class="d">π·D³</view>
+              </view>
+            </view>
+            <view class="fm-item"><text>v = </text>
+              <view class="frac">
+                <view class="n">4·Q</view>
+                <view class="d">π·D²</view>
+              </view>
+            </view>
+          </view>
+          <view class="legend-grid">
+            <view><text>D</text> 管道内径 (m)</view>
+            <view><text>L</text> 管道长度 (m)</view>
+            <view><text>Q</text> 流量 (m³/s)</view>
+            <view><text>v</text> 流速 (m/s)</view>
+            <view><text>ρ</text> 湿胶密度 (kg/m³)</view>
+            <view><text>Δz</text> 高程差 (m)</view>
+          </view>
+        </view>
+        <view class="f-box">
+          <view class="ft">3. 狭缝压降 (Slot ΔP)</view>
+          <view class="fm-row"><text>ΔP = </text>
+            <view class="frac">
+              <view class="n">12·η_eff·Ls·Q</view>
+              <view class="d">W·H³</view>
+            </view>
+          </view>
+          <view class="fm-row-split">
+            <view class="fm-item"><text>γ_wall = </text>
+              <view class="frac">
+                <view class="n">2n+1</view>
+                <view class="d">3n</view>
+              </view><text> · </text>
+              <view class="frac">
+                <view class="n">6·Q</view>
+                <view class="d">W·H²</view>
+              </view>
+            </view>
+            <view class="fm-item"><text>v = </text>
+              <view class="frac">
+                <view class="n">Q</view>
+                <view class="d">W·H</view>
+              </view>
+            </view>
+          </view>
+          <view class="legend-grid">
+            <view><text>Ls</text> 模唇陆长 (m)</view>
+            <view><text>H</text> 垫片厚度 (m)</view>
+            <view><text>W</text> 涂布幅宽 (m)</view>
+            <view><text>v</text> 流速 (m/s)</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
   <!-- 流量换算弹窗 - 蓝色主题 -->
   <view class="modal-mask" wx:if="{{showRPMModal}}" bindtap="closeRPMModal">
     <view class="modal-card conv-modal fluid" catchtap="preventBubble">
