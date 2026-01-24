@@ -11,7 +11,7 @@
     </view>
 
     <view class="toolbar-row">
-      <view class="tool-btn" bindtap="toggleFormula" hover-class="tool-hover">
+      <view class="tool-btn" bindtap="handleToggleFormula" hover-class="tool-hover">
         <ui-icon name="calc" />
       </view>
       <view class="tool-btn" bindtap="openHistory" hover-class="tool-hover">
@@ -251,9 +251,9 @@
 
 
 
-  <view class="modal-mask center-modal" wx:if="{{showFormulaModal}}" bindtap="toggleFormula">
+  <view class="modal-mask center-modal" wx:if="{{showFormulaModal}}" bindtap="handleToggleFormula">
     <view class="fm-card" catchtap="true">
-      <view class="fm-head highlight">计算原理 <text class="close-icon" bindtap="toggleFormula">×</text></view>
+      <view class="fm-head highlight">计算原理 <text class="close-icon" bindtap="handleToggleFormula">×</text></view>
       <scroll-view scroll-y class="fm-scroll">
 
         <!-- 公式1: 卷径 -->

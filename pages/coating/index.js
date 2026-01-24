@@ -10,7 +10,6 @@ Page({
     // --- 悬浮公式条 ---
     showFormulaModal: false,
 
-    showFormulaModal: false,
     // --- 确认弹窗 ---
     showResetModal: false,
     showDeleteModal: false,
@@ -47,6 +46,10 @@ Page({
 
   goBack() {
     wx.navigateBack({ delta: 1 });
+  },
+
+  handleToggleFormula() {
+    this.setData({ showFormulaModal: !this.data.showFormulaModal });
   },
 
   onShow() {

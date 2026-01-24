@@ -1312,3 +1312,51 @@ button.btn-ghost {
   /* background: rgba(255,255,255,0.1); REMOVED to fix Light Mode visibility */
   border-radius: 8rpx;
 }
+
+/* ========================================= */
+/* Formula Modal Specifics (Coating Module)  */
+/* ========================================= */
+
+/* Section Title - Theme Color & Smaller Size */
+.ft {
+  color: #f59e0b !important; /* Force Orange matching UI */
+  font-weight: bold;
+  font-size: 26rpx; /* Reduced from 28/30rpx */
+  margin-bottom: 12rpx;
+}
+
+/* Modal Layout */
+.fm-card { width: 90%; max-height: 80vh; background: var(--card-bg); border-radius: 20rpx; padding: 24rpx; display: flex; flex-direction: column; }
+.fm-head { display: flex; justify-content: center; align-items: center; margin-bottom: 20rpx; position: relative; }
+.fm-head .close-icon { position: absolute; right: 0; font-size: 40rpx; color: var(--text-sub); padding: 10rpx; line-height: 1; }
+.fm-title { font-weight: bold; color: var(--text-main); font-size: 32rpx; }
+.fm-scroll { flex: 1; overflow-y: auto; }
+.f-box { background: var(--input-bg); padding: 20rpx; border-radius: 16rpx; margin-bottom: 20rpx; border: 1px solid var(--border); }
+
+/* Formula Row */
+.fm-row {
+  text-align: center;
+  font-family: "Times New Roman", serif;
+  font-size: 30rpx;
+  margin: 12rpx 0;
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Fraction */
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 6rpx; }
+.frac .n { border-bottom: 1px solid currentColor; padding: 0 4rpx; font-size: 0.9em; }
+.frac .d { padding: 0 4rpx; font-size: 0.9em; }
+
+/* Square Root */
+.sqrt-wrap { display: inline-flex; align-items: baseline; }
+.sqrt-sign { font-size: 1.2em; line-height: 1; margin-right: 2rpx; }
+.sqrt-content { border-top: 1px solid currentColor; padding-top: 2rpx; }
+
+/* Legend */
+.legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-top: 16rpx; border-top: 1px dashed var(--border); padding-top: 16rpx; }
+.legend-grid view { font-size: 24rpx; color: var(--text-sub); display: flex; align-items: center; }
+.legend-grid text { font-weight: bold; color: var(--highlight); margin-right: 12rpx; font-family: "Times New Roman", serif; font-style: normal; font-size: 28rpx; }
