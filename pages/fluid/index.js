@@ -1,7 +1,10 @@
 const { initTheme, formatNumberObj, formatTime } = require('../../utils/common')
 const { saveHistory, deleteHistory } = require('../../utils/history')
+const formBehavior = require('../../behaviors/form-behavior')
 
 Page({
+  behaviors: [formBehavior],
+
   data: {
     theme: 'dark',
     statusBarHeight: 44,

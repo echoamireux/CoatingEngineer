@@ -1,7 +1,10 @@
 const { initTheme, formatNumber, formatTime } = require('../../utils/common')
 const { saveHistory } = require('../../utils/history')
+const formBehavior = require('../../behaviors/form-behavior')
 
 Page({
+  behaviors: [formBehavior],
+
   data: {
     theme: 'dark',
     currentTab: 'composite',
