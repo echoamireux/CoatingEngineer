@@ -344,7 +344,7 @@ page {
 
 .btn-primary {
   background: var(--btn-gradient);
-  color: white;
+  color: #1a1a1a; /* 深色文字，与 Tab 统一 */
   box-shadow: 0 4rpx 12rpx var(--accent-dim);
   border-radius: 16rpx;
   font-weight: 700;

@@ -54,7 +54,7 @@ page {
   --primary-hover: #059669;
   --accent: #34d399;
   --accent-dim: rgba(16, 185, 129, 0.15);
-  --btn-gradient: linear-gradient(135deg, #10b981, #34d399);
+  --btn-gradient: #10b981; /* 纯色 */
 }
 
 /* Fluid: Ocean (Blue) */
@@ -63,7 +63,7 @@ page {
   --primary-hover: #2563eb;
   --accent: #60a5fa;
   --accent-dim: rgba(59, 130, 246, 0.15);
-  --btn-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+  --btn-gradient: #3b82f6; /* 纯色 */
 }
 
 /* Coating: Amber (Orange) */
@@ -72,7 +72,7 @@ page {
   --primary-hover: #d97706;
   --accent: #fbbf24;
   --accent-dim: rgba(245, 158, 11, 0.15);
-  --btn-gradient: linear-gradient(135deg, #f59e0b, #fbbf24);
+  --btn-gradient: #f59e0b; /* 纯色，与 Tab 统一 */
 }
 
 /* Tools: Violet (Purple) */
