@@ -12,6 +12,12 @@
   flex-direction: column;
 }
 
+/* 首页按钮紧凑样式 - 与返回按钮形成操作组 */
+.home-btn {
+  margin-left: -16rpx !important; /* 完全抵消 gap */
+  padding: 4rpx 8rpx !important; /* 更紧凑 */
+}
+
 /* 搜索结果列表 (复用Handbook Index样式) */
 .search-results {
   flex: 1;
