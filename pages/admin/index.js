@@ -64,17 +64,17 @@ Page({
         wx.showToast({ title: '欢迎回来', icon: 'success', duration: 2000 })
       } else {
         wx.vibrateShort()
-        wx.showToast({ title: '密码错误', icon: 'error', duration: 3000 })
+        wx.showToast({ title: '密码错误', icon: 'error', duration: 2000 })
       }
     } catch (err) {
       this.setData({ loading: false })
       console.error(err)
       if (err.message.includes('网络')) {
-          wx.showToast({ title: '网络不可用', icon: 'none', duration: 3000 })
+          wx.showToast({ title: '网络不可用', icon: 'none', duration: 2000 })
       } else if (err.isTimeout) {
-          wx.showToast({ title: '请求超时', icon: 'none', duration: 3000 })
+          wx.showToast({ title: '请求超时', icon: 'none', duration: 2000 })
       } else {
-          wx.showToast({ title: '验证失败', icon: 'none', duration: 3000 })
+          wx.showToast({ title: '验证失败', icon: 'none', duration: 2000 })
       }
     }
   },
@@ -166,21 +166,22 @@ Page({
       })
 
       if (res.result.success) {
+        wx.hideLoading()
         wx.showToast({ title: '保存成功', icon: 'success', duration: 2000 })
       } else {
-        wx.showToast({ title: '保存失败: ' + res.result.message, icon: 'none', duration: 3000 })
+        wx.hideLoading()
+        wx.showToast({ title: '保存失败: ' + res.result.message, icon: 'none', duration: 2000 })
       }
     } catch (err) {
       console.error(err)
-      if (err.message.includes('网络')) {
-          wx.showToast({ title: '网络不可用', icon: 'none', duration: 3000 })
-      } else if (err.isTimeout) {
-          wx.showToast({ title: '请求超时', icon: 'none', duration: 3000 })
-      } else {
-          wx.showToast({ title: '保存异常', icon: 'none', duration: 3000 })
-      }
-    } finally {
       wx.hideLoading()
+      if (err.message.includes('网络')) {
+          wx.showToast({ title: '网络不可用', icon: 'none', duration: 2000 })
+      } else if (err.isTimeout) {
+          wx.showToast({ title: '请求超时', icon: 'none', duration: 2000 })
+      } else {
+          wx.showToast({ title: '保存异常', icon: 'none', duration: 2000 })
+      }
     }
   }
 })
