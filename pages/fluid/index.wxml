@@ -130,7 +130,7 @@
       <view class="split-col">
          <view class="subsection-title">涂布模头</view>
          <view class="form-group">
-            <ui-form-field label="模头间隙 H" fieldName="slot_H" data-field="slot_H" value="{{slot_H}}" unit="µm" placeholder="0.0"
+            <ui-form-field label="垫片厚度 H" fieldName="slot_H" data-field="slot_H" value="{{slot_H}}" unit="µm" placeholder="0.0"
               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_H}}" />
          </view>
          <view class="form-group">
