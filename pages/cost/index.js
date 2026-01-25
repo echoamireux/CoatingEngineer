@@ -4,7 +4,13 @@ const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('.
 const { validateRequired, validatePercentage: vPercent, hasRangeError } = require('../../utils/validator')
 const { saveHistory, getHistory, deleteHistory } = require('../../utils/history')
 
+// 引入 Behaviors
+const costCalcBehavior = require('../../behaviors/cost-calc-behavior')
+const formBehavior = require('../../behaviors/form-behavior')
+
 Page({
+  behaviors: [costCalcBehavior, formBehavior],
+
   data: {
     theme: 'dark',
     statusBarHeight: 44,
