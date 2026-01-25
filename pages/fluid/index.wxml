@@ -265,7 +265,7 @@
 
           <!-- SLOT COLUMN -->
           <view class="split-col">
-             <text class="col-header">狭缝模头 (Slot)</text>
+             <text class="col-header">狭缝模头 (Die)</text>
              <view class="res-table">
                 <!-- DP -->
                 <view class="res-row">
@@ -323,7 +323,7 @@
        <!-- SINGLE MODE CENTERED -->
        <view class="split-layout single-centered">
           <view class="split-col">
-             <text class="col-header">{{result.layoutMode === 'single-pipe' ? '供液管路 (Pipe)' : '狭缝模头 (Slot)'}}</text>
+             <text class="col-header">{{result.layoutMode === 'single-pipe' ? '供液管路 (Pipe)' : '狭缝模头 (Die)'}}</text>
              <view class="res-table">
                 <!-- DP -->
                 <view class="res-row">
