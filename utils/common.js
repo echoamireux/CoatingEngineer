@@ -79,6 +79,8 @@ function formatNumberObj(num) {
 
 /**
  * 格式化数值 (单位换算专用，更高精度)
+ * @param {number} num - 要格式化的数值
+ * @returns {string} 格式化后的字符串，大/小数自动转科学计数法
  */
 function formatNumberConverter(num) {
     if (!isFinite(num) || isNaN(num)) return '';
@@ -95,6 +97,8 @@ function formatNumberConverter(num) {
 
 /**
  * 解析可能包含科学计数法的字符串
+ * @param {string} str - 要解析的字符串，如 '1.23×10^6'
+ * @returns {number} 解析后的数值，解析失败返回 NaN
  */
 function parseNumber(str) {
     if (!str) return NaN;
