@@ -1,5 +1,6 @@
 const app = getApp()
-const { initTheme, toggleTheme: commonToggleTheme } = require('../../utils/common')
+const { initTheme, toggleTheme: commonToggleTheme, callCloudFunction } = require('../../utils/common')
+
 const { SHOW_REWARD, REWARD_IMAGE_PATH } = require('../../utils/config')
 
 // 尝试加载本地私有配置（不提交到远程仓库）
@@ -215,16 +216,13 @@ Page({
   async handleModalConfirm() {
     if (this.data.modalType === 'login') {
       // 显示加载提示
-      wx.showLoading({ title: '验证中...' })
+      wx.showLoading({ title: '验证中...', mask: true })
 
       try {
-        // 优先使用云端验证
-        const res = await wx.cloud.callFunction({
-          name: 'verifyPasscode',
-          data: { code: this.data.inputCode }
-        })
-
-        wx.hideLoading()
+        // 使用封装的云函数调用 (15秒超时)
+        const res = await callCloudFunction('verifyPasscode', {
+          code: this.data.inputCode
+        }, 15000)
 
         if (res.result.success) {
           wx.setStorageSync('isLogin', true)
@@ -239,27 +237,34 @@ Page({
           this.setData({ inputCode: '' })
         }
       } catch (err) {
-        wx.hideLoading()
-        console.warn('云函数调用失败:', err)
+        console.warn('云验证异常:', err)
 
-        // 本地备用口令（仅在云端不可用且配置了备用口令时使用）
-        if (FALLBACK_CODE && this.data.inputCode === FALLBACK_CODE) {
-          console.log('使用本地备用验证')
-          wx.setStorageSync('isLogin', true)
-          wx.showToast({ title: '验证通过', icon: 'success' })
-          this.setData({ showModal: false })
-          if (this.data.pendingPath) {
-            setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
-          }
-        } else if (FALLBACK_CODE) {
-          // 有备用口令但输入错误
-          wx.vibrateShort()
-          wx.showToast({ title: '口令错误', icon: 'error' })
-          this.setData({ inputCode: '' })
+        // 区分错误类型进行提示
+        if (err.message.includes('网络')) {
+             wx.showToast({ title: '网络不可用', icon: 'none' })
+        } else if (err.isTimeout) {
+             wx.showToast({ title: '请求超时', icon: 'none' })
         } else {
-          // 没有配置备用口令，直接提示网络异常
-          wx.showToast({ title: '网络异常', icon: 'error' })
+             // 尝试本地备用验证
+             if (FALLBACK_CODE && this.data.inputCode === FALLBACK_CODE) {
+                console.log('使用本地备用验证')
+                wx.setStorageSync('isLogin', true)
+                wx.showToast({ title: '验证通过', icon: 'success' })
+                this.setData({ showModal: false })
+                if (this.data.pendingPath) {
+                  setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
+                }
+                return // 本地成功则直接返回，不走下面的错误提示
+             }
+
+             // 其他错误
+             wx.showToast({ title: '验证服务异常', icon: 'none' })
         }
+
+        // 仅在非本地成功的情况下清空输入（或者是保持输入让用户重试？）
+        // 这里选择由用户决定，不强制清空，除非是明确的口令错误（上面已经处理）
+      } finally {
+        wx.hideLoading()
       }
     } else {
       this.setData({ showModal: false })

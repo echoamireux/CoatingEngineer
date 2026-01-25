@@ -168,6 +168,54 @@ function debounce(fn, delay = 300) {
     }
 }
 
+/**
+ * 封装云函数调用 (支持超时控制和网络检查)
+ * @param {string} name - 云函数名称
+ * @param {object} data - 传递的参数
+ * @param {number} timeout - 超时时间(ms)，默认10000ms
+ */
+function callCloudFunction(name, data = {}, timeout = 10000) {
+    return new Promise(async (resolve, reject) => {
+        // 1. 检查网络状态
+        try {
+            const netRes = await wx.getNetworkType()
+            if (netRes.networkType === 'none') {
+                return reject(new Error('网络不可用，请检查连接'))
+            }
+        } catch (e) {
+            // 获取网络状态失败，暂时忽略，继续尝试
+            console.warn('检查网络状态失败:', e)
+        }
+
+        // 2. 构造超时 Promise
+        let timeoutId
+        const timeoutPromise = new Promise((_, reject) => {
+            timeoutId = setTimeout(() => {
+                const err = new Error('请求超时，请稍后重试')
+                err.isTimeout = true
+                reject(err)
+            }, timeout)
+        })
+
+        // 3. 构造请求 Promise
+        const requestPromise = wx.cloud.callFunction({
+            name,
+            data
+        })
+
+        // 4. 竞态调用
+        Promise.race([requestPromise, timeoutPromise])
+            .then(res => {
+                clearTimeout(timeoutId)
+                resolve(res)
+            })
+            .catch(err => {
+                clearTimeout(timeoutId)
+                reject(err)
+            })
+    })
+}
+
 module.exports = {
     formatTime,
     formatNumber,
@@ -179,5 +227,7 @@ module.exports = {
     initTheme,
     vibrateSuccess,
     round,
-    debounce
+    debounce,
+    toSuperscript,
+    callCloudFunction
 };
