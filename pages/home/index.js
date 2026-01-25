@@ -226,39 +226,40 @@ Page({
 
         if (res.result.success) {
           wx.setStorageSync('isLogin', true)
-          wx.showToast({ title: '验证通过', icon: 'success' })
+          wx.showToast({ title: '验证通过', icon: 'success', duration: 2000 })
           this.setData({ showModal: false })
           if (this.data.pendingPath) {
             setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
           }
         } else {
           wx.vibrateShort()
-          wx.showToast({ title: res.result.message || '口令错误', icon: 'error' })
+          wx.showToast({ title: res.result.message || '口令错误', icon: 'error', duration: 3000 })
           this.setData({ inputCode: '' })
         }
       } catch (err) {
         console.warn('云验证异常:', err)
 
+        // 1. 优先尝试本地备用验证 (无论是什么错误，只要有备用码且匹配就放行)
+        if (FALLBACK_CODE && this.data.inputCode === FALLBACK_CODE) {
+           console.log('使用本地备用验证')
+           wx.setStorageSync('isLogin', true)
+           wx.showToast({ title: '验证通过', icon: 'success', duration: 2000 })
+           this.setData({ showModal: false })
+           if (this.data.pendingPath) {
+             setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
+           }
+           return // 本地成功，阻断后续错误提示
+        }
+
+        // 2. 本地验证失败，才进行错误提示
         // 区分错误类型进行提示
         if (err.message.includes('网络')) {
-             wx.showToast({ title: '网络不可用', icon: 'none' })
+             wx.showToast({ title: '网络不可用', icon: 'none', duration: 3000 })
         } else if (err.isTimeout) {
-             wx.showToast({ title: '请求超时', icon: 'none' })
+             wx.showToast({ title: '请求超时', icon: 'none', duration: 3000 })
         } else {
-             // 尝试本地备用验证
-             if (FALLBACK_CODE && this.data.inputCode === FALLBACK_CODE) {
-                console.log('使用本地备用验证')
-                wx.setStorageSync('isLogin', true)
-                wx.showToast({ title: '验证通过', icon: 'success' })
-                this.setData({ showModal: false })
-                if (this.data.pendingPath) {
-                  setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
-                }
-                return // 本地成功则直接返回，不走下面的错误提示
-             }
-
              // 其他错误
-             wx.showToast({ title: '验证服务异常', icon: 'none' })
+             wx.showToast({ title: '验证服务异常', icon: 'none', duration: 3000 })
         }
 
         // 仅在非本地成功的情况下清空输入（或者是保持输入让用户重试？）

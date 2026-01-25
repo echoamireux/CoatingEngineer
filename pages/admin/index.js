@@ -61,20 +61,20 @@ Page({
         // 填充数据
         const { settings, currentAccessCode } = res.result.data
         this.applySettings(settings, currentAccessCode)
-        wx.showToast({ title: '欢迎回来', icon: 'success' })
+        wx.showToast({ title: '欢迎回来', icon: 'success', duration: 2000 })
       } else {
         wx.vibrateShort()
-        wx.showToast({ title: '密码错误', icon: 'error' })
+        wx.showToast({ title: '密码错误', icon: 'error', duration: 3000 })
       }
     } catch (err) {
       this.setData({ loading: false })
       console.error(err)
       if (err.message.includes('网络')) {
-          wx.showToast({ title: '网络不可用', icon: 'none' })
+          wx.showToast({ title: '网络不可用', icon: 'none', duration: 3000 })
       } else if (err.isTimeout) {
-          wx.showToast({ title: '请求超时', icon: 'none' })
+          wx.showToast({ title: '请求超时', icon: 'none', duration: 3000 })
       } else {
-          wx.showToast({ title: '验证失败', icon: 'none' })
+          wx.showToast({ title: '验证失败', icon: 'none', duration: 3000 })
       }
     }
   },
@@ -166,18 +166,18 @@ Page({
       })
 
       if (res.result.success) {
-        wx.showToast({ title: '保存成功', icon: 'success' })
+        wx.showToast({ title: '保存成功', icon: 'success', duration: 2000 })
       } else {
-        wx.showToast({ title: '保存失败: ' + res.result.message, icon: 'none' })
+        wx.showToast({ title: '保存失败: ' + res.result.message, icon: 'none', duration: 3000 })
       }
     } catch (err) {
       console.error(err)
       if (err.message.includes('网络')) {
-          wx.showToast({ title: '网络不可用', icon: 'none' })
+          wx.showToast({ title: '网络不可用', icon: 'none', duration: 3000 })
       } else if (err.isTimeout) {
-          wx.showToast({ title: '请求超时', icon: 'none' })
+          wx.showToast({ title: '请求超时', icon: 'none', duration: 3000 })
       } else {
-          wx.showToast({ title: '保存异常', icon: 'none' })
+          wx.showToast({ title: '保存异常', icon: 'none', duration: 3000 })
       }
     } finally {
       wx.hideLoading()
