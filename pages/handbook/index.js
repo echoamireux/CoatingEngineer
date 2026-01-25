@@ -20,11 +20,11 @@ Page({
       {
         id: 'glossary',
         title: '涂布名词库',
-        desc: '80+ 专业术语 / 快速查阅',
+        desc: '专业术语 / 快速查阅',
         icon: '📖',
         color: '#6366f1',
         isWide: true, // Make Glossary prominent as "The One"
-        count: 80,
+        count: 0, // 动态计算
         unit: '词条'
       },
       {
@@ -97,7 +97,25 @@ Page({
     this.setData({
       statusBarHeight: systemInfo.statusBarHeight || 44
     })
-    // 预加载所有数据到内存（数据量较小，直接放data外或data里均可，这里暂不放在data以减少setData开销，用到时直接引用模块变量）
+    // 动态计算名词库词条数
+    this._updateGlossaryCount()
+  },
+
+  // 动态更新名词库词条数量
+  _updateGlossaryCount() {
+    let total = 0
+    if (glossaryData.categories) {
+      glossaryData.categories.forEach(cat => {
+        if (cat.items) total += cat.items.length
+      })
+    }
+    const categories = this.data.categories.map(c => {
+      if (c.id === 'glossary') {
+        return { ...c, count: total, desc: `${total}+ 专业术语 / 快速查阅` }
+      }
+      return c
+    })
+    this.setData({ categories })
   },
 
   onShow() {
