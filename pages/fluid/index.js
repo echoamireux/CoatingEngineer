@@ -519,5 +519,12 @@ Page({
       },
       pipeMissingText: '', slotMissingText: ''
     });
+
+    let tip = '计算完成';
+    if (mode === 'pipe') tip = '已计算管道压降';
+    else if (mode === 'slot') tip = '已计算模头压降';
+    else if (mode === 'total') tip = '全部已更新';
+
+    wx.showToast({ title: tip, icon: 'success' });
   }
 })

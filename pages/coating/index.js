@@ -235,6 +235,7 @@ Page({
 
     const showD = formatNumber(D);
     this.setData({ result_diameter: showD });
+    if (!isSilent) wx.showToast({ title: '已计算卷径', icon: 'success' });
   },
 
   calcCompWeight(e) {
@@ -247,6 +248,7 @@ Page({
 
     const showM = formatNumber(M);
     this.setData({ result_weight: showM });
+    if (!isSilent) wx.showToast({ title: '已计算重量', icon: 'success' });
   },
 
   calculateComposite(e) {
@@ -254,6 +256,7 @@ Page({
     if (!this._checkComp(['comp_i', 'comp_c', 'comp_L', 'layer_w', 'layer_t', 'layer_d'], isSilent)) return;
     this.calcCompDiameter(true);
     this.calcCompWeight(true);
+    if (!isSilent) wx.showToast({ title: '全部已更新', icon: 'success' });
   },
 
   resetComposite() {
@@ -375,6 +378,7 @@ Page({
     const Q = (parseFloat(d.glue_v) * parseFloat(d.glue_W) * m_dry) / (10 * S * rhoWet);
     const showVal = formatNumber(Q / Dp);
     this.setData({ result_pump_speed: showVal });
+    if (!isSilent) wx.showToast({ title: '已计算泵速', icon: 'success' });
   },
 
   calcGlueWetWeight(e) {
@@ -393,6 +397,7 @@ Page({
     const M = (m_dry * parseFloat(d.glue_L) * parseFloat(d.glue_W)) / (10000 * S);
     const showM = formatNumber(M);
     this.setData({ result_wet_weight: showM });
+    if (!isSilent) wx.showToast({ title: '已计算湿重', icon: 'success' });
   },
 
   calculateGlue(e) {
@@ -400,6 +405,7 @@ Page({
     if (!this._validateGlue(['glue_v', 'glue_W', 'glue_S', 'glue_rho_wet', 'glue_Dp', 'glue_L'], isSilent)) return;
     this.calcGluePump(true);
     this.calcGlueWetWeight(true);
+    if (!isSilent) wx.showToast({ title: '全部已更新', icon: 'success' });
   },
 
   saveGlueHistory() {
