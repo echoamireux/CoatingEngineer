@@ -161,8 +161,28 @@
   box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.02);
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+  /* 入场动画 */
+  opacity: 0;
+  transform: translateY(20rpx);
+  animation: cardFadeIn 0.4s ease forwards;
 }
+
+/* 卡片交错入场动画 */
+@keyframes cardFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 交错延迟 - 使用nth-child */
+.menu-card:nth-child(1) { animation-delay: 0.05s; }
+.menu-card:nth-child(2) { animation-delay: 0.1s; }
+.menu-card:nth-child(3) { animation-delay: 0.15s; }
+.menu-card:nth-child(4) { animation-delay: 0.2s; }
+.menu-card:nth-child(5) { animation-delay: 0.25s; }
+.menu-card:nth-child(6) { animation-delay: 0.3s; }
 
 .menu-card:active { transform: scale(0.98); }
 .card-bar { width: 10rpx; }
