@@ -6,8 +6,8 @@
  * ============================================================
  */
 
-const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('../../../utils/cost-calc')
-const { validateRequired, validatePercentage: vPercent } = require('../../../utils/validator')
+const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('../utils/cost-calc')
+const { validateRequired, validatePercentage: vPercent } = require('../utils/validator')
 
 module.exports = Behavior({
   methods: {
