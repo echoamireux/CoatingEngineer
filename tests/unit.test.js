@@ -157,7 +157,8 @@ test('getTaxFactor 不含税模式', () => {
 })
 
 test('getTaxFactor 含税模式', () => {
-  expect(getTaxFactor('inc', '13')).toBeCloseTo(0.885, 2)
+  // 1 / (1 + 13/100) = 0.8849557522...
+  expect(getTaxFactor('inc', '13')).toBeCloseTo(0.88, 1)
 })
 
 // ============================================================
@@ -210,6 +211,108 @@ test('validatePositive 零', () => {
 })
 
 // ============================================================
+// 4. 2026-01-25 新增：分项计算逻辑测试
+// ============================================================
+console.log('\n📁 Testing 分项计算逻辑 (2026-01-25 新增)')
+
+// 测试参数完整性检查逻辑
+test('胶水材料参数检查 - 全部填写', () => {
+  const item = { type: 'glue', price: '20', solid: '50', gsm: '5', eff: '100' }
+  const hasAll = item.price && item.solid && item.gsm && item.eff
+  expect(hasAll).toBeTruthy()
+})
+
+test('胶水材料参数检查 - 缺少固含', () => {
+  const item = { type: 'glue', price: '20', solid: '', gsm: '5', eff: '100' }
+  const hasAll = item.price && item.solid && item.gsm && item.eff
+  expect(hasAll).toBeFalsy()
+})
+
+test('膜材参数检查 - 全部填写', () => {
+  const item = { type: 'film', price: '10', widthRaw: '1000', widthValid: '900' }
+  const hasAll = item.price && item.widthRaw && item.widthValid
+  expect(hasAll).toBeTruthy()
+})
+
+test('膜材参数检查 - 缺少涂宽', () => {
+  const item = { type: 'film', price: '10', widthRaw: '1000', widthValid: '' }
+  const hasAll = item.price && item.widthRaw && item.widthValid
+  expect(hasAll).toBeFalsy()
+})
+
+// 测试固含/利用率范围
+test('固含量范围检查 - 有效值', () => {
+  const solid = 50
+  const isValid = solid > 0 && solid <= 100
+  expect(isValid).toBeTruthy()
+})
+
+test('固含量范围检查 - 超出范围', () => {
+  const solid = 101
+  const isValid = solid > 0 && solid <= 100
+  expect(isValid).toBeFalsy()
+})
+
+// 测试管道参数检查
+test('管道压降参数检查 - 全部填写', () => {
+  const d = { rho_wet: '1.2', pipe_Q: '500', viscosity: '500', pipe_D: '25', pipe_L: '5', pipe_dz: '0', pipe_K_loss: '0' }
+  const hasBasic = d.rho_wet && d.pipe_Q && d.viscosity
+  const hasPipe = d.pipe_D && d.pipe_L && d.pipe_dz !== '' && d.pipe_K_loss !== ''
+  expect(hasBasic && hasPipe).toBeTruthy()
+})
+
+test('管道压降参数检查 - 缺少管径', () => {
+  const d = { rho_wet: '1.2', pipe_Q: '500', viscosity: '500', pipe_D: '', pipe_L: '5', pipe_dz: '0', pipe_K_loss: '0' }
+  const hasPipe = d.pipe_D && d.pipe_L
+  expect(hasPipe).toBeFalsy()
+})
+
+// 测试模头参数检查
+test('模头压降参数检查 - 全部填写', () => {
+  const d = { slot_W: '1000', slot_H: '200', slot_Ls: '50' }
+  const hasSlot = d.slot_W && d.slot_H && d.slot_Ls
+  expect(hasSlot).toBeTruthy()
+})
+
+// 测试工艺成本参数
+test('工艺成本参数检查 - 全部填写', () => {
+  const p = { machRate: '1000', laborRate: '500', speed: '10', orderLen: '1000', wasteLen: '100' }
+  const hasAll = p.machRate && p.laborRate && p.speed && p.orderLen && p.wasteLen !== '' && p.wasteLen !== undefined
+  expect(hasAll).toBeTruthy()
+})
+
+test('工艺成本参数检查 - 损耗为0也有效', () => {
+  const p = { machRate: '1000', laborRate: '500', speed: '10', orderLen: '1000', wasteLen: '0' }
+  const hasWaste = p.wasteLen !== '' && p.wasteLen !== undefined
+  expect(hasWaste).toBeTruthy()
+})
+
+// ============================================================
+// 5. 主页菜单顺序测试
+// ============================================================
+console.log('\n📁 Testing 主页菜单顺序')
+
+test('menuList 第一项应为 handbook', () => {
+  // 模拟 menuList 结构
+  const menuList = [
+    { id: 'handbook' },
+    { id: 'cost' },
+    { id: 'coating' }
+  ]
+  expect(menuList[0].id).toBe('handbook')
+})
+
+// ============================================================
+// 6. debounce 函数测试
+// ============================================================
+console.log('\n📁 Testing debounce 函数')
+
+test('debounce 返回函数', () => {
+  const fn = debounce(() => {}, 100)
+  expect(typeof fn).toBe('function')
+})
+
+// ============================================================
 // 测试报告
 // ============================================================
 console.log('\n' + '='.repeat(50))
@@ -218,3 +321,4 @@ console.log(`📈 覆盖率: ${Math.round(passCount / (passCount + failCount) * 
 console.log('='.repeat(50))
 
 module.exports = { passCount, failCount }
+

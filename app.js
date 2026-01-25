@@ -11,6 +11,10 @@ App({
         traceUser: true
       })
       console.log('✅ 云开发初始化成功')
+
+      // ★ 临时：运行单元测试（验证后请删除此行）
+      console.log('🧪 开始运行单元测试...')
+      require('./tests/unit.test.js')
     }
   },
 

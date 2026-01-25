@@ -1,5 +1,5 @@
 const app = getApp()
-const { initTheme, round, formatTime } = require('../../utils/common')
+const { initTheme, round, formatTime, debounce } = require('../../utils/common')
 const { calcGlueCost, calcFilmCost, calcProcessCost, getTaxFactor } = require('../../utils/cost-calc')
 const { validateRequired, validatePercentage: vPercent, hasRangeError } = require('../../utils/validator')
 const { saveHistory, getHistory, deleteHistory } = require('../../utils/history')
@@ -62,6 +62,8 @@ Page({
     // 获取状态栏高度
     const systemInfo = wx.getSystemInfoSync();
     this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+    // 初始化防抖计算
+    this._initDebounce();
   },
 
   goBack() {
@@ -877,6 +879,97 @@ Page({
     if (type === 'global') this.setData({ [field]: val }); else if (type === 'stage_name' || type === 'stage_yield') list[stage][field === 'stage_name' ? 'name' : 'yield'] = val; else if (type === 'process') list[stage].process[field] = val; else if (type === 'material') list[stage].materials[index][field] = val;
     else if (type === 'save_name') this.setData({ tempRecipeName: val });
     if (type !== 'global' && type !== 'save_name') this.setData({ stages: list });
+
+    // ★ 触发防抖自动计算
+    if ((type === 'material' || type === 'process') && this._debouncedCalc) {
+      this._debouncedCalc(parseInt(stage), type, parseInt(index));
+    }
+  },
+
+  // ★★★ 初始化防抖计算函数 ★★★
+  _initDebounce() {
+    if (!this._debouncedCalc) {
+      this._debouncedCalc = debounce((stageIdx, type, matIdx) => {
+        if (type === 'material' && matIdx !== undefined) {
+          // 尝试计算单个材料
+          this._tryCalcMaterial(stageIdx, matIdx);
+        } else if (type === 'process') {
+          // 尝试计算工艺成本
+          this._tryCalcProcess(stageIdx);
+        }
+      }, 500);
+    }
+  },
+
+  // ★★★ 分项计算：单个材料 ★★★
+  _tryCalcMaterial(stageIdx, matIdx) {
+    const stage = this.data.stages[stageIdx];
+    if (!stage) return;
+    const item = stage.materials[matIdx];
+    if (!item) return;
+    const toExFactor = getTaxFactor(this.data.taxMode, this.data.vatRate);
+
+    let cost = 0;
+    let canCalc = false;
+
+    if (item.type === 'glue') {
+      // 检查胶水必填字段
+      if (item.price && item.solid && item.gsm && item.eff) {
+        const solid = parseFloat(item.solid);
+        const eff = parseFloat(item.eff);
+        if (solid > 0 && solid <= 100 && eff > 0 && eff <= 100) {
+          cost = calcGlueCost({ price: item.price, solid: item.solid, gsm: item.gsm, eff: item.eff, toExFactor });
+          canCalc = true;
+        }
+      }
+    } else {
+      // 检查膜材必填字段
+      if (item.price && item.widthRaw && item.widthValid) {
+        cost = calcFilmCost({ price: item.price, widthRaw: item.widthRaw, widthValid: item.widthValid, toExFactor });
+        canCalc = true;
+      }
+    }
+
+    if (canCalc) {
+      const key = `stages[${stageIdx}].materials[${matIdx}].cost`;
+      this.setData({ [key]: cost.toFixed(2) }, () => {
+        this._updateStageMatSum(stageIdx);
+      });
+    }
+  },
+
+  // ★★★ 分项计算：工艺成本 ★★★
+  _tryCalcProcess(stageIdx) {
+    const list = this.data.stages;
+    const stage = list[stageIdx];
+    if (!stage) return;
+    const p = stage.process;
+
+    // 检查必填字段
+    if (!p.machRate || !p.laborRate || !p.speed || !p.orderLen || p.wasteLen === '' || p.wasteLen === undefined) return;
+
+    // 寻找膜宽
+    let refWidth = 0;
+    for (let i = stageIdx; i >= 0; i--) {
+      const foundMat = list[i].materials.find(m => m.type === 'film' && m.widthValid && parseFloat(m.widthValid) > 0);
+      if (foundMat) { refWidth = parseFloat(foundMat.widthValid); break; }
+    }
+    if (refWidth === 0) return;
+
+    const Rm = parseFloat(p.machRate) || 0;
+    const Rl = parseFloat(p.laborRate) || 0;
+    const V = parseFloat(p.speed) || 0;
+    const Lo = parseFloat(p.orderLen) || 0;
+    const Lw = parseFloat(p.wasteLen) || 0;
+
+    const hourlyOutput = V * 60 * (refWidth / 1000);
+    if (hourlyOutput <= 0 || Lo <= 0) return;
+
+    const baseCost = (Rm + Rl) / hourlyOutput;
+    const scale = (Lo + Lw) / Lo;
+    const cost = baseCost * scale;
+
+    this.setData({ [`stages[${stageIdx}].stageProcCost`]: cost.toFixed(2) });
   },
 
   // ... (其余代码：mixCal, formula, machCalc, laborCalc 等保持不变) ...

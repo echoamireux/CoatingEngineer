@@ -30,6 +30,14 @@ Page({
 
     menuList: [
       {
+        id: 'handbook',
+        title: '涂布工程师手册',
+        desc: '术语 / 材料 / 设备 / 工艺 / 诊断',
+        path: '/pages/handbook/index',
+        icon: '📚',
+        color: '#6366f1' // Indigo - 手册专属色
+      },
+      {
         id: 'cost',
         title: '生产成本核算',
         desc: '多层级成本流 / 智能报价模拟',
@@ -45,14 +53,6 @@ Page({
         path: '/pages/coating/index',
         icon: '🏭', /* Factory Icon */
         color: '#f59e0b', // Amber
-      },
-      {
-        id: 'handbook',
-        title: '涂布工程师手册',
-        desc: '术语 / 材料 / 设备 / 工艺 / 诊断',
-        path: '/pages/handbook/index',
-        icon: '📚',
-        color: '#6366f1' // Indigo - 手册专属色
       },
       {
         id: 'fluid',

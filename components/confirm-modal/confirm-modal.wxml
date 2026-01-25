@@ -4,8 +4,8 @@
         <view class="modal-content" wx:if="{{content}}">{{content}}</view>
         <slot></slot>
         <view class="modal-footer">
-            <button class="btn-cancel" bindtap="onCancel">{{cancelText}}</button>
-            <button class="btn-confirm {{confirmDanger ? 'danger' : ''}}" bindtap="onConfirm">{{confirmText}}</button>
+            <button class="modal-btn btn-cancel" bindtap="onCancel">{{cancelText}}</button>
+            <button class="modal-btn btn-confirm {{confirmDanger ? 'danger' : ''}}" bindtap="onConfirm">{{confirmText}}</button>
         </view>
     </view>
 </view>

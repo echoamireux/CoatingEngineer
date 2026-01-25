@@ -1,4 +1,4 @@
-const { initTheme, formatNumberObj, formatTime } = require('../../utils/common')
+const { initTheme, formatNumberObj, formatTime, debounce } = require('../../utils/common')
 const { saveHistory, deleteHistory } = require('../../utils/history')
 const formBehavior = require('../../behaviors/form-behavior')
 
@@ -36,6 +36,8 @@ Page({
     // 获取状态栏高度
     const systemInfo = wx.getSystemInfoSync();
     this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+    // 初始化防抖计算
+    this._initDebounce();
   },
 
   goBack() {
@@ -84,6 +86,112 @@ Page({
     const value = e.detail.value;
 
     this.setData({ [field]: value, [`errors.${field}`]: false, pipeMissingText: '', slotMissingText: '' });
+    // ★ 触发防抖自动计算
+    if (this._debouncedCalc) this._debouncedCalc();
+  },
+
+  // ★★★ 初始化防抖计算函数 ★★★
+  _initDebounce() {
+    if (!this._debouncedCalc) {
+      this._debouncedCalc = debounce(() => {
+        // 分项独立计算：管道和模头各自尝试
+        this._tryCalcPipe();
+        this._tryCalcSlot();
+      }, 500);
+    }
+  },
+
+  // ★★★ 分项计算：管道压降 ★★★
+  _tryCalcPipe() {
+    const d = this.data;
+    // 检查通用必填字段
+    if (!d.rho_wet || !d.pipe_Q) return;
+    // 检查流变参数
+    if (d.isPowerLaw && (!d.K_val || !d.n_val)) return;
+    if (!d.isPowerLaw && !d.viscosity) return;
+    // 检查管道专属字段
+    if (!d.pipe_D || !d.pipe_L || d.pipe_dz === '' || d.pipe_K_loss === '') return;
+    // 静默计算管道压降
+    this._runMathSilent('pipe');
+  },
+
+  // ★★★ 分项计算：模头压降 ★★★
+  _tryCalcSlot() {
+    const d = this.data;
+    // 检查通用必填字段
+    if (!d.rho_wet || !d.pipe_Q) return;
+    // 检查流变参数
+    if (d.isPowerLaw && (!d.K_val || !d.n_val)) return;
+    if (!d.isPowerLaw && !d.viscosity) return;
+    // 检查模头专属字段
+    if (!d.slot_W || !d.slot_H || !d.slot_Ls) return;
+    // 静默计算模头压降
+    this._runMathSilent('slot');
+  },
+
+  // ★★★ 静默计算（不弹Toast） ★★★
+  _runMathSilent(mode) {
+    const d = this.data;
+    const rho = parseFloat(d.rho_wet) * 1000;
+    let K = 0, n = 1;
+    if (d.isPowerLaw) { K = parseFloat(d.K_val); n = parseFloat(d.n_val); }
+    else { K = parseFloat(d.viscosity) / 1000; n = 1; }
+    const Q = parseFloat(d.pipe_Q) / 60000;
+
+    if (n <= 0 || K <= 0 || !isFinite(rho) || !isFinite(Q)) return;
+
+    let p_dp = 0, p_re = 0, p_visc = 0, p_shear = 0, p_turb = false;
+    let s_dp = 0, s_re = 0, s_visc = 0, s_shear = 0, s_turb = false;
+
+    if (mode === 'pipe') {
+      const D = parseFloat(d.pipe_D) / 1000;
+      const L = parseFloat(d.pipe_L);
+      const dz = parseFloat(d.pipe_dz);
+      const Kl = parseFloat(d.pipe_K_loss);
+      if (D <= 0) return;
+      const factor = (3 * n + 1) / (4 * n);
+      const shear = factor * (32 * Q) / (Math.PI * Math.pow(D, 3));
+      const mu_eff = shear > 0 ? K * Math.pow(shear, n - 1) : K;
+      if (mu_eff <= 0 || !isFinite(mu_eff)) return;
+      const v = Q / (Math.PI * Math.pow(D / 2, 2));
+      const re = (rho * v * D) / mu_eff;
+      const dp = (128 * mu_eff * L * Q) / (Math.PI * Math.pow(D, 4)) + rho * 9.81 * dz + Kl * 0.5 * rho * v * v;
+      p_dp = dp / 1000; p_re = re; p_visc = mu_eff * 1000; p_shear = shear; p_turb = re > 2300;
+    }
+
+    if (mode === 'slot') {
+      const W = parseFloat(d.slot_W) / 1000;
+      const H = parseFloat(d.slot_H) / 1e6;
+      const Ls = parseFloat(d.slot_Ls) / 1000;
+      if (W <= 0 || H <= 0) return;
+      const factor = (2 * n + 1) / (3 * n);
+      const shear = factor * (6 * Q) / (W * H * H);
+      const mu_eff = shear > 0 ? K * Math.pow(shear, n - 1) : K;
+      if (mu_eff <= 0 || !isFinite(mu_eff)) return;
+      const v = Q / (W * H);
+      const re = (rho * v * (2 * H)) / mu_eff;
+      const dp = (12 * mu_eff * Ls * Q) / (W * Math.pow(H, 3));
+      s_dp = dp / 1000; s_re = re; s_visc = mu_eff * 1000; s_shear = shear; s_turb = re > 2300;
+    }
+
+    // 保留之前的另一个分项结果
+    const prevResult = this.data.result || {};
+    const newResult = {
+      hasResult: true,
+      layoutMode: 'dual',
+      total_dp: this.fmt((mode === 'pipe' ? p_dp : (prevResult.p_dp?.b !== '-' ? parseFloat(prevResult.p_dp.b) * Math.pow(10, prevResult.p_dp.p || 0) : 0)) + (mode === 'slot' ? s_dp : (prevResult.s_dp?.b !== '-' ? parseFloat(prevResult.s_dp.b) * Math.pow(10, prevResult.s_dp.p || 0) : 0))),
+      p_dp: mode === 'pipe' ? this.fmt(p_dp) : (prevResult.p_dp || { b: '-', p: 0, s: false }),
+      p_re: mode === 'pipe' ? this.fmt(p_re) : (prevResult.p_re || '-'),
+      p_visc: mode === 'pipe' ? this.fmt(p_visc) : (prevResult.p_visc || { b: '-', p: 0, s: false }),
+      p_shear: mode === 'pipe' ? this.fmt(p_shear) : (prevResult.p_shear || { b: '-', p: 0, s: false }),
+      p_turb: mode === 'pipe' ? p_turb : (prevResult.p_turb || false),
+      s_dp: mode === 'slot' ? this.fmt(s_dp) : (prevResult.s_dp || { b: '-', p: 0, s: false }),
+      s_re: mode === 'slot' ? this.fmt(s_re) : (prevResult.s_re || '-'),
+      s_visc: mode === 'slot' ? this.fmt(s_visc) : (prevResult.s_visc || { b: '-', p: 0, s: false }),
+      s_shear: mode === 'slot' ? this.fmt(s_shear) : (prevResult.s_shear || { b: '-', p: 0, s: false }),
+      s_turb: mode === 'slot' ? s_turb : (prevResult.s_turb || false)
+    };
+    this.setData({ result: newResult });
   },
 
   onInputFocus(e) {

@@ -133,9 +133,13 @@ Page({
     if (!this._debouncedCalc) {
       this._debouncedCalc = debounce(() => {
         if (this.data.currentTab === 'composite') {
-          this.calculateComposite(true);
+          // ★ 分项独立计算：卷径和重量各自尝试
+          this.calcCompDiameter(true);
+          this.calcCompWeight(true);
         } else if (this.data.currentTab === 'glue') {
-          this.calculateGlue(true);
+          // ★ 分项独立计算：泵速和湿重各自尝试
+          this.calcGluePump(true);
+          this.calcGlueWetWeight(true);
         }
       }, 500);
     }
