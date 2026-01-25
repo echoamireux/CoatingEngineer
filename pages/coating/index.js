@@ -195,6 +195,8 @@ Page({
     if (field === 'thickness') l[idx].err_t = false;
     if (field === 'density') l[idx].err_d = false;
     this.setData({ layers: l });
+    // 触发自动计算
+    this._debouncedCalc();
   },
 
   _isSilent(e) { return typeof e === 'boolean' ? e : false; },
