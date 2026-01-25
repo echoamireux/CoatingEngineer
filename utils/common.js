@@ -147,6 +147,23 @@ function round(num, scale = 6) {
     return Math.round(num * Math.pow(10, scale)) / Math.pow(10, scale);
 }
 
+/**
+ * 防抖函数 - 用于实时计算场景
+ * @param {Function} fn - 要防抖的函数
+ * @param {number} delay - 延迟毫秒数，默认 300ms
+ * @returns {Function} 防抖后的函数
+ */
+function debounce(fn, delay = 300) {
+    let timer = null
+    return function (...args) {
+        if (timer) clearTimeout(timer)
+        timer = setTimeout(() => {
+            fn.apply(this, args)
+            timer = null
+        }, delay)
+    }
+}
+
 module.exports = {
     formatTime,
     formatNumber,
@@ -157,5 +174,6 @@ module.exports = {
     toggleTheme,
     initTheme,
     vibrateSuccess,
-    round
+    round,
+    debounce
 };

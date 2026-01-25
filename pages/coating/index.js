@@ -1,4 +1,4 @@
-const { initTheme, formatNumber, formatTime } = require('../../utils/common')
+const { initTheme, formatNumber, formatTime, debounce } = require('../../utils/common')
 const { saveHistory } = require('../../utils/history')
 const formBehavior = require('../../behaviors/form-behavior')
 
@@ -45,6 +45,8 @@ Page({
     // 获取状态栏高度
     const systemInfo = wx.getSystemInfoSync();
     this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+    // 初始化防抖计算
+    this._initDebounce();
   },
 
   goBack() {
@@ -122,6 +124,21 @@ Page({
     const field = e.detail.field || e.currentTarget.dataset.field;
     const value = e.detail.value;
     this.setData({ [field]: value, [`errors.${field}`]: false });
+    // 实时计算（防抖）
+    this._debouncedCalc();
+  },
+
+  // 初始化防抖计算函数
+  _initDebounce() {
+    if (!this._debouncedCalc) {
+      this._debouncedCalc = debounce(() => {
+        if (this.data.currentTab === 'composite') {
+          this.calculateComposite(true);
+        } else if (this.data.currentTab === 'glue') {
+          this.calculateGlue(true);
+        }
+      }, 500);
+    }
   },
 
   onInputFocus(e) {
