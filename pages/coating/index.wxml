@@ -88,16 +88,7 @@
       <!-- V23 Optimized Layout: Label Top, Input + Buttons Inline -->
       <!-- V24 Refactor: Decoupled Label for Perfect Alignment -->
       <view class="form-group-wrapper" style="margin-bottom: 24rpx">
-        <text
-          class="form-label"
-          style="
-            margin-bottom: 12rpx;
-            display: block;
-            color: var(--text-sub);
-            font-weight: 500;
-          "
-          >管芯内径 i</text
-        >
+        <text class="form-label">管芯内径 i</text>
 
         <view class="input-row-with-actions" style="margin-bottom: 0">
           <view class="input-main">
