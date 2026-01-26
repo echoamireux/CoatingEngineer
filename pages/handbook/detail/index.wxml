@@ -57,7 +57,7 @@
           <view class="formula-params" wx:if="{{item.params && item.params.length > 0}}">
             <view class="param-item" wx:for="{{item.params}}" wx:key="symbol" wx:for-item="param">
               <view class="param-symbol">
-                <latex-formula formula="{{param.symbol}}" color="var(--primary)" />
+                <latex-formula formula="{{param.symbol}}" color="var(--primary)" justify="flex-end" />
               </view>
               <text class="param-desc">{{param.desc}}</text>
             </view>

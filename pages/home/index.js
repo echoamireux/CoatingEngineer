@@ -85,7 +85,7 @@ Page({
   onLoad() {
     initTheme(this);
     // 获取状态栏高度用于沉浸式适配
-    const systemInfo = wx.getSystemInfoSync();
+    const systemInfo = wx.getWindowInfo();
     this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
   },
 

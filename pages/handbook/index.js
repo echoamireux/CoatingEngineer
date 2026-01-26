@@ -93,7 +93,7 @@ Page({
 
   onLoad() {
     initTheme(this)
-    const systemInfo = wx.getSystemInfoSync()
+    const systemInfo = wx.getWindowInfo()
     this.setData({
       statusBarHeight: systemInfo.statusBarHeight || 44
     })

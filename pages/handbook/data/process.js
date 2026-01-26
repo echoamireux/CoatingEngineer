@@ -114,10 +114,10 @@ module.exports = {
           formula: Formulas.DIFFUSION,
           description: "扩散系数随温度升高呈指数增加",
           params: [
-            { symbol: 'D', desc: '扩散系数' },
-            { symbol: 'D₀', desc: '前指因子' },
-            { symbol: 'Ea', desc: '活化能' },
-            { symbol: 'R', desc: '气体常数' },
+            { symbol: 'D', desc: '扩散系数 (m²/s)' },
+            { symbol: 'D_0', desc: '前指因子 (m²/s)' },
+            { symbol: 'E_a', desc: '活化能 (J/mol)' },
+            { symbol: 'R', desc: '气体常数 (8.314 J·mol⁻¹·K⁻¹)' },
             { symbol: 'T', desc: '绝对温度 (K)' }
           ]
         },

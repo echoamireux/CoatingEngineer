@@ -34,7 +34,7 @@ Page({
     this.loadLocalHistory();
     this.restoreFromHistory();
     // 获取状态栏高度
-    const systemInfo = wx.getSystemInfoSync();
+    const systemInfo = wx.getWindowInfo();
     this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
     // 初始化防抖计算
     this._initDebounce();

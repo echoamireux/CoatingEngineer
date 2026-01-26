@@ -23,7 +23,7 @@ Page({
   onLoad() {
     this.setData({ isLoggedIn: false })
     // 获取状态栏高度
-    const systemInfo = wx.getSystemInfoSync();
+    const systemInfo = wx.getWindowInfo();
     // 获取主题
     const theme = wx.getStorageSync('theme') || 'dark';
     this.setData({

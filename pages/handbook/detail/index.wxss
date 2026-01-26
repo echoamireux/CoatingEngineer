@@ -197,7 +197,7 @@
   display: table; /* 核心方案：表格布局 - 让每组公式根据内容自适应列宽 */
   width: 100%;
   border-spacing: 0 12rpx; /* 模拟 gap: 12rpx */
-  margin-left: 0; /* 移除之前的左移 hack */
+  margin-left: 24rpx; /* 整体右移 */
 }
 
 .param-item {
@@ -206,12 +206,12 @@
 }
 
 .param-symbol {
-  display: flex; /* Flex layout to aligning custom components */
-  width: auto;
+  display: table-cell;
+  width: 120rpx; /* 增加宽度，使对齐轴线右移 */
   white-space: nowrap;
-  justify-content: center; /* Align Center for better breathing room */
-  align-items: center;
-  padding-right: 16rpx;
+  text-align: right; /* 符号右对齐 */
+  vertical-align: middle;
+  padding-right: 40rpx; /* 增加间距 */
 }
 
 .param-desc {

@@ -60,8 +60,10 @@ Component({
   lifetimes: {
     attached() {
       const rect = wx.getMenuButtonBoundingClientRect()
-      const systemInfo = wx.getSystemInfoSync()
-      const { windowWidth, statusBarHeight, platform } = systemInfo
+      const windowInfo = wx.getWindowInfo()
+      const deviceInfo = wx.getDeviceInfo()
+      const { windowWidth, statusBarHeight } = windowInfo
+      const { platform } = deviceInfo
       const isAndroid = platform === 'android'
 
       // 计算右侧胶囊按钮所占的宽度（用于给右侧留白）

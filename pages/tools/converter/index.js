@@ -25,7 +25,7 @@ Page({
     initTheme(this);
     this.initUnits(0);
     // 获取状态栏高度
-    const systemInfo = wx.getSystemInfoSync();
+    const systemInfo = wx.getWindowInfo();
     this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
   },
 

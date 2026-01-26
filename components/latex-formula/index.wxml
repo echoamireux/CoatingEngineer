@@ -1,5 +1,5 @@
 <!-- 主入口：遍历 AST -->
-<view class="latex-container" style="color: {{color}}">
+<view class="latex-container" style="color: {{color}}; justify-content: {{justify}}">
   <block wx:for="{{ast}}" wx:key="index" wx:for-item="node">
 
     <!-- 文本 -->
@@ -41,7 +41,7 @@
 
     <!-- 组合 -->
     <block wx:elif="{{node.type === 'group'}}">
-      <view class="latex-group">
+      <view class="latex-group {{node.className}}">
         <latex-formula nodes="{{node.content}}" />
       </view>
     </block>

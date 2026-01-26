@@ -51,7 +51,7 @@ Component({
           const ctx = canvas.getContext('2d')
 
           // 处理高清屏缩放
-          const dpr = wx.getSystemInfoSync().pixelRatio
+          const dpr = wx.getWindowInfo().pixelRatio
           canvas.width = res[0].width * dpr
           canvas.height = res[0].height * dpr
           ctx.scale(dpr, dpr)

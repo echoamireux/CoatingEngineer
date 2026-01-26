@@ -152,7 +152,7 @@ module.exports = {
         { type: 'text', content: '有机硅压敏胶由硅橡胶和MQ硅树脂共混组成，两者比例决定性能特征。' },
         { type: 'list', items: [
           '硅橡胶：提供柔软性和粘着力（PDMS主链）',
-          'MQ树脂：提供内聚力和粘性（M单元(CH₃)₃SiO₁/₂ + Q单元SiO₄/₂）',
+          'MQ树脂：提供内聚力和粘性（M单元(CH₃)₃SiO₀.₅ + Q单元SiO₂）',
           '典型配比：硅橡胶:MQ = 50:50 ~ 60:40'
         ]},
         { type: 'table', title: 'MQ树脂影响', headers: ['MQ含量', '初粘', '剥离力', '内聚力'], rows: [
@@ -209,7 +209,7 @@ module.exports = {
           ['自由基Ⅱ型', '夺氢', 'BP/ITX+胺', '表干好'],
           ['阳离子型', '光酸产生', '三芳基硫盐', '低收缩、耐水']
         ]},
-        { type: 'formula', title: '引发剂用量', formula: 'C = 1-5% (相对于预聚物)', description: '用量过多会导致黄变和固化不均' }
+        { type: 'formula', title: '引发剂用量', formula: 'C = 1\\% \\sim 5\\% \\text{ (相对于预聚物)}', description: '用量过多会导致黄变和固化不均' }
       ]
     },
     'uv-cure': {

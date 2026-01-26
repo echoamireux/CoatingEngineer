@@ -115,3 +115,12 @@
   line-height: 1;
   margin-bottom: -6rpx; /* 紧贴下方内容 */
 }
+
+/* 文本模式 (去除符号间距) */
+.latex-text-mode .latex-symbol {
+  margin: 0;
+}
+
+.latex-text-mode .latex-text.italic {
+  font-style: normal;
+}
