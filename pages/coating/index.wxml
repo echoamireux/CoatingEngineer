@@ -1,7 +1,6 @@
-<view class="page-container {{theme}} theme-coating">
-
+<view class="page-container {{ theme }} theme-coating">
   <!-- 双排导航栏：专业紧凑设计 -->
-  <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
+  <view class="page-header" style="padding-top: {{ statusBarHeight }}px;">
     <!-- Row 1: 标题栏 -->
     <view class="nav-row">
       <view class="back-btn" bindtap="goBack">
@@ -11,79 +10,156 @@
     </view>
 
     <view class="toolbar-row">
-      <view class="tool-btn" bindtap="handleToggleFormula" hover-class="tool-hover">
+      <view
+        class="tool-btn"
+        bindtap="handleToggleFormula"
+        hover-class="tool-hover"
+      >
         <ui-icon name="sigma" />
       </view>
       <view class="tool-btn" bindtap="openHistory" hover-class="tool-hover">
         <ui-icon name="history" />
       </view>
-      <view class="tool-btn" bindtap="saveCompHistory" wx:if="{{currentTab=='composite' && (result_diameter !== '-' || result_weight !== '-')}}" hover-class="tool-hover">
+      <view
+        class="tool-btn"
+        bindtap="saveCompHistory"
+        wx:if="{{
+          currentTab == 'composite' &&
+            (result_diameter !== '-' || result_weight !== '-')
+        }}"
+        hover-class="tool-hover"
+      >
         <ui-icon name="save" color="var(--primary)" />
       </view>
-      <view class="tool-btn" bindtap="saveGlueHistory" wx:if="{{currentTab=='glue' && (result_pump_speed !== '-' || result_wet_weight !== '-')}}" hover-class="tool-hover">
+      <view
+        class="tool-btn"
+        bindtap="saveGlueHistory"
+        wx:if="{{
+          currentTab == 'glue' &&
+            (result_pump_speed !== '-' || result_wet_weight !== '-')
+        }}"
+        hover-class="tool-hover"
+      >
         <ui-icon name="save" color="var(--primary)" />
       </view>
-      <view class="tool-btn" bindtap="resetComposite" wx:if="{{currentTab=='composite'}}" hover-class="tool-hover">
+      <view
+        class="tool-btn"
+        bindtap="resetComposite"
+        wx:if="{{ currentTab == 'composite' }}"
+        hover-class="tool-hover"
+      >
         <ui-icon name="trash" />
       </view>
-      <view class="tool-btn" bindtap="resetGlue" wx:if="{{currentTab=='glue'}}" hover-class="tool-hover">
+      <view
+        class="tool-btn"
+        bindtap="resetGlue"
+        wx:if="{{ currentTab == 'glue' }}"
+        hover-class="tool-hover"
+      >
         <ui-icon name="trash" />
       </view>
     </view>
 
     <!-- Tabs: Integrated into Header (Row 3) -->
     <view class="tabs">
-      <view class="tab-item {{currentTab=='composite' ? 'active' : ''}}" bindtap="switchTab" data-tab="composite">卷材规格</view>
+      <view
+        class="tab-item {{ currentTab == 'composite' ? 'active' : '' }}"
+        bindtap="switchTab"
+        data-tab="composite"
+        >卷材规格</view
+      >
       <view class="tab-divider"></view>
-      <view class="tab-item {{currentTab=='glue' ? 'active' : ''}}" bindtap="switchTab" data-tab="glue">涂布参数</view>
+      <view
+        class="tab-item {{ currentTab == 'glue' ? 'active' : '' }}"
+        bindtap="switchTab"
+        data-tab="glue"
+        >涂布参数</view
+      >
     </view>
   </view>
 
   <!-- Content Panels -->
-  <view class="panel" wx:if="{{currentTab=='composite'}}">
+  <view class="panel" wx:if="{{ currentTab == 'composite' }}">
     <ui-card>
-      <view class="section-title" style="margin-top:0;">基础参数 <text class="bracket-info">(Basic Specs)</text></view>
+      <view class="section-title-row" style="margin-top:0;">
+        <view class="section-title">基础参数 <text class="bracket-info">(Basic Specs)</text></view>
+      </view>
       <!-- Compact Row for Pipe Core -->
       <!-- V23 Optimized Layout: Label Top, Input + Buttons Inline -->
       <!-- V24 Refactor: Decoupled Label for Perfect Alignment -->
-       <view class="form-group-wrapper" style="margin-bottom: 24rpx;">
-          <text class="form-label" style="margin-bottom:12rpx; display:block; font-size:26rpx; color:var(--text-sub); font-weight:500;">管芯内径 i</text>
+      <view class="form-group-wrapper" style="margin-bottom: 24rpx">
+        <text
+          class="form-label"
+          style="
+            margin-bottom: 12rpx;
+            display: block;
+            color: var(--text-sub);
+            font-weight: 500;
+          "
+          >管芯内径 i</text
+        >
 
-          <view class="input-row-with-actions" style="margin-bottom:0;">
-             <view class="input-main">
-                <!-- Native Input Implementation for Pixel-Perfect Alignment -->
-                <view class="input-native-wrapper {{focus.comp_i ? 'focused' : ''}} {{errors.comp_i ? 'error' : ''}}">
-                   <input class="native-input"
-                          type="digit"
-                          value="{{comp_i}}"
-                          placeholder="0.0"
-                          placeholder-class="input-placeholder-native"
-                          bindinput="bindInput"
-                          bindfocus="onInputFocus"
-                          bindblur="onInputBlur"
-                          data-field="comp_i" />
-                   <view class="unit-suffix-native">mm</view>
-                </view>
-             </view>
-
-             <view class="quick-btn-group">
-                 <view class="q-btn" bindtap="setCoreSize" data-size="76.2">3"</view>
-                 <view class="q-btn" bindtap="setCoreSize" data-size="152.4">6"</view>
-                 <view class="q-btn icon" bindtap="setCoreSize" data-size="0">
-                   <ui-icon name="trash" size="28" color="var(--text-sub)" />
-                 </view>
-             </view>
+        <view class="input-row-with-actions" style="margin-bottom: 0">
+          <view class="input-main">
+            <!-- Native Input Implementation for Pixel-Perfect Alignment -->
+            <view
+              class="input-native-wrapper {{ focus.comp_i ? 'focused' : '' }} {{
+                errors.comp_i ? 'error' : ''
+              }}"
+            >
+              <input
+                class="native-input"
+                type="digit"
+                value="{{ comp_i }}"
+                placeholder="0.0"
+                placeholder-class="input-placeholder-native"
+                bindinput="bindInput"
+                bindfocus="onInputFocus"
+                bindblur="onInputBlur"
+                data-field="comp_i"
+              />
+              <view class="unit-suffix-native">mm</view>
+            </view>
           </view>
-       </view>
+
+          <view class="quick-btn-group">
+            <view class="q-btn" bindtap="setCoreSize" data-size="76.2">3"</view>
+            <view class="q-btn" bindtap="setCoreSize" data-size="152.4"
+              >6"</view
+            >
+            <view class="q-btn icon" bindtap="setCoreSize" data-size="0">
+              <ui-icon name="trash" size="28" color="var(--text-sub)" />
+            </view>
+          </view>
+        </view>
+      </view>
 
       <view class="form-row">
         <view class="form-col">
-          <ui-form-field label="管芯壁厚 c" fieldName="comp_c" value="{{comp_c}}" unit="mm" placeholder="0.0"
-            bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.comp_c}}" />
+          <ui-form-field
+            label="管芯壁厚 c"
+            fieldName="comp_c"
+            value="{{ comp_c }}"
+            unit="mm"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.comp_c }}"
+          />
         </view>
         <view class="form-col">
-          <ui-form-field label="卷材长度 L" fieldName="comp_L" value="{{comp_L}}" unit="m" placeholder="0.0"
-            bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.comp_L}}" />
+          <ui-form-field
+            label="卷材长度 L"
+            fieldName="comp_L"
+            value="{{ comp_L }}"
+            unit="m"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.comp_L }}"
+          />
         </view>
       </view>
 
@@ -91,51 +167,92 @@
 
       <!-- V24: Minimal Add Button (Text Only) -->
       <view class="section-title-row">
-        <view class="section-title">材料层结构 <text class="bracket-info">(Structure)</text></view>
-        <view class="add-btn-minimal" bindtap="addLayer" hover-class="btn-hover-text">
-           <text style="font-size:26rpx;">+ 添加 (Add)</text>
+        <view class="section-title"
+          >材料层结构 <text class="bracket-info">(Structure)</text></view
+        >
+        <view
+          class="add-btn-minimal"
+          bindtap="addLayer"
+          hover-class="btn-hover-text"
+        >
+          <text style="font-size: 26rpx">+ 添加 (Add)</text>
         </view>
       </view>
 
-      <block wx:for="{{layers}}" wx:key="id">
+      <block wx:for="{{ layers }}" wx:key="id">
         <view class="layer-item">
           <!-- Layer Header with Delete interaction -->
           <view class="layer-header">
-            <text class="layer-idx">#{{index+1}}</text>
-            <view class="del-layer-btn" bindtap="removeLayer" data-index="{{index}}" wx:if="{{layers.length > 1}}">
-               <ui-icon name="trash" size="24" color="#9ca3af" />
+            <text class="layer-idx">#{{ index + 1 }}</text>
+            <view
+              class="del-layer-btn"
+              bindtap="removeLayer"
+              data-index="{{ index }}"
+              wx:if="{{ layers.length > 1 }}"
+            >
+              <ui-icon name="trash" size="24" color="#9ca3af" />
             </view>
           </view>
 
           <!-- Grid 3 with unified inputs AND UNITS -->
-          <view class="grid-3" style="gap:8rpx">
-             <view class="form-col">
-                <ui-form-field label="幅宽 W" fieldName="width" value="{{item.width}}" placeholder="0.0" unit="mm" data-index="{{index}}"
-                   bind:input="bindLayerInput" isError="{{item.err_w}}" />
-             </view>
-             <view class="form-col">
-                <ui-form-field label="厚度 t" fieldName="thickness" value="{{item.thickness}}" placeholder="0.0" unit="µm" data-index="{{index}}"
-                   bind:input="bindLayerInput" isError="{{item.err_t}}" />
-             </view>
-             <view class="form-col">
-                <ui-form-field label="密度 ρ" fieldName="density" value="{{item.density}}" placeholder="0.0" unit="g/cm³" data-index="{{index}}"
-                   bind:input="bindLayerInput" isError="{{item.err_d}}" />
-             </view>
+          <view class="grid-3" style="gap: 8rpx">
+            <view class="form-col">
+              <ui-form-field
+                label="幅宽 W"
+                fieldName="width"
+                value="{{ item.width }}"
+                placeholder="0.0"
+                unit="mm"
+                data-index="{{ index }}"
+                bind:input="bindLayerInput"
+                isError="{{ item.err_w }}"
+              />
+            </view>
+            <view class="form-col">
+              <ui-form-field
+                label="厚度 t"
+                fieldName="thickness"
+                value="{{ item.thickness }}"
+                placeholder="0.0"
+                unit="µm"
+                data-index="{{ index }}"
+                bind:input="bindLayerInput"
+                isError="{{ item.err_t }}"
+              />
+            </view>
+            <view class="form-col">
+              <ui-form-field
+                label="密度 ρ"
+                fieldName="density"
+                value="{{ item.density }}"
+                placeholder="0.0"
+                unit="g/cm³"
+                data-index="{{ index }}"
+                bind:input="bindLayerInput"
+                isError="{{ item.err_d }}"
+              />
+            </view>
           </view>
         </view>
       </block>
 
       <view class="btn-grid">
         <view class="btn-wrapper">
-          <button class="btn btn-secondary" bindtap="calcCompDiameter">计算卷径 (D)</button>
+          <button class="btn btn-secondary" bindtap="calcCompDiameter">
+            计算卷径 (D)
+          </button>
           <text class="hint-text">需要: i, c, L, t</text>
         </view>
         <view class="btn-wrapper">
-          <button class="btn btn-secondary" bindtap="calcCompWeight">计算重量 (M)</button>
+          <button class="btn btn-secondary" bindtap="calcCompWeight">
+            计算重量 (M)
+          </button>
           <text class="hint-text">需要: L, W, t, ρ</text>
         </view>
         <view class="btn-wrapper full-width">
-          <button class="btn btn-primary" bindtap="calculateComposite">一键计算全部</button>
+          <button class="btn btn-primary" bindtap="calculateComposite">
+            一键计算全部
+          </button>
           <text class="hint-text">需要: 所有参数</text>
         </view>
       </view>
@@ -143,92 +260,176 @@
 
     <!-- Result Surface Refactored (Split Layout) -->
     <ui-card class="result-surface">
-       <view class="result-split-layout">
-           <view class="res-col">
-               <text class="res-label">收卷卷径 D</text>
-               <view class="res-val-wrapper">
-                   <text class="res-val-big highlight">{{result_diameter}}</text><text class="res-unit-small">mm</text>
-               </view>
-           </view>
-           <view class="res-divider-v"></view>
-           <view class="res-col">
-               <text class="res-label">材料总重 M</text>
-               <view class="res-val-wrapper">
-                   <text class="res-val-big highlight">{{result_weight}}</text><text class="res-unit-small">kg</text>
-               </view>
-           </view>
-       </view>
+      <view class="result-split-layout">
+        <view class="res-col">
+          <text class="res-label">收卷卷径 D</text>
+          <view class="res-val-wrapper">
+            <text class="res-val-big highlight">{{ result_diameter }}</text
+            ><text class="res-unit-small">mm</text>
+          </view>
+        </view>
+        <view class="res-divider-v"></view>
+        <view class="res-col">
+          <text class="res-label">材料总重 M</text>
+          <view class="res-val-wrapper">
+            <text class="res-val-big highlight">{{ result_weight }}</text
+            ><text class="res-unit-small">kg</text>
+          </view>
+        </view>
+      </view>
     </ui-card>
   </view>
 
-  <view class="panel" wx:if="{{currentTab=='glue'}}">
+  <view class="panel" wx:if="{{ currentTab == 'glue' }}">
     <ui-card>
-      <view class="section-title-row">
-         <view class="section-title">核心参数 <text class="bracket-info">(Core Params)</text></view>
-         <view class="convert-link" bindtap="openConvertModal">
-            <ui-icon name="calc" size="24" color="var(--text-sub)" />
-            <text>换算</text>
-         </view>
+      <view class="section-title-row" style="margin-top:0;">
+        <view class="section-title"
+          >核心参数 <text class="bracket-info">(Core Params)</text></view
+        >
+        <view class="convert-link" bindtap="openConvertModal">
+          <ui-icon name="calc" size="24" color="var(--text-sub)" />
+          <text>换算</text>
+        </view>
       </view>
 
       <view class="form-row">
         <view class="form-col">
-          <ui-form-field label="干厚 t_dry" fieldName="glue_t_dry" value="{{glue_t_dry}}" unit="µm" placeholder="0.0"
-            bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.glue_t_dry}}" />
+          <ui-form-field
+            label="干厚 t_dry"
+            fieldName="glue_t_dry"
+            value="{{ glue_t_dry }}"
+            unit="µm"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.glue_t_dry }}"
+          />
         </view>
         <view class="form-col">
-           <ui-form-field label="干胶密度 ρ_dry" fieldName="glue_rho_dry" value="{{glue_rho_dry}}" unit="g/cm³" placeholder="0.0"
-            bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.glue_rho_dry}}" />
+          <ui-form-field
+            label="干胶密度 ρ_dry"
+            fieldName="glue_rho_dry"
+            value="{{ glue_rho_dry }}"
+            unit="g/cm³"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.glue_rho_dry }}"
+          />
         </view>
       </view>
 
       <view class="divider"></view>
-      <view class="section-title">胶液与工艺 <text class="bracket-info">(Process)</text></view>
-
-      <view class="form-row">
-         <view class="form-col">
-            <ui-form-field label="固含量 S" fieldName="glue_S" value="{{glue_S}}" unit="%" placeholder="0.0"
-              bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.glue_S}}" />
-         </view>
-         <view class="form-col">
-            <ui-form-field label="湿胶密度 ρ_wet" fieldName="glue_rho_wet" value="{{glue_rho_wet}}" unit="g/cm³" placeholder="0.0"
-              bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.glue_rho_wet}}" />
-         </view>
+      <view class="section-title-row">
+        <view class="section-title">胶液与工艺 <text class="bracket-info">(Process)</text></view>
       </view>
 
       <view class="form-row">
-         <view class="form-col">
-            <ui-form-field label="涂布幅宽 W" fieldName="glue_W" value="{{glue_W}}" unit="mm" placeholder="0.0"
-              bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.glue_W}}" />
-         </view>
-         <view class="form-col">
-             <ui-form-field label="生产线速 v" fieldName="glue_v" value="{{glue_v}}" unit="m/min" placeholder="0.0"
-              bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.glue_v}}" />
-         </view>
+        <view class="form-col">
+          <ui-form-field
+            label="固含量 S"
+            fieldName="glue_S"
+            value="{{ glue_S }}"
+            unit="%"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.glue_S }}"
+          />
+        </view>
+        <view class="form-col">
+          <ui-form-field
+            label="湿胶密度 ρ_wet"
+            fieldName="glue_rho_wet"
+            value="{{ glue_rho_wet }}"
+            unit="g/cm³"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.glue_rho_wet }}"
+          />
+        </view>
       </view>
 
       <view class="form-row">
-         <view class="form-col">
-            <ui-form-field label="泵排量 Dp" fieldName="glue_Dp" value="{{glue_Dp}}" unit="cc/rev" placeholder="0.0"
-              bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.glue_Dp}}" />
-         </view>
-         <view class="form-col">
-            <ui-form-field label="涂布长度 L" fieldName="glue_L" value="{{glue_L}}" unit="m" placeholder="0.0"
-              bind:input="bindInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.glue_L}}" />
-         </view>
+        <view class="form-col">
+          <ui-form-field
+            label="涂布幅宽 W"
+            fieldName="glue_W"
+            value="{{ glue_W }}"
+            unit="mm"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.glue_W }}"
+          />
+        </view>
+        <view class="form-col">
+          <ui-form-field
+            label="生产线速 v"
+            fieldName="glue_v"
+            value="{{ glue_v }}"
+            unit="m/min"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.glue_v }}"
+          />
+        </view>
+      </view>
+
+      <view class="form-row">
+        <view class="form-col">
+          <ui-form-field
+            label="泵排量 Dp"
+            fieldName="glue_Dp"
+            value="{{ glue_Dp }}"
+            unit="cc/rev"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.glue_Dp }}"
+          />
+        </view>
+        <view class="form-col">
+          <ui-form-field
+            label="涂布长度 L"
+            fieldName="glue_L"
+            value="{{ glue_L }}"
+            unit="m"
+            placeholder="0.0"
+            bind:input="bindInput"
+            bind:focus="onInputFocus"
+            bind:blur="onInputBlur"
+            isError="{{ errors.glue_L }}"
+          />
+        </view>
       </view>
 
       <view class="btn-grid">
         <view class="btn-wrapper">
-          <button class="btn btn-secondary" bindtap="calcGluePump">计算泵速 (N)</button>
+          <button class="btn btn-secondary" bindtap="calcGluePump">
+            计算泵速 (N)
+          </button>
           <text class="hint-text">需要: 核心参数, S, ρ_wet, W, v, Dp</text>
         </view>
         <view class="btn-wrapper">
-          <button class="btn btn-secondary" bindtap="calcGlueWetWeight">计算湿重 (Mw)</button>
+          <button class="btn btn-secondary" bindtap="calcGlueWetWeight">
+            计算湿重 (Mw)
+          </button>
           <text class="hint-text">需要: 核心参数, S, W, L</text>
         </view>
         <view class="btn-wrapper full-width">
-          <button class="btn btn-primary" bindtap="calculateGlue">一键计算全部</button>
+          <button class="btn btn-primary" bindtap="calculateGlue">
+            一键计算全部
+          </button>
           <text class="hint-text">需要: 所有参数</text>
         </view>
       </view>
@@ -236,41 +437,45 @@
 
     <!-- Result Surface Refactored (Split Layout) -->
     <ui-card class="result-surface">
-       <view class="result-split-layout">
-           <view class="res-col">
-               <text class="res-label">泵转速 N</text>
-               <view class="res-val-wrapper">
-                   <text class="res-val-big highlight">{{result_pump_speed}}</text><text class="res-unit-small">rpm</text>
-               </view>
-           </view>
-           <view class="res-divider-v"></view>
-           <view class="res-col">
-               <text class="res-label">湿胶重量 Mw</text>
-               <view class="res-val-wrapper">
-                   <text class="res-val-big highlight">{{result_wet_weight}}</text><text class="res-unit-small">kg</text>
-               </view>
-           </view>
-       </view>
+      <view class="result-split-layout">
+        <view class="res-col">
+          <text class="res-label">泵转速 N</text>
+          <view class="res-val-wrapper">
+            <text class="res-val-big highlight">{{ result_pump_speed }}</text
+            ><text class="res-unit-small">rpm</text>
+          </view>
+        </view>
+        <view class="res-divider-v"></view>
+        <view class="res-col">
+          <text class="res-label">湿胶重量 Mw</text>
+          <view class="res-val-wrapper">
+            <text class="res-val-big highlight">{{ result_wet_weight }}</text
+            ><text class="res-unit-small">kg</text>
+          </view>
+        </view>
+      </view>
     </ui-card>
   </view>
 
-
-
-
-  <view class="modal-mask center-modal" wx:if="{{showFormulaModal}}" bindtap="handleToggleFormula">
+  <view
+    class="modal-mask center-modal"
+    wx:if="{{ showFormulaModal }}"
+    bindtap="handleToggleFormula"
+  >
     <view class="fm-card" catchtap="true">
-      <view class="fm-head highlight">计算原理 <text class="close-icon" bindtap="handleToggleFormula">×</text></view>
+      <view class="fm-head highlight"
+        >计算原理
+        <text class="close-icon" bindtap="handleToggleFormula">×</text></view
+      >
       <scroll-view scroll-y class="fm-scroll">
-
         <!-- 公式1: 卷径 -->
         <view class="f-box">
           <view class="ft highlight">1. 收卷卷径 D (mm)</view>
-          <view class="fm-row"><text>D = </text>
+          <view class="fm-row"
+            ><text>D = </text>
             <view class="sqrt-wrap">
               <text class="sqrt-sign">√</text>
-              <view class="sqrt-content">
-                (i+2c)² + 4·L·Σt / π
-              </view>
+              <view class="sqrt-content"> (i+2c)² + 4·L·Σt / π </view>
             </view>
           </view>
           <view class="legend-grid">
@@ -284,7 +489,8 @@
         <!-- 公式2: 材料重量 -->
         <view class="f-box">
           <view class="ft highlight">2. 材料总重 M (kg)</view>
-          <view class="fm-row"><text>M = </text>
+          <view class="fm-row"
+            ><text>M = </text>
             <view class="frac">
               <view class="n">L · Σ(W·t·ρ)</view>
               <view class="d">10⁶</view>
@@ -301,7 +507,8 @@
         <!-- 公式3: 供液泵转速 -->
         <view class="f-box">
           <view class="ft highlight">3. 供液泵转速 N (rpm)</view>
-          <view class="fm-row"><text>N = </text>
+          <view class="fm-row"
+            ><text>N = </text>
             <view class="frac">
               <view class="n">t_dry · ρ_dry · W · v</view>
               <view class="d">10 · S · ρ_wet · Dp</view>
@@ -319,7 +526,8 @@
         <!-- 公式4: 湿胶重量 -->
         <view class="f-box">
           <view class="ft highlight">4. 湿胶重量 Mw (kg)</view>
-          <view class="fm-row"><text>Mw = </text>
+          <view class="fm-row"
+            ><text>Mw = </text>
             <view class="frac">
               <view class="n">t_dry · ρ_dry · W · L</view>
               <view class="d">10000 · S</view>
@@ -333,16 +541,25 @@
             <view><text>S</text>固含量 (%)</view>
           </view>
         </view>
-
       </scroll-view>
     </view>
   </view>
 
-  <confirm-modal show="{{showResetModal}}" title="清空确认" content="确定要清空当前页面的所有输入数据吗？此操作无法撤销。" confirmDanger="{{true}}"
-    bind:confirm="confirmClear" bind:cancel="cancelClear" />
+  <confirm-modal
+    show="{{ showResetModal }}"
+    title="清空确认"
+    content="确定要清空当前页面的所有输入数据吗？此操作无法撤销。"
+    confirmDanger="{{ true }}"
+    bind:confirm="confirmClear"
+    bind:cancel="cancelClear"
+  />
 
   <!-- 干涂量→干厚转换工具弹窗 - 重新设计 -->
-  <view class="modal-mask" wx:if="{{showConvertModal}}" bindtap="closeConvertModal">
+  <view
+    class="modal-mask"
+    wx:if="{{ showConvertModal }}"
+    bindtap="closeConvertModal"
+  >
     <view class="modal-card conv-modal" catchtap="preventBubble">
       <!-- 标题栏 -->
       <view class="conv-head">
@@ -360,29 +577,49 @@
       <view class="conv-inputs">
         <view class="conv-input-col">
           <text class="conv-label">m_dry 干涂量</text>
-          <view class="input-native-wrapper {{focus.conv_m_dry ? 'focused' : ''}}">
-            <input class="native-input" type="digit"
-              bindinput="bindConvertInput" bindfocus="onConvInputFocus" bindblur="onConvInputBlur"
-              data-field="convert_m_dry" value="{{convert_m_dry}}" placeholder="0.0" />
+          <view
+            class="input-native-wrapper {{ focus.conv_m_dry ? 'focused' : '' }}"
+          >
+            <input
+              class="native-input"
+              type="digit"
+              bindinput="bindConvertInput"
+              bindfocus="onConvInputFocus"
+              bindblur="onConvInputBlur"
+              data-field="convert_m_dry"
+              value="{{ convert_m_dry }}"
+              placeholder="0.0"
+            />
             <view class="unit-suffix-native">g/m²</view>
           </view>
         </view>
         <view class="conv-input-col">
           <text class="conv-label">ρ_dry 干胶密度</text>
-          <view class="input-native-wrapper {{focus.conv_rho_dry ? 'focused' : ''}}">
-            <input class="native-input" type="digit"
-              bindinput="bindConvertInput" bindfocus="onConvInputFocus" bindblur="onConvInputBlur"
-              data-field="convert_rho_dry" value="{{convert_rho_dry}}" placeholder="0.0" />
+          <view
+            class="input-native-wrapper {{
+              focus.conv_rho_dry ? 'focused' : ''
+            }}"
+          >
+            <input
+              class="native-input"
+              type="digit"
+              bindinput="bindConvertInput"
+              bindfocus="onConvInputFocus"
+              bindblur="onConvInputBlur"
+              data-field="convert_rho_dry"
+              value="{{ convert_rho_dry }}"
+              placeholder="0.0"
+            />
             <view class="unit-suffix-native">g/cm³</view>
           </view>
         </view>
       </view>
 
       <!-- 计算结果 -->
-      <view class="conv-result-box" wx:if="{{convertResult}}">
+      <view class="conv-result-box" wx:if="{{ convertResult }}">
         <text class="conv-result-label">计算结果</text>
         <view class="conv-result-value">
-          <text class="conv-result-num">{{convertResult}}</text>
+          <text class="conv-result-num">{{ convertResult }}</text>
           <text class="conv-result-unit">µm</text>
         </view>
       </view>
@@ -390,10 +627,22 @@
       <!-- 底部按钮 -->
       <view class="conv-foot">
         <button class="btn-ghost" bindtap="closeConvertModal">取消</button>
-        <button class="btn-primary" bindtap="applyConvertResult" wx:if="{{convertResult}}">应用到表单</button>
+        <button
+          class="btn-primary"
+          bindtap="applyConvertResult"
+          wx:if="{{ convertResult }}"
+        >
+          应用到表单
+        </button>
       </view>
     </view>
   </view>
-  <confirm-modal show="{{showDeleteModal}}" title="删除确认" content="确定要删除这条记录吗？" confirmDanger="{{true}}"
-    bind:confirm="confirmDelete" bind:cancel="cancelDelete" />
+  <confirm-modal
+    show="{{ showDeleteModal }}"
+    title="删除确认"
+    content="确定要删除这条记录吗？"
+    confirmDanger="{{ true }}"
+    bind:confirm="confirmDelete"
+    bind:cancel="cancelDelete"
+  />
 </view>

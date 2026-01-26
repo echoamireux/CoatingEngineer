@@ -167,9 +167,9 @@ page {
   background: rgba(255, 255, 255, 0.02); /* Very subtle transparency */
   padding: 0;
   margin: 8rpx 24rpx 16rpx 24rpx; /* Compact margins */
-  border-radius: 100rpx; /* Full rounded strip */
+  border-radius: 16rpx !important; /* Rounded Rectangle (Hierarchy distinction) */
   border: 1px solid var(--border);
-  height: 56rpx; /* Compact Height (Professional) */
+  height: 72rpx; /* Increased Height for better touch target */
   position: relative;
   /* Removed sticky here as parent header is sticky */
 }
@@ -185,14 +185,14 @@ page {
   color: var(--text-sub);
   font-size: 26rpx;
   font-weight: 500;
-  border-radius: 100rpx;
+  border-radius: 12rpx !important; /* Inner Radius slightly smaller */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 2;
 }
 
 .tab-item.active {
-  color: var(--bg); /* Inverted Text */
+  color: #1a1a1a; /* Dark text for Amber background (Professional Contrast) */
   background-color: var(--primary); /* Solid Primary (Yellow) */
   font-weight: 700;
   box-shadow: 0 4rpx 12rpx rgba(245, 158, 11, 0.3);
@@ -324,10 +324,16 @@ page {
   grid-column: span 2;
 }
 
+/* Button Reset - CRITICAL for Radius */
+button::after {
+  border: none !important;
+  border-radius: 999px !important; /* Ensure pseudo-element matches button shape */
+}
+
 .btn {
   width: 100% !important;
   font-weight: 600;
-  border-radius: 12rpx;
+  /* border-radius removed to allow sub-classes to control shape */
   font-size: 24rpx;
   padding: 16rpx 0;
   margin: 0 !important;
@@ -343,22 +349,42 @@ page {
 }
 
 .btn-primary {
-  background: var(--btn-gradient);
-  color: #1a1a1a; /* 深色文字，与 Tab 统一 */
-  box-shadow: 0 4rpx 12rpx var(--accent-dim);
-  border-radius: 16rpx;
+  background: var(--primary) !important; /* Flat Color matching Tab */
+  color: #1a1a1a; /* Dark Text (Professional for Amber/Yellow) */
+  border-radius: 999px !important; /* Force Capsule (Standard) */
+  box-shadow: 0 4rpx 12rpx rgba(245, 158, 11, 0.3) !important;
   font-weight: 700;
   letter-spacing: 1rpx;
+  border: none !important;
   opacity: 1;
-  /* Reset opacity */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+  /* Fluid Layout Alignment */
+  width: 92% !important;
+  margin: 0 auto !important;
+  height: 88rpx;
+}
+
+.btn-primary:active {
+  transform: scale(0.96); /* Tactile Feedback */
+  opacity: 0.9;
 }
 
 .btn-secondary {
-  background-color: var(--accent-dim);
-  color: var(--accent);
-  border: 1px solid var(--accent-dim);
-  padding: 12rpx 0;
-  font-size: 22rpx;
+  /* Fluid .btn-mini Exact Match + Visibility Fix */
+  background: rgba(245, 158, 11, 0.1); /* Amber Tint */
+  border: 1px solid rgba(245, 158, 11, 0.3) !important; /* Restore Border for Visibility */
+  color: var(--primary); /* Amber Text */
+  backdrop-filter: blur(4px);
+  border-radius: 999px !important; /* Force Capsule */
+  font-weight: 600;
+  padding: 10rpx 24rpx; /* Match Fluid Padding */
+  font-size: 24rpx;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+}
+
+.btn-secondary:active, .btn-secondary-hover {
+  background: rgba(245, 158, 11, 0.15); /* Darker tint on press */
+  transform: scale(0.96); /* Tactile Feedback */
 }
 
 .btn-outline {
@@ -825,10 +851,11 @@ button.btn-ghost {
 }
 
 .res-label {
-  font-size: 22rpx; /* Slightly smaller for better contrast */
+  font-size: 26rpx; /* Increased from 22rpx for hierarchy */
   color: var(--text-sub);
-  margin-bottom: 4rpx; /* Reduced margin to move title up */
-  font-weight: 500;
+  margin-bottom: 8rpx; /* Breathing room */
+  font-weight: 600; /* Bold to distinguishing from input labels */
+  letter-spacing: 0.5rpx;
 }
 
 .res-val-wrapper {
@@ -1291,9 +1318,16 @@ button.btn-ghost {
   margin-bottom: 12rpx !important; /* Halved from 24rpx */
 }
 
+/* Add Compact Rule for Form Row (Split) */
+.form-row {
+  margin-bottom: 12rpx !important;
+  gap: 16rpx !important; /* Slightly tighter gap */
+}
+
 .form-label {
   margin-bottom: 6rpx !important;
   font-size: 24rpx !important; /* Slightly smaller labels */
+  font-weight: 500 !important; /* Visual Consistency */
 }
 
 /* 3. Compact Input Heights (The Core Change) */
@@ -1351,7 +1385,7 @@ button.btn-ghost {
   padding: 0 !important;
   height: 72rpx !important;
   font-size: 26rpx !important;
-  border-radius: 12rpx !important;
+  border-radius: 999px !important;
 }
 
 .btn-secondary {

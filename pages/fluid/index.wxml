@@ -30,7 +30,7 @@
   <ui-card customStyle="{{isPowerLaw ? 'padding-bottom: 12rpx;' : ''}}">
     <!-- Custom Header with Switch -->
     <view class="card-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12rpx;">
-       <view class="section-title" style="margin:0;">流体属性 (Fluid)</view>
+       <view class="section-title" style="margin-bottom:8rpx;">流体属性 (Fluid)</view>
        <view style="display:flex; align-items:center;">
           <text style="font-size:22rpx; color:var(--text-sub); margin-right:8rpx">非牛顿流体</text>
           <switch checked="{{isPowerLaw}}" bindchange="toggleModel" color="#3b82f6" style="transform: scale(0.65);" />
@@ -46,7 +46,7 @@
 
        <view class="form-col">
           <block wx:if="{{!isPowerLaw}}">
-             <ui-form-field label="有效粘度 η" fieldName="viscosity" data-field="viscosity" value="{{viscosity}}" unit="cP" placeholder="0.0"
+             <ui-form-field label="有效粘度 η_eff" fieldName="viscosity" data-field="viscosity" value="{{viscosity}}" unit="cP" placeholder="0.0"
                 bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.viscosity}}" />
           </block>
           <block wx:else>
@@ -96,26 +96,21 @@
       <!-- Left Column: Pipe -->
       <view class="split-col">
          <view class="subsection-title">供液管路</view>
-         <view class="form-group">
-            <ui-form-field label="管道内径 D" fieldName="pipe_D" data-field="pipe_D" value="{{pipe_D}}" unit="mm" placeholder="0.0"
-              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_D}}" />
-         </view>
-         <view class="form-group">
-            <ui-form-field label="管道长度 L" fieldName="pipe_L" data-field="pipe_L" value="{{pipe_L}}" unit="m" placeholder="0.0"
-              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_L}}" />
-         </view>
-         <view class="form-group">
-            <ui-form-field label="管路高差 Δz" fieldName="pipe_dz" data-field="pipe_dz" value="{{pipe_dz}}" unit="m" placeholder="0.0"
-              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_dz}}" />
-         </view>
-         <view class="form-group">
-            <ui-form-field label="管路损耗系数 ΣK" fieldName="pipe_K_loss" data-field="pipe_K_loss" value="{{pipe_K_loss}}" placeholder="0.0"
-              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_K_loss}}">
-              <view slot="right-icon" class="input-action" bindtap="openKModal" style="padding-left:12rpx; border-left:1px solid var(--border);">
-                  <ui-icon name="list" size="32" color="var(--text-sub)" />
-              </view>
-            </ui-form-field>
-         </view>
+         <ui-form-field label="管道内径 D" fieldName="pipe_D" data-field="pipe_D" value="{{pipe_D}}" unit="mm" placeholder="0.0"
+            bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_D}}" />
+
+         <ui-form-field label="管道长度 L" fieldName="pipe_L" data-field="pipe_L" value="{{pipe_L}}" unit="m" placeholder="0.0"
+            bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_L}}" />
+
+         <ui-form-field label="管路高差 Δz" fieldName="pipe_dz" data-field="pipe_dz" value="{{pipe_dz}}" unit="m" placeholder="0.0"
+            bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_dz}}" />
+
+         <ui-form-field label="管路损耗系数 ΣK" fieldName="pipe_K_loss" data-field="pipe_K_loss" value="{{pipe_K_loss}}" placeholder="0.0"
+            bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_K_loss}}">
+            <view slot="right-icon" class="input-action" bindtap="openKModal" style="padding-left:12rpx; border-left:1px solid var(--border);">
+                <ui-icon name="list" size="32" color="var(--text-sub)" />
+            </view>
+         </ui-form-field>
 
          <!-- Pipe Calc Button -->
          <view style="margin-top:auto; padding-top:12rpx;">
@@ -129,18 +124,12 @@
       <!-- Right Column: Slot -->
       <view class="split-col">
          <view class="subsection-title">涂布模头</view>
-         <view class="form-group">
-            <ui-form-field label="垫片厚度 H" fieldName="slot_H" data-field="slot_H" value="{{slot_H}}" unit="µm" placeholder="0.0"
-              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_H}}" />
-         </view>
-         <view class="form-group">
-            <ui-form-field label="涂布幅宽 W" fieldName="slot_W" data-field="slot_W" value="{{slot_W}}" unit="mm" placeholder="0.0"
-               bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_W}}" />
-         </view>
-         <view class="form-group">
+         <ui-form-field label="垫片厚度 H" fieldName="slot_H" data-field="slot_H" value="{{slot_H}}" unit="µm" placeholder="0.0"
+           bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_H}}" />
+         <ui-form-field label="涂布幅宽 W" fieldName="slot_W" data-field="slot_W" value="{{slot_W}}" unit="mm" placeholder="0.0"
+            bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_W}}" />
            <ui-form-field label="模唇陆长 Ls" fieldName="slot_Ls" data-field="slot_Ls" value="{{slot_Ls}}" unit="mm" placeholder="0.0"
              bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_Ls}}" />
-         </view>
 
          <!-- Slot Calc Button -->
          <view style="margin-top:auto; padding-top:12rpx;">
