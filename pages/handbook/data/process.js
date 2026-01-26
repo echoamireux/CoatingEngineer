@@ -270,11 +270,11 @@ module.exports = {
           formula: Formulas.TAPER_TENSION,
           description: "内卷紧外卷松，防止因应力累积产生菜心皱纹",
           params: [
-            { symbol: 'F', desc: '当前实际张力' },
-            { symbol: 'F₀', desc: '起卷初始张力' },
-            { symbol: 'Taper%', desc: '锥度百分比 (通常10-30%)' },
-            { symbol: 'D', desc: '当前卷径' },
-            { symbol: 'D₀', desc: '卷芯直径' }
+            { symbol: 'F', desc: '当前实际张力 (N)' },
+            { symbol: 'F_0', desc: '起卷初始张力 (N)' },
+            { symbol: 'Taper %', desc: '锥度百分比 (10-30%)' },
+            { symbol: 'D', desc: '当前卷径 (mm)' },
+            { symbol: 'D_0', desc: '卷芯直径 (mm)' }
           ]
         },
         {

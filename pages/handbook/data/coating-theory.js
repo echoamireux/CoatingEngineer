@@ -130,7 +130,7 @@ module.exports = {
           { symbol: 'W', desc: '理论涂布量 (g/m²)' },
           { symbol: 'V', desc: '网穴容积 (mL/m²)' },
           { symbol: '\\rho', desc: '液体密度 (g/mL)' },
-          { symbol: '\\eta_t', desc: '转移效率' }
+          { symbol: '\\eta_t', desc: '转移效率 (%)' }
         ] }
       ]
     },

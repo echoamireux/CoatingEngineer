@@ -188,12 +188,12 @@
 }
 
 .param-symbol {
-  display: table-cell; /* 表格单元格 */
-  width: auto; /* 关键修复：自然宽度，防止压缩换行 */
-  white-space: nowrap; /* 必须：禁止换行 */
-  text-align: right; /* Axis Alignment */
+  display: flex; /* Flex layout to aligning custom components */
+  width: auto;
+  white-space: nowrap;
+  justify-content: center; /* Align Center for better breathing room */
+  align-items: center;
   padding-right: 16rpx;
-  vertical-align: middle;
 }
 
 .param-desc {

@@ -214,8 +214,8 @@ module.exports = {
            ]
         },
         { type: 'formula', title: 'SAS 计算', formula: "SAS% = \\frac{F_{tested}}{F_{initial}} \\times 100%", description: '越接近100%越好', params: [
-          { symbol: 'F_{tested}', desc: '接触离型膜后的剥离力' },
-          { symbol: 'F_{initial}', desc: '原始胶带剥离力' }
+          { symbol: 'F_{tested}', desc: '接触离型膜后的剥离力 (N/25mm)' },
+          { symbol: 'F_{initial}', desc: '原始胶带剥离力 (N/25mm)' }
         ]},
         { type: 'tip', tipType: 'warning', content: 'SAS < 85% 通常意味着硅油转移严重，会导致下游产品这一面“甚至粘不住”。' }
       ]
@@ -447,8 +447,8 @@ module.exports = {
         },
         { type: 'formula', title: 'WLF 方程', formula: Formulas.WLF_EQUATION, params: [
            { symbol: 'a_T', desc: '移位因子 (Shift Factor)' },
-           { symbol: 'C_1', desc: '经验常数' },
-           { symbol: 'C_2', desc: '经验常数' },
+           { symbol: 'C_1', desc: '经验常数 (17.44)' },
+           { symbol: 'C_2', desc: '经验常数 (51.6 K)' },
            { symbol: 'T', desc: '测试温度 (K)' },
            { symbol: 'T_r', desc: '参考温度 (K)' }
         ]}
@@ -495,8 +495,8 @@ module.exports = {
           ]
         },
         { type: 'formula', title: '雾度计算', formula: Formulas.HAZE_CALC, description: '散射光比例', params: [
-           { symbol: 'T_{diffuse}', desc: '散射光透射率 (>2.5°)' },
-           { symbol: 'T_{total}', desc: '总透射率' }
+           { symbol: 'T_{diffuse}', desc: '散射光透射率 (%)' },
+           { symbol: 'T_{total}', desc: '总透射率 (%)' }
         ]}
       ]
     },

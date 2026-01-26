@@ -11,7 +11,7 @@ module.exports = {
 
   CPK: "CPK = \\min \\frac{USL-\\mu}{3\\sigma}, \\frac{\\mu-LSL}{3\\sigma}",
 
-  TAPER_TENSION: "F = F_0 \\times [1 - Taper\\% \\times \\frac{D - D_0}{D}]",
+  TAPER_TENSION: "F = F_0 \\times [1 - Taper % \\times \\frac{D - D_0}{D}]",
 
   // Coating Theory Formulas
   WET_FILM_THICKNESS: "H = \\frac{Q}{V \\times W}",
