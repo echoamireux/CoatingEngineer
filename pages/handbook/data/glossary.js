@@ -30,7 +30,7 @@ module.exports = {
         {
           id: 'b02a',
           term: '离型膜 (Release Film)',
-          english: 'Release Liner / Release Film',
+
           definition: '表面涂覆有低表面能离型剂（如硅油）的薄膜，用于保护胶面或作为涂布载体。',
           impact: '胶带/保护膜生产的必需品。离型力是核心指标，过轻导致转移（胶粘到离型膜），过重导致剥离破坏或张力波动。',
           control: '离型力控制（轻/中/重离型）、残余接着力、硅油迁移量（硅转移）。',

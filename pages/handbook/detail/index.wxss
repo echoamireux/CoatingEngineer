@@ -107,6 +107,7 @@
   text-align: left; /* 核心：左对齐 */
   line-height: 1.5; /* 优化多行阅读 */
   word-break: break-all; /* 防止长单词撑破 */
+  box-sizing: border-box; /* 核心修复：含内边距，防止撑破100%导致滚动 */
   display: flex;
   align-items: center; /* 垂直居中 */
 }
@@ -119,18 +120,35 @@
 }
 
 /* 特殊列宽：仅针对 Testing 模块的4列宽表格 (测试方法表) */
-/* 收窄首列 (18%)，加宽设备列 (32%) */
-.category-testing .col-4 .table-row .table-cell:first-child,
-.category-testing .col-4 .table-header .table-cell:first-child {
-  flex: 0 0 18%;
+/* 针对 Testing 模块 4 列表格的特殊优化 */
+.category-testing .col-4 .table-row .table-cell,
+.category-testing .col-4 .table-header .table-cell {
+  padding: 24rpx 8rpx; /* 减小内边距以容纳更多文字 */
 }
 
+/* 方法列 (16%) */
+.category-testing .col-4 .table-row .table-cell:first-child,
+.category-testing .col-4 .table-header .table-cell:first-child {
+  flex: 0 0 16%;
+}
+
+/* 设备列 (33%) */
 .category-testing .col-4 .table-row .table-cell:nth-child(2),
 .category-testing .col-4 .table-header .table-cell:nth-child(2) {
+  flex: 0 0 33%;
+}
+
+/* 剪切速率列 (32%) */
+.category-testing .col-4 .table-row .table-cell:nth-child(3),
+.category-testing .col-4 .table-header .table-cell:nth-child(3) {
   flex: 0 0 32%;
 }
 
-/* 剩下的列自动平分剩余70% */
+/* 用途列 (19%) */
+.category-testing .col-4 .table-row .table-cell:nth-child(4),
+.category-testing .col-4 .table-header .table-cell:nth-child(4) {
+  flex: 0 0 19%;
+}
 
 /* 公式 */
 .section-formula {
