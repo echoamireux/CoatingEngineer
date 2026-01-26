@@ -6,7 +6,7 @@
       <view class="back-btn" bindtap="goBack">
          <ui-icon name="back" size="50" />
       </view>
-      <view class="tool-btn" bindtap="goHome" style="margin-left: -4rpx; margin-right: 4rpx;">
+      <view class="tool-btn home-btn" bindtap="goHome">
          <ui-icon name="home" size="44" />
       </view>
       <text class="page-title">{{title}}</text>
@@ -18,7 +18,7 @@
     <!-- 内容段落 -->
     <block wx:for="{{sections}}" wx:key="index">
       <view class="content-section">
-        <view class="section-header" wx:if="{{item.title}}">
+        <view class="section-header" wx:if="{{item.title && item.type !== 'standard-card' && item.type !== 'analysis-block'}}">
           <text class="section-title">{{item.title}}</text>
         </view>
 

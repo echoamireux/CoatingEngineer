@@ -13,6 +13,12 @@
   flex-direction: column;
 }
 
+/* 首页按钮紧凑样式 - 与返回按钮形成操作组 */
+.home-btn {
+  margin-left: -16rpx !important; /* 完全抵消 gap */
+  padding: 4rpx 8rpx !important; /* 更紧凑 */
+}
+
 /* 状态栏占位 */
 .status-bar {
   width: 100%;
@@ -321,26 +327,30 @@
 
 .analysis-item {
   display: flex;
-  align-items: flex-start; /* Align top for multi-line text */
+  align-items: flex-start; /* Professional: Align with Title (First Line) */
 }
 
 .fail-tag-wrapper {
-  width: 80rpx; /* Fixed width for alignment */
+  width: 120rpx; /* Increased from 80rpx to fit "Lock-up" */
   flex-shrink: 0;
   margin-right: 16rpx;
   display: flex;
   justify-content: center;
-  padding-top: 4rpx; /* Visual alignment with text */
+  padding-top: 2rpx; /* Optical: Align tag baseline with Title text */
 }
 
 .fail-tag {
   font-size: 22rpx;
-  padding: 4rpx 8rpx;
+  padding: 6rpx 10rpx; /* Increased padding */
   border-radius: 6rpx;
-  min-width: 60rpx; /* Ensure 2-3 chars fit nicely */
+  width: 100%; /* Fill wrapper */
+  box-sizing: border-box;
   text-align: center;
   font-weight: bold;
   font-family: monospace; /* Code-like look */
+  white-space: nowrap; /* Prevent wrap */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Handle extreme cases */
 }
 
 .tag-success {
