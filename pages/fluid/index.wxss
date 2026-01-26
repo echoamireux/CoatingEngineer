@@ -48,7 +48,7 @@ page {
   padding: 0 24rpx;
   gap: 40rpx;
   background: transparent;
-  margin-bottom: 4rpx;
+  margin-bottom: 0;
   box-sizing: border-box;
 }
 

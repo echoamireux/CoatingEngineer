@@ -27,7 +27,7 @@
     </view>
   </view>
 
-  <ui-card customStyle="{{isPowerLaw ? 'padding-bottom: 12rpx;' : ''}}">
+  <ui-card customStyle="padding: 16rpx; margin-bottom: 12rpx; {{isPowerLaw ? 'padding-bottom: 12rpx;' : ''}}">
     <!-- Custom Header with Switch -->
     <view class="card-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12rpx;">
        <view class="section-title" style="margin-bottom:8rpx;">流体属性 (Fluid)</view>
@@ -70,10 +70,10 @@
   </ui-card>
 
   <!-- 工艺与几何参数 (Merged Card) -->
-  <ui-card>
+  <ui-card customStyle="padding: 16rpx; margin-bottom: 24rpx;">
     <view class="section-title">工艺与几何参数 (Process)</view>
 
-    <view class="form-group" style="margin-bottom: 24rpx;">
+    <view class="form-group" style="margin-bottom: 12rpx;">
        <!-- Flex Layout for Input + Button -->
        <view class="input-row-with-actions" style="display:flex; align-items:flex-end; gap:12rpx;">
           <view style="flex:1">
@@ -89,12 +89,12 @@
     </view>
 
     <!-- Divider -->
-    <view class="divider" style="margin: 12rpx 0;"></view>
+    <view class="divider" style="margin: 8rpx 0;"></view>
 
     <!-- 2. Split Columns (Pipe | Slot) -->
     <view class="split-layout">
       <!-- Left Column: Pipe -->
-      <view class="split-col">
+      <view class="split-col" style="padding: 12rpx;">
          <view class="subsection-title">供液管路</view>
          <ui-form-field label="管道内径 D" fieldName="pipe_D" data-field="pipe_D" value="{{pipe_D}}" unit="mm" placeholder="0.0"
             bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.pipe_D}}" />
@@ -122,7 +122,7 @@
       <view class="v-divider" style="width:1px; background:var(--border); margin:0 8rpx;"></view>
 
       <!-- Right Column: Slot -->
-      <view class="split-col">
+      <view class="split-col" style="padding: 12rpx;">
          <view class="subsection-title">涂布模头</view>
          <ui-form-field label="垫片厚度 H" fieldName="slot_H" data-field="slot_H" value="{{slot_H}}" unit="µm" placeholder="0.0"
            bind:input="onInput" bind:focus="onInputFocus" bind:blur="onInputBlur" isError="{{errors.slot_H}}" />
