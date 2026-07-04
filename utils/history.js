@@ -13,9 +13,9 @@ const MAX_RECORDS = 50; // 最大记录数
  * 模块定义
  */
 const MODULES = {
-    coating: { name: '涂布卷材', icon: '⚙️' },
-    fluid: { name: '流体力学', icon: '💧' },
     cost: { name: '成本核算', icon: '💰' },
+    coating: { name: '涂布生产计算', icon: '🏭' },
+    fluid: { name: '流体力学', icon: '💧' },
     converter: { name: '单位换算', icon: '🔄' }
 };
 
@@ -43,15 +43,15 @@ function formatTime(date = new Date()) {
  * @param {string} module - 模块标识 (coating/fluid/cost/converter)
  * @param {string} type - 计算类型
  * @param {Array} displayData - 显示用的 [{k, v}] 数组
- * @param {object} rawData - 原始参数用于回填
+ * @param {string} moduleNameOverride - 可选，自定义模块名称
  * @returns {string} 记录 ID
  */
-function saveHistory(module, type, displayData, rawData) {
+function saveHistory(module, type, displayData, rawData, moduleNameOverride) {
     const record = {
         id: generateId(),
         module: module,
         type: type,
-        moduleName: MODULES[module]?.name || module,
+        moduleName: moduleNameOverride || MODULES[module]?.name || module,
         time: formatTime(),
         timestamp: Date.now(),
         data: displayData,
