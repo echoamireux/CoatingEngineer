@@ -1,0 +1,134 @@
+<view class="page-container {{ theme }}">
+  <!-- 页面头部 - 统一单行设计 -->
+  <view class="page-header" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 导航行 -->
+    <view class="nav-row">
+      <view class="back-btn" bindtap="goBack">
+         <ui-icon name="back" size="50" />
+      </view>
+      <text class="page-title">涂布工程师手册</text>
+    </view>
+  </view>
+
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <view class="search-input-wrapper">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索术语、工艺、测试方法..."
+        placeholder-class="search-placeholder"
+        bindinput="onSearchInput"
+        value="{{ searchKeyword }}"
+      />
+      <text class="clear-icon" wx:if="{{ searchKeyword }}" bindtap="clearSearch"
+        >✕</text
+      >
+    </view>
+  </view>
+
+  <!-- 搜索结果列表 -->
+  <scroll-view class="search-results" scroll-y wx:if="{{ searchKeyword }}">
+    <view class="result-list" wx:if="{{ searchResults.length > 0 }}">
+      <block wx:for="{{ searchResults }}" wx:key="id">
+        <view class="result-card" bindtap="handleResultClick" data-type="{{ item.type }}" data-id="{{ item.id }}" data-title="{{ item.title }}" data-category="{{ item.category }}" data-index="{{ index }}">
+          <view class="result-icon-box">
+             <text class="result-icon">{{ item.category === 'glossary' ? '📖' : (item.category === 'troubleshoot' ? '🛠️' : '📄') }}</text>
+          </view>
+          <view class="result-info">
+            <view class="result-title">{{ item.title }}</view>
+            <view class="result-desc">{{ item.desc }}</view>
+          </view>
+          <view class="result-tag">{{ item.categoryTitle }}</view>
+        </view>
+      </block>
+    </view>
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">未找到相关内容</text>
+    </view>
+  </scroll-view>
+
+  <!-- 分类卡片网格 (无搜索时显示) -->
+  <view class="category-grid" wx:else>
+    <block wx:for="{{ categories }}" wx:key="id">
+      <view
+        class="category-card {{ item.isWide ? 'wide' : '' }}"
+        bindtap="navigateToCategory"
+        data-id="{{ item.id }}"
+        data-title="{{ item.title }}"
+      >
+        <view class="card-icon-box" style="background: {{ item.color }}20;">
+          <text class="card-icon">{{ item.icon }}</text>
+        </view>
+        <view class="card-info">
+          <view class="card-title">{{ item.title }}</view>
+          <view class="card-desc">{{ item.desc }}</view>
+        </view>
+        <view class="card-count" wx:if="{{ item.count }}">
+          <text class="count-num">{{ item.count }}</text>
+          <text class="count-unit">{{ item.unit || "项" }}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部提示 (无搜索时显示) -->
+  <view class="footer-tips" wx:if="{{ !searchKeyword }}">
+    <text class="tips-icon">💡</text>
+    <text class="tips-text">内容支持离线查阅</text>
+  </view>
+
+  <!-- 词条详情弹窗 -->
+  <view class="term-modal {{showTermModal ? 'show' : ''}}">
+    <view class="modal-mask" bindtap="closeTermModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <view class="modal-title">{{currentTerm.term}}</view>
+        <view class="modal-english" wx:if="{{currentTerm.english}}">{{currentTerm.english}}</view>
+      </view>
+      <view class="modal-body">
+         <!-- 1. 定义 -->
+        <view class="modal-section">
+          <text class="section-label">📖 定义</text>
+          <text class="section-content">{{currentTerm.definition}}</text>
+        </view>
+
+        <!-- 2. 工程意义 (New) -->
+        <view class="modal-section" wx:if="{{currentTerm.impact}}">
+          <text class="section-label">⚡ 工程与质量意义</text>
+          <text class="section-content">{{currentTerm.impact}}</text>
+        </view>
+
+        <!-- 3. 管控要点 (New) -->
+        <view class="modal-section" wx:if="{{currentTerm.control}}">
+          <text class="section-label">🎛 关键管控点</text>
+          <text class="section-content">{{currentTerm.control}}</text>
+        </view>
+
+        <!-- Fallback: 详细说明 (Old) -->
+        <view class="modal-section" wx:if="{{!currentTerm.impact && currentTerm.detail}}">
+          <text class="section-label">📝 详细说明</text>
+          <text class="section-content">{{currentTerm.detail}}</text>
+        </view>
+
+         <!-- 4. 深度学习链接 (New) -->
+        <view class="deep-dive-box" wx:if="{{currentTerm.moduleLink}}" bindtap="navToModule" data-link="{{currentTerm.moduleLink}}">
+           <text class="dive-icon">📚</text>
+           <text class="dive-text">深度学习：{{currentTerm.moduleLink.title}}</text>
+           <text class="dive-arrow">➡️</text>
+        </view>
+
+        <view class="modal-section" wx:if="{{currentTerm.related && currentTerm.related.length > 0}}">
+          <text class="section-label">🔗 相关术语</text>
+          <view class="related-tags">
+            <text class="related-tag" wx:for="{{currentTerm.related}}" wx:key="*this" bindtap="onRelatedTap" data-keyword="{{item}}">{{item}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="btn-close" bindtap="closeTermModal">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -42,7 +42,7 @@
   margin-top: 30rpx;
 }
 
-.modal-footer button {
+.modal-footer .modal-btn {
   flex: 1;
   height: 80rpx;
   line-height: 80rpx;

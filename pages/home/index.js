@@ -1,5 +1,6 @@
 const app = getApp()
-const { initTheme, toggleTheme: commonToggleTheme } = require('../../utils/common')
+const { initTheme, toggleTheme: commonToggleTheme, callCloudFunction } = require('../../utils/common')
+
 const { SHOW_REWARD, REWARD_IMAGE_PATH } = require('../../utils/config')
 
 // 尝试加载本地私有配置（不提交到远程仓库）
@@ -14,6 +15,7 @@ try {
 Page({
   data: {
     theme: 'dark',
+    statusBarHeight: 44,
     showReward: SHOW_REWARD,
     requirePasscode: true,    // 是否需要口令验证（从云端读取）
     passcodeHint: '流体力学临界雷诺数 (Re)',  // 口令提示词（从云端读取）
@@ -28,6 +30,14 @@ Page({
     adminTapCount: 0, // 管理员入口点击计数
 
     menuList: [
+      {
+        id: 'handbook',
+        title: '涂布工程师手册',
+        desc: '术语 / 材料 / 设备 / 工艺 / 诊断',
+        path: '/pages/handbook/index',
+        icon: '📚',
+        color: '#6366f1' // Indigo - 手册专属色
+      },
       {
         id: 'cost',
         title: '生产成本核算',
@@ -74,6 +84,9 @@ Page({
 
   onLoad() {
     initTheme(this);
+    // 获取状态栏高度用于沉浸式适配
+    const systemInfo = wx.getWindowInfo();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
   },
 
   onShow() {
@@ -203,50 +216,54 @@ Page({
   async handleModalConfirm() {
     if (this.data.modalType === 'login') {
       // 显示加载提示
-      wx.showLoading({ title: '验证中...' })
+      wx.showLoading({ title: '验证中...', mask: true })
 
       try {
-        // 优先使用云端验证
-        const res = await wx.cloud.callFunction({
-          name: 'verifyPasscode',
-          data: { code: this.data.inputCode }
-        })
-
-        wx.hideLoading()
+        // 使用封装的云函数调用 (15秒超时)
+        const res = await callCloudFunction('verifyPasscode', {
+          code: this.data.inputCode
+        }, 15000)
 
         if (res.result.success) {
+          wx.hideLoading()
           wx.setStorageSync('isLogin', true)
-          wx.showToast({ title: '验证通过', icon: 'success' })
+          wx.showToast({ title: '验证通过', icon: 'success', duration: 2000 })
           this.setData({ showModal: false })
           if (this.data.pendingPath) {
-            setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
+            setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 1500)
           }
         } else {
+          wx.hideLoading()
           wx.vibrateShort()
-          wx.showToast({ title: res.result.message || '口令错误', icon: 'error' })
+          wx.showToast({ title: res.result.message || '口令错误', icon: 'error', duration: 2000 })
           this.setData({ inputCode: '' })
         }
       } catch (err) {
-        wx.hideLoading()
-        console.warn('云函数调用失败:', err)
+        console.warn('云验证异常:', err)
 
-        // 本地备用口令（仅在云端不可用且配置了备用口令时使用）
+        // 1. 优先尝试本地备用验证 (无论是什么错误，只要有备用码且匹配就放行)
         if (FALLBACK_CODE && this.data.inputCode === FALLBACK_CODE) {
-          console.log('使用本地备用验证')
-          wx.setStorageSync('isLogin', true)
-          wx.showToast({ title: '验证通过', icon: 'success' })
-          this.setData({ showModal: false })
-          if (this.data.pendingPath) {
-            setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 500)
-          }
-        } else if (FALLBACK_CODE) {
-          // 有备用口令但输入错误
-          wx.vibrateShort()
-          wx.showToast({ title: '口令错误', icon: 'error' })
-          this.setData({ inputCode: '' })
+           console.log('使用本地备用验证')
+           wx.hideLoading()
+           wx.setStorageSync('isLogin', true)
+           wx.showToast({ title: '验证通过', icon: 'success', duration: 2000 })
+           this.setData({ showModal: false })
+           if (this.data.pendingPath) {
+             setTimeout(() => { wx.navigateTo({ url: this.data.pendingPath }) }, 1500)
+           }
+           return // 本地成功，阻断后续错误提示
+        }
+
+        // 2. 本地验证失败，才进行错误提示
+        wx.hideLoading()
+        // 区分错误类型进行提示
+        if (err.message.includes('网络')) {
+             wx.showToast({ title: '网络不可用', icon: 'none', duration: 2000 })
+        } else if (err.isTimeout) {
+             wx.showToast({ title: '请求超时', icon: 'none', duration: 2000 })
         } else {
-          // 没有配置备用口令，直接提示网络异常
-          wx.showToast({ title: '网络异常', icon: 'error' })
+             // 其他错误
+             wx.showToast({ title: '验证服务异常', icon: 'none', duration: 2000 })
         }
       }
     } else {

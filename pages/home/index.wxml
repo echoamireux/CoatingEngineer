@@ -1,15 +1,15 @@
 <view class="page-container {{theme}}">
 
-  <view class="home-header">
-    <view class="header-placeholder"></view>
+  <!-- 首页头部：专业布局 -->
+  <view class="home-header" style="padding-top: {{statusBarHeight}}px;">
 
+    <!-- 第二行：标题居中 -->
     <view class="title-box">
       <view class="app-name">涂布工程专家</view>
       <view class="app-sub">COATING ENGINEERING</view>
-    </view>
-
-    <view class="theme-toggle" bindtap="toggleTheme">
-      {{theme === 'dark' ? '☀️' : '🌑'}}
+      <view class="theme-toggle-abs" bindtap="toggleTheme">
+        {{theme === 'dark' ? '☀️' : '🌑'}}
+      </view>
     </view>
   </view>
 
@@ -51,6 +51,8 @@
         <text class="ft-icon">💬</text>
         <text>联系客服</text>
       </button>
+
+
     </view>
 
     <view class="copyright-box">

@@ -1,0 +1,151 @@
+<view class="page-container {{theme}}">
+  <!-- 固定头部 - 统一单行设计 -->
+  <view class="page-header sticky-header" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 导航行 -->
+    <view class="nav-row">
+      <view class="back-btn" bindtap="goBack">
+         <ui-icon name="back" size="50" />
+      </view>
+      <view class="tool-btn home-btn" bindtap="goHome">
+         <ui-icon name="home" size="44" />
+      </view>
+      <text class="page-title">{{title}}</text>
+    </view>
+
+    <!-- 搜索框 (Sticky inside header) -->
+    <view class="search-box" wx:if="{{showSearch}}">
+      <view class="search-input-wrapper">
+        <text class="search-icon">🔍</text>
+        <input
+          class="search-input"
+          placeholder="在{{title}}中搜索..."
+          placeholder-class="search-placeholder"
+          bindinput="onSearchInput"
+          value="{{searchKeyword}}"
+        />
+        <text class="clear-icon" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索结果列表 (Search Active) -->
+  <scroll-view class="search-results" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{ searchKeyword }}">
+    <view class="result-list" wx:if="{{ searchResults.length > 0 }}">
+      <block wx:for="{{ searchResults }}" wx:key="id">
+        <view class="result-card" bindtap="showTermDetail" data-term="{{ item.originalData }}">
+          <view class="result-icon-box">
+             <text class="result-icon">📖</text>
+          </view>
+          <view class="result-info">
+            <view class="result-title">{{ item.title }}</view>
+            <view class="result-desc">{{ item.desc }}</view>
+          </view>
+          <view class="result-tag">{{ title }}</view>
+        </view>
+      </block>
+    </view>
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">未找到相关内容</text>
+    </view>
+  </scroll-view>
+
+  <!-- 内容滚动区 (Search Inactive) -->
+  <scroll-view class="content-scroll" scroll-y enhanced show-scrollbar="{{false}}" scroll-into-view="{{scrollToId}}" scroll-with-animation wx:else>
+    <view id="top"></view>
+    <!-- 子分类列表 -->
+    <view class="subcategory-list" wx:if="{{subcategories.length > 0}}">
+      <block wx:for="{{subcategories}}" wx:key="id">
+        <view class="subcategory-section" id="category-{{item.id}}">
+          <view class="section-header">
+            <image class="section-icon-img" src="{{item.icon}}" wx:if="{{item.icon.length > 4}}" mode="aspectFit"></image>
+            <text class="section-icon" wx:else>{{item.icon}}</text>
+            <text class="section-title">{{item.title}}</text>
+            <text class="section-count">{{item.items.length}}项</text>
+          </view>
+          <view class="section-items">
+            <block wx:for="{{item.items}}" wx:for-item="subItem" wx:key="id">
+              <view
+                class="item-card"
+                bindtap="{{subItem.term ? 'showTermDetail' : 'navigateToDetail'}}"
+                data-id="{{subItem.id}}"
+                data-title="{{subItem.title}}"
+                data-category="{{categoryId}}"
+                data-term="{{subItem}}"
+              >
+                <view class="item-title">{{subItem.title || subItem.term}}</view>
+                <view class="item-brief" wx:if="{{subItem.brief || subItem.definition}}">{{subItem.brief || subItem.definition}}</view>
+              </view>
+            </block>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 词条列表（名词库用） -->
+    <view class="term-list" wx:if="{{terms.length > 0}}">
+      <block wx:for="{{filteredTerms.length > 0 ? filteredTerms : terms}}" wx:key="id">
+        <view class="item-card" bindtap="showTermDetail" data-term="{{item}}">
+            <view class="item-title">{{item.term}} <text wx:if="{{item.english}}" style="font-weight:normal;opacity:0.6;font-size:24rpx;margin-left:10rpx;">{{item.english}}</text></view>
+            <view class="item-brief">{{item.definition}}</view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 底部留白 -->
+    <view class="scroll-footer"></view>
+  </scroll-view>
+
+  <!-- 词条详情弹窗 -->
+  <view class="term-modal {{showTermModal ? 'show' : ''}}">
+    <view class="modal-mask" bindtap="closeTermModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <view class="modal-title">{{currentTerm.term}}</view>
+        <view class="modal-english" wx:if="{{currentTerm.english}}">{{currentTerm.english}}</view>
+      </view>
+      <view class="modal-body">
+        <!-- 1. 定义 -->
+        <view class="modal-section">
+          <text class="section-label">📖 定义</text>
+          <text class="section-content">{{currentTerm.definition}}</text>
+        </view>
+
+        <!-- 2. 工程意义 (New) -->
+        <view class="modal-section" wx:if="{{currentTerm.impact}}">
+          <text class="section-label">⚡ 工程与质量意义</text>
+          <text class="section-content">{{currentTerm.impact}}</text>
+        </view>
+
+        <!-- 3. 管控要点 (New) -->
+        <view class="modal-section" wx:if="{{currentTerm.control}}">
+          <text class="section-label">🎛 关键管控点</text>
+          <text class="section-content">{{currentTerm.control}}</text>
+        </view>
+
+        <!-- Fallback: 详细说明 (Old) -->
+        <view class="modal-section" wx:if="{{!currentTerm.impact && currentTerm.detail}}">
+          <text class="section-label">📝 详细说明</text>
+          <text class="section-content">{{currentTerm.detail}}</text>
+        </view>
+
+        <!-- 4. 深度学习链接 (New) -->
+        <view class="deep-dive-box" wx:if="{{currentTerm.moduleLink}}" bindtap="navToModule" data-link="{{currentTerm.moduleLink}}">
+           <text class="dive-icon">📚</text>
+           <text class="dive-text">深度学习：{{currentTerm.moduleLink.title}}</text>
+           <text class="dive-arrow">➡️</text>
+        </view>
+
+        <view class="modal-section" wx:if="{{currentTerm.related && currentTerm.related.length > 0}}">
+          <text class="section-label">🔗 相关术语</text>
+          <view class="related-tags">
+            <text class="related-tag" wx:for="{{currentTerm.related}}" wx:key="*this" bindtap="onRelatedTap" data-keyword="{{item}}">{{item}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="btn-close" bindtap="closeTermModal">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

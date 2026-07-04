@@ -1,53 +1,110 @@
-/* ================= 工业精密风 (Final V24) ================= */
-page {
-  --bg-base: #0f172a;
-  --card-bg: #1e293b;
-  --accent: #38bdf8;
-  --accent-dim: rgba(56, 189, 248, 0.1);
-  --text-main: #f1f5f9;
-  --text-sub: #94a3b8;
-  --border: #334155;
-  --input-bg: #020617;
-  --success: #10b981;
-  --ph-color: rgba(255, 255, 255, 0.1);
+@import "../../styles/form.wxss";
+@import "../../styles/icon.wxss";
 
+/* Coating 页面样式 */
+page {
   font-family: "DIN Alternate", "Roboto", Helvetica, sans-serif;
   box-sizing: border-box;
 }
 
-.page-container.light {
-  --bg-base: #f1f5f9;
-  --card-bg: #ffffff;
-  --accent: #0284c7;
-  --accent-dim: rgba(2, 132, 199, 0.1);
-  --text-main: #0f172a;
-  --text-sub: #64748b;
-  --border: #e2e8f0;
-  --input-bg: #f8fafc;
-  --ph-color: rgba(0, 0, 0, 0.1);
-}
-
+/* 页面容器 */
 .page-container {
   min-height: 100vh;
-  background-color: var(--bg-base);
-  color: var(--text-main);
+  background-color: var(--bg);
+  color: var(--text);
   padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 统一的导航栏样式 */
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 30rpx;
-  background: var(--card-bg);
-  border-bottom: 1px solid var(--border);
+/* 导航栏样式 - 沉浸式设计（无分隔线） */
+.page-header {
   position: sticky;
   top: 0;
-  z-index: 50;
-  box-shadow: 0 -1px 0 var(--card-bg);
+  z-index: 100;
+  background: var(--bg); /* 沉浸式：与页面背景一致 */
+  box-sizing: border-box;
+  padding-bottom: 12rpx; /* Add breathing room for tabs */
+  /* box-shadow removed as per user request for flat look */
 }
+
+/* 导航栏 - 第一行 */
+.nav-row {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  gap: 12rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 工具栏 - 第二行 (紧凑/无底色) */
+.toolbar-row {
+  height: 32px; /* 极度紧凑 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 左对齐 */
+  padding: 0 24rpx;
+  gap: 40rpx; /* 图标间较大间距，防止误触 */
+  background: transparent;
+  margin-bottom: 4rpx;
+  box-sizing: border-box;
+}
+
+/* Back Button */
+.back-btn {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: var(--text-sub);
+  font-weight: 300;
+  margin-right: 4rpx;
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* Tool Button - Ghost Style (无底色) */
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: 4rpx;
+  background: transparent !important; /* 强制去底色 */
+  border: none !important;
+  border-radius: 8rpx;
+}
+
+.tool-hover {
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+.tool-btn .icon {
+  font-size: 30rpx; /* 精致小图标 */
+  opacity: 0.7; /* 低调 */
+  line-height: 1;
+  color: var(--text-main); /* 跟随主题色 */
+}
+
+/* Active State for Icon */
+.tool-btn .icon:active {
+  opacity: 1;
+}
+/* 移除 nav-left/nav-tools 相关旧样式 */
 
 .nav-title {
   font-size: 38rpx;
@@ -80,172 +137,140 @@ page {
   opacity: 0.8;
 }
 
-/* Tabs */
+/* Panel Container */
+.panel {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Minimal Add Button (Text Only) */
+.add-btn-minimal {
+  display: flex;
+  align-items: center;
+  color: var(--text-sub);
+  opacity: 0.8;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  transition: opacity 0.2s;
+  background: transparent !important; /* Force remove any inherited background */
+  border: none !important;
+}
+
+.btn-hover-text {
+  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.05); /* Very subtle hover */
+}
+/* Professional Sticky Tabs (Integrated) */
 .tabs {
   display: flex;
-  background: var(--card-bg);
-  padding: 8rpx;
-  border-radius: 20rpx;
-  margin: 20rpx 30rpx;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02); /* Very subtle transparency */
+  padding: 0;
+  margin: 8rpx 24rpx 16rpx 24rpx; /* Compact margins */
+  border-radius: 16rpx !important; /* Rounded Rectangle (Hierarchy distinction) */
   border: 1px solid var(--border);
-  transition: all 0.3s;
+  height: 72rpx; /* Increased Height for better touch target */
+  position: relative;
+  /* Removed sticky here as parent header is sticky */
 }
+
 
 .tab-item {
   flex: 1;
   text-align: center;
-  padding: 20rpx 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-sub);
-  font-size: 28rpx;
-  font-weight: 600;
-  border-radius: 14rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  border-radius: 12rpx !important; /* Inner Radius slightly smaller */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
 }
 
 .tab-item.active {
-  color: #fff;
-  background-color: #2563eb;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-}
-
-/* Panel 容器 */
-.panel {
-  padding: 0 30rpx;
-}
-
-/* Card */
-.card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 24rpx;
-  padding: 24rpx;
-  margin-bottom: 20rpx;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s, border-color 0.3s;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 32rpx;
-  right: 32rpx;
-  height: 2rpx;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-}
-
-.section-title {
-  font-size: 28rpx;
+  color: #1a1a1a; /* Dark text for Amber background (Professional Contrast) */
+  background-color: var(--primary); /* Solid Primary (Yellow) */
   font-weight: 700;
-  margin-bottom: 20rpx;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  text-transform: uppercase;
-  letter-spacing: 1rpx;
+  box-shadow: 0 4rpx 12rpx rgba(245, 158, 11, 0.3);
 }
 
-.tool-btn {
-  font-size: 24rpx;
-  color: var(--text-main);
-  background: var(--accent-dim);
-  padding: 6rpx 16rpx;
-  border-radius: 8rpx;
-  border: 1px solid var(--border);
-}
-
-.tool-btn:active {
-  opacity: 0.6;
-}
-
-.btn-text-plain {
-  font-size: 28rpx;
-  color: var(--text-sub);
-}
-
-.btn-text-plain:active {
-  opacity: 0.7;
-}
-
-.divider {
-  height: 1px;
-  background-color: var(--border);
-  margin: 20rpx 0;
+.tab-divider {
+  width: 1px;
+  height: 24rpx;
+  background: var(--border);
   opacity: 0.5;
 }
 
-/* Inputs */
-.input-row {
-  margin-bottom: 20rpx;
-}
-
-.label-row {
+/* Input Row for Core ID: Bottom Alignment is Critical */
+.input-row-with-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14rpx;
-}
-
-.label {
-  font-size: 26rpx;
-  color: var(--text-sub);
-  font-weight: 500;
-  margin-bottom: 8rpx;
-  display: block;
-}
-
-.input {
-  background-color: var(--input-bg);
-  border: 1px solid var(--border);
-  color: var(--text-main);
-  height: 64rpx;
-  padding: 0 24rpx;
-  border-radius: 12rpx;
-  width: 100%;
-  box-sizing: border-box;
-  font-size: 28rpx;
-  font-family: monospace;
-  transition: all 0.2s;
-}
-
-.input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-dim);
-}
-
-.input-placeholder {
-  color: var(--ph-color);
-  font-size: 22rpx;
-}
-
-/* Tags & Layouts */
-.tags {
-  display: flex;
-  gap: 16rpx;
-}
-
-.tag {
-  font-size: 22rpx;
-  color: var(--accent);
-  background: var(--accent-dim);
-  padding: 8rpx 20rpx;
-  border-radius: 8rpx;
-  border: 1px solid var(--border);
-}
-
-.flex-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16rpx;
-  margin-bottom: 20rpx;
-}
-
-.flex-item {
-  flex: 1;
+  align-items: center; /* ALIGN CENTER (Elements are same height) */
+  gap: 12rpx;
   margin-bottom: 0;
 }
 
+.input-main {
+  flex: 1;
+  /* ui-form-field handles its own layout, we just contain it */
+}
+
+/* Native Input Styles for Perfect Alignment */
+.input-native-wrapper {
+  height: 72rpx; /* Strict Height Match */
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 16rpx; /* Match Buttons */
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  box-sizing: border-box; /* CRITICAL */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+.input-native-wrapper.focused {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx rgba(245, 158, 11, 0.2); /* Theme Primary Glow */
+  background: var(--card-bg);
+}
+
+.input-native-wrapper.error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.native-input {
+  flex: 1;
+  height: 100%;
+  font-size: 30rpx;
+  color: var(--text-main);
+  font-family: "DIN Alternate", "Roboto", monospace;
+  font-weight: 600;
+  line-height: 72rpx; /* Force vertical center */
+  height: 72rpx;
+  min-height: 72rpx;
+}
+
+.input-placeholder-native {
+  color: var(--text-sub);
+  opacity: 0.5;
+  font-size: 28rpx;
+  font-weight: normal;
+}
+
+.unit-suffix-native {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-left: 16rpx;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* Inputs - Superseded by form.wxss but keeping grid logic */
 .grid-2 {
   display: flex;
   gap: 24rpx;
@@ -260,7 +285,7 @@ page {
   gap: 16rpx;
 }
 
-.grid-3 .input-group {
+.grid-3 .form-col {
   flex: 1;
   min-width: 0;
 }
@@ -276,60 +301,8 @@ page {
 .layer-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 16rpx;
-}
-
-/* Result */
-.result-row {
-  margin-bottom: 36rpx;
-}
-
-.result-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 16rpx;
-}
-
-.label-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.result-label {
-  font-size: 28rpx;
-  color: var(--text-sub);
-}
-
-.result-unit-sub {
-  font-size: 22rpx;
-  color: var(--text-sub);
-  margin-top: 4rpx;
-  opacity: 0.8;
-}
-
-.formula-box {
-  font-size: 20rpx;
-  color: var(--text-sub);
-  font-family: monospace;
-  background: var(--input-bg);
-  padding: 8rpx 16rpx;
-  border-radius: 8rpx;
-  border: 1px solid var(--border);
-}
-
-.result-val {
-  display: block;
-  font-size: 56rpx;
-  font-weight: 700;
-  color: var(--accent);
-  background: var(--input-bg);
-  padding: 30rpx;
-  border-radius: 16rpx;
-  text-align: right;
-  border: 1px solid var(--border);
-  letter-spacing: 2rpx;
-  font-family: monospace;
 }
 
 /* Buttons */
@@ -351,10 +324,16 @@ page {
   grid-column: span 2;
 }
 
+/* Button Reset - CRITICAL for Radius */
+button::after {
+  border: none !important;
+  border-radius: 999px !important; /* Ensure pseudo-element matches button shape */
+}
+
 .btn {
   width: 100% !important;
   font-weight: 600;
-  border-radius: 12rpx;
+  /* border-radius removed to allow sub-classes to control shape */
   font-size: 24rpx;
   padding: 16rpx 0;
   margin: 0 !important;
@@ -370,17 +349,42 @@ page {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  background: var(--primary) !important; /* Flat Color matching Tab */
+  color: #1a1a1a; /* Dark Text (Professional for Amber/Yellow) */
+  border-radius: 999px !important; /* Force Capsule (Standard) */
+  box-shadow: 0 4rpx 12rpx rgba(245, 158, 11, 0.3) !important;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  border: none !important;
+  opacity: 1;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+  /* Fluid Layout Alignment */
+  width: 92% !important;
+  margin: 0 auto !important;
+  height: 88rpx;
+}
+
+.btn-primary:active {
+  transform: scale(0.96); /* Tactile Feedback */
+  opacity: 0.9;
 }
 
 .btn-secondary {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: var(--accent);
-  border: 1px solid rgba(59, 130, 246, 0.15);
-  padding: 12rpx 0;
-  font-size: 22rpx;
+  /* Fluid .btn-mini Exact Match + Visibility Fix */
+  background: rgba(245, 158, 11, 0.1); /* Amber Tint */
+  border: 1px solid rgba(245, 158, 11, 0.3) !important; /* Restore Border for Visibility */
+  color: var(--primary); /* Amber Text */
+  backdrop-filter: blur(4px);
+  border-radius: 999px !important; /* Force Capsule */
+  font-weight: 600;
+  padding: 10rpx 24rpx; /* Match Fluid Padding */
+  font-size: 24rpx;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+}
+
+.btn-secondary:active, .btn-secondary-hover {
+  background: rgba(245, 158, 11, 0.15); /* Darker tint on press */
+  transform: scale(0.96); /* Tactile Feedback */
 }
 
 .btn-outline {
@@ -662,337 +666,33 @@ button.btn-ghost {
   top: 16rpx;
   color: var(--text-sub);
   font-size: 36rpx;
-  line-height: 1;
-  padding: 8rpx;
-  opacity: 0.5;
 }
 
-.hi-del-btn:active {
-  opacity: 1;
-  color: #ef4444;
-}
-
-.hi-time {
-  font-size: 20rpx;
-  color: var(--text-sub);
-  margin-bottom: 12rpx;
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-}
-
-.hi-time::before {
-  content: '🕒';
-  font-size: 18rpx;
-}
-
-.hi-data {
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-}
-
-.hi-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8rpx 0;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
-}
-
-.hi-row:last-child {
-  border-bottom: none;
-}
-
-.hi-k {
-  font-size: 22rpx;
-  color: var(--text-sub);
-  flex-shrink: 0;
-}
-
-.hi-v {
-  font-size: 24rpx;
-  color: var(--accent);
-  font-weight: bold;
-  text-align: right;
-  font-family: "DIN Alternate", sans-serif;
-}
-
-.empty-hint {
-  text-align: center;
-  color: var(--text-sub);
-  padding: 60rpx 0;
-  font-size: 26rpx;
-  opacity: 0.6;
-}
-
-/* --- Formula Modal Styles (Adapted from Fluid) --- */
-.fm-card {
-  background: var(--card);
-  width: 90%;
-  max-height: 90vh;
-  border-radius: 24rpx;
-  padding: 30rpx;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.fm-head {
-  font-weight: bold;
-  margin-bottom: 24rpx;
-  display: flex;
-  justify-content: center;
-  color: var(--text);
-  font-size: 30rpx;
-  align-items: center;
-  position: relative;
-}
-
-.fm-head .close-icon {
-  position: absolute;
-  right: 0;
-}
-
-.close-icon {
-  font-size: 44rpx;
-  color: var(--text-sub);
-  padding: 0 10rpx;
-  line-height: 1;
-}
-
-.fm-scroll {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.f-box {
-  background: var(--input);
-  padding: 20rpx;
-  border-radius: 12rpx;
-  margin-bottom: 20rpx;
-  border: 1px solid var(--border);
-}
-
-.ft {
-  color: var(--accent);
-  font-size: 26rpx;
-  font-weight: bold;
-  margin-bottom: 12rpx;
-}
-
-.fm-row {
-  font-family: monospace;
-  color: var(--text);
-  text-align: center;
-  margin: 8rpx 0;
-  font-size: 24rpx;
-}
-
-.formula-text {
-  font-family: "Courier New", monospace;
-  font-size: 24rpx;
-  color: var(--accent);
-  background: rgba(99, 102, 241, 0.1);
-  padding: 12rpx 16rpx;
-  border-radius: 8rpx;
-  display: inline-block;
-}
-
-.fm-row-split {
-  display: flex;
-  justify-content: space-around;
-  margin: 16rpx 0;
-}
-
-.fm-item {
-  display: flex;
-  align-items: center;
-  font-family: "Times New Roman";
-  font-weight: bold;
-  font-size: 28rpx;
-  color: var(--text);
-}
-
-.frac {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 6rpx;
-  vertical-align: middle;
-}
-
-.n {
-  border-bottom: 1px solid var(--text);
-  padding: 0 4rpx;
-}
-
-.d {
-  padding-top: 2rpx;
-}
-
-.legend-grid {
-  margin-top: 20rpx;
-  border-top: 1px dashed var(--border);
-  padding-top: 20rpx;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10rpx;
-}
-
-.legend-grid view {
-  font-size: 22rpx;
-  color: var(--text-sub);
-}
-
-.legend-grid text {
-  font-weight: bold;
-  color: var(--accent);
-  margin-right: 8rpx;
-}
-
-/* --- 历史记录弹窗样式（统一风格） --- */
-.hi-head-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12rpx;
-  padding-bottom: 8rpx;
-  border-bottom: 1px dashed var(--border);
-}
-
-.hi-time {
-  font-size: 22rpx;
-  color: var(--text-sub);
-  flex: 1;
-}
-
-.hi-del-btn {
-  color: var(--text-sub);
-  font-size: 40rpx;
-  line-height: 0.8;
-  padding: 0 10rpx;
-  opacity: 0.6;
-}
-
-.hi-del-btn:active {
-  opacity: 1;
-  color: #ef4444;
-}
-
-/* 公式弹窗分区标题 */
-.f-section-title {
-  font-size: 28rpx;
-  font-weight: bold;
-  color: var(--accent);
-  margin: 30rpx 0 16rpx 0;
-  padding-bottom: 10rpx;
-  border-bottom: 1px solid var(--border);
-}
-
-.f-section-title:first-child {
-  margin-top: 0;
-}
-
-/* 转换工具按钮 */
-.convert-btn {
-  font-size: 22rpx;
-  font-weight: normal;
-  color: var(--accent);
-  margin-left: 16rpx;
-  padding: 4rpx 12rpx;
-  background: rgba(99, 102, 241, 0.1);
-  border-radius: 8rpx;
-}
-
-/* 转换工具弹窗 */
-.convert-card {
-  width: 90%;
-}
-
-/* 根号样式 - 简洁稳定版 */
-.sqrt-wrap {
-  display: inline-flex;
-  align-items: flex-start;
-  margin: 0 4rpx;
-}
-
-.sqrt-sign {
-  font-family: inherit;
-  /* 恢复默认字体 */
-  font-size: 32rpx;
-  line-height: 1;
-  margin-right: 2rpx;
-  transform: translateY(10%);
-  /* 基础微调 */
-  font-weight: normal;
-}
-
-.sqrt-content {
-  border-top: 1px solid var(--text);
-  padding: 4rpx 6rpx 0 6rpx;
-  margin-top: 0;
-  /* 移除额外偏移 */
-  display: inline-flex;
-  align-items: center;
-}
-
-.legend-inline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16rpx;
-  padding-top: 8rpx;
-  border-top: 1px dashed var(--border);
-}
-
-.legend-inline text {
-  font-size: 20rpx;
-  color: var(--text-sub);
-}
-
-.legend-inline .b {
-  font-weight: bold;
-  color: var(--accent);
-  margin-right: 4rpx;
-}
-
-.frac.small .n,
-.frac.small .d {
-  font-size: 22rpx;
-  padding: 0 4rpx;
-}
-
-/* 核心输入框优化 */
-.input-row-split {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.input-half {
-  flex: 1;
-}
-
+/* Cleaned up old alignment classes */
+/* Quick Actions Group - Bottom Aligned */
 .quick-btn-group {
   display: flex;
   gap: 12rpx;
+  height: 72rpx; /* MATCH STANDARD INPUT HEIGHT (72rpx) */
+  align-items: center;
 }
 
 .q-btn {
+  height: 72rpx; /* STRICT MATCH */
+  margin: 0;
   background: var(--accent-dim);
   color: var(--accent);
   border: 1px solid var(--border);
   font-size: 26rpx;
   font-family: monospace;
   font-weight: bold;
-  height: 64rpx;
-  /* 与输入框等高 */
   padding: 0 24rpx;
-  border-radius: 12rpx;
+  border-radius: 16rpx; /* Match Input Radius */
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
+  box-sizing: border-box; /* CRITICAL: Include border in 72rpx height */
 }
 
 .q-btn.icon {
@@ -1022,65 +722,218 @@ button.btn-ghost {
   margin-right: auto;
 }
 
-.convert-inputs {
-  margin-bottom: 16rpx;
+/* ========== 换算弹窗 - 重新设计 ========== */
+.conv-modal {
+  width: 90%;
+  max-width: 640rpx;
+  background: var(--card-bg, #1f2937);
+  border-radius: 24rpx;
+  padding: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
 }
 
-.input-row-inline {
+.conv-head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 28rpx;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.conv-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.conv-head .close-icon {
+  position: absolute;
+  right: 20rpx;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.conv-formula-box {
+  margin: 20rpx 28rpx;
+  padding: 16rpx;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.conv-formula-box .formula-label {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  margin-bottom: 6rpx;
+  display: block;
+}
+
+.conv-formula-box .formula-code {
+  font-family: "DIN Alternate", "Courier New", monospace;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.conv-inputs {
   display: flex;
   gap: 16rpx;
-}
-
-.input-col {
-  flex: 1;
-}
-
-.input-col .label {
-  font-size: 22rpx;
-  margin-bottom: 6rpx;
-}
-
-.input-col .input {
-  height: 60rpx;
-  font-size: 26rpx;
-}
-
-.convert-result {
-  text-align: center;
-  padding: 20rpx;
-  background: rgba(16, 185, 129, 0.1);
-  border-radius: 12rpx;
+  padding: 0 28rpx;
   margin-bottom: 20rpx;
 }
 
-.result-label {
-  font-size: 24rpx;
-  color: var(--text-sub);
-  display: block;
-  margin-bottom: 8rpx;
+.conv-input-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.result-value {
-  font-size: 36rpx;
+.conv-label {
+  font-size: 22rpx;
+  color: var(--text-sub);
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.conv-result-box {
+  margin: 0 28rpx 16rpx;
+  padding: 16rpx;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.04) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.conv-result-label {
+  font-size: 20rpx;
+  color: var(--text-sub);
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.conv-result-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+
+/* Result Split Layout (New Dashboard Style) */
+.result-split-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  /* Negative margins offset ui-card's internal 30rpx padding */
+  margin: -30rpx -30rpx;
+  /* Now add our own symmetric padding */
+  padding: 40rpx 30rpx;
+  min-height: 140rpx;
+}
+
+.res-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.res-divider-v {
+  width: 1px;
+  height: 60rpx; /* Height of the separator */
+  background: var(--border);
+  opacity: 0.5;
+}
+
+.res-label {
+  font-size: 26rpx; /* Increased from 22rpx for hierarchy */
+  color: var(--text-sub);
+  margin-bottom: 8rpx; /* Breathing room */
+  font-weight: 600; /* Bold to distinguishing from input labels */
+  letter-spacing: 0.5rpx;
+}
+
+.res-val-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 6rpx;
+}
+
+.res-val-big {
+  font-size: 56rpx; /* Enlarged for prominence */
   font-weight: bold;
-  color: #10b981;
+  font-family: "DIN Alternate", sans-serif;
+  color: var(--text-main);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.res-val-big.highlight {
+  color: var(--primary);
+}
+
+/* 结果更新时的脉冲动效 */
+.res-val-big.pulse {
+  animation: resultPulse 0.5s ease-out;
+}
+
+@keyframes resultPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); color: var(--accent); }
+  100% { transform: scale(1); }
+}
+
+.res-unit-small {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.conv-result-num {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: var(--accent);
   font-family: "DIN Alternate", monospace;
 }
 
-.convert-card .mc-foot {
-  display: flex;
-  gap: 20rpx;
+.conv-result-unit {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  font-weight: 500;
 }
 
-.convert-card .btn-primary {
+.conv-foot {
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx 28rpx 28rpx;
+  border-top: 1px solid var(--border);
+}
+
+.conv-foot .btn-ghost,
+.conv-foot .btn-primary {
   flex: 1;
-  background: var(--accent);
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.conv-foot .btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+}
+
+.conv-foot .btn-primary {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.85) 100%);
   color: #fff;
   border: none;
-  border-radius: 16rpx;
-  height: 76rpx;
-  line-height: 76rpx;
-  font-size: 26rpx;
+  box-shadow: 0 2rpx 8rpx rgba(245, 158, 11, 0.2);
 }
 
 /* 结果网格布局 */
@@ -1144,3 +997,477 @@ button.btn-ghost {
   color: var(--text-sub);
   font-weight: 500;
 }
+
+/* --- Formula Modal Styles (Restored & Optimized) --- */
+.fm-card {
+  background: var(--card-bg);
+  width: 88% !important; /* Narrower for side breathing room */
+  max-height: 75vh;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 0;
+  margin-top: 60rpx; /* Bias position downwards for visual balance */
+  border: 1px solid var(--border);
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.3);
+}
+
+.fm-card .fm-head {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  color: var(--text-main);
+  font-size: 30rpx; /* Scaled down */
+  align-items: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.fm-card .close-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 36rpx; /* Scaled down */
+  color: var(--text-sub);
+  padding: 10rpx;
+  line-height: 1;
+}
+
+.fm-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.f-box {
+  background: var(--input-bg);
+  padding: 16rpx;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  border: 1px solid var(--border);
+}
+
+
+/* Result Surface Overrides */
+/* Result Surface Overrides */
+.result-surface::before {
+  /* Restore yellow bar */
+  display: block !important;
+}
+
+.result-surface {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-top: 1px solid var(--border) !important;
+  /* Override ui-card's default padding for full centering control */
+  padding: 0 !important;
+  /* Flex centering for content */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-height: 180rpx !important; /* Minimum height for proper centering */
+}
+
+/* Section & Titles - Standardized to Fluid Module */
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20rpx 0 16rpx 0;
+  padding-bottom: 8rpx;
+  min-height: 48rpx;
+}
+
+.section-title {
+  font-size: 30rpx !important; /* Fluid Standard */
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0; /* Remove vertical margin as row handles it */
+  padding-left: 16rpx;
+  border-left: 8rpx solid var(--primary); /* Thick Vertical Bar */
+  text-transform: uppercase;
+  letter-spacing: 1rpx;
+  line-height: 1.2;
+}
+
+.bracket-info {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  font-weight: 400;
+  margin-left: 8rpx;
+  text-transform: none; /* Keep english subtitle natural */
+}
+
+/* Grid Layout for Perfect Alignment */
+.grid-2-align {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.align-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input Row with External Actions (V23) */
+.input-row-with-actions {
+  display: flex;
+  align-items: flex-end; /* Align bottom to match input box */
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.input-main {
+  flex: 1; /* Input takes remaining space */
+}
+
+/* Ghost Add Button (Visual De-noise) */
+.add-layer-btn-ghost {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 8rpx 20rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100rpx;
+  transition: all 0.2s;
+}
+
+.add-layer-btn-ghost:active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(0.95);
+}
+
+.ghost-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+/* Convert Link - Minimal */
+.convert-link {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 24rpx;
+  color: var(--text-sub);
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.convert-link:active {
+  background: var(--bg-hover);
+  opacity: 0.8;
+}
+
+/* Add Layer Button Style */
+.add-layer-btn {
+  background: var(--primary);
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+
+.add-layer-btn:active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+/* Delete Layer Button */
+.del-layer-btn {
+  padding: 8rpx;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make Result Row Compact */
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.result-row:last-child {
+  border-bottom: none;
+}
+
+.result-key {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+.result-val {
+  font-size: 32rpx;
+  font-weight: bold;
+  font-family: monospace;
+}
+
+
+.fm-row {
+  font-family: "Times New Roman", serif;
+  color: var(--text-main);
+  text-align: center;
+  margin: 8rpx 0;
+  font-size: 34rpx; /* Scaled down */
+  font-weight: bold;
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.legend-grid {
+  margin-top: 16rpx;
+  border-top: 1px dashed var(--border);
+  padding-top: 16rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rpx;
+}
+
+.legend-grid view {
+  font-size: 20rpx; /* Scaled down */
+  color: var(--text-sub);
+  white-space: nowrap;
+}
+
+.legend-grid view text {
+  font-weight: bold;
+  color: var(--accent);
+  margin-right: 6rpx;
+}
+
+/* Fraction styles */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 4rpx;
+}
+
+.frac .n {
+  border-bottom: 1px solid currentColor;
+  padding: 0 4rpx;
+}
+
+.frac .d {
+  padding: 0 4rpx;
+}
+
+.sqrt-wrap {
+  display: inline-flex;
+}
+
+.sqrt-sign {
+  font-size: 1.15em;
+  font-weight: normal; /* Normal weight for better glyph shape */
+  margin-right: -3rpx; /* Tighter overlap */
+  transform: translateY(4rpx); /* Fine-tune vertical position */
+}
+
+
+.sqrt-content {
+  border-top: 1.5px solid currentColor; /* Thicker line */
+  padding-top: 2rpx;
+  margin-top: 0.12em; /* Lower line slightly to meet V tip */
+}
+
+/* ========================================= */
+/* COMPACT MODE OVERRIDES (Single Page View) */
+/* ========================================= */
+
+/* 1. Global Spacing Compression */
+.page-container {
+  padding-bottom: 20rpx; /* Minimal bottom padding */
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* No gap between cards if any */
+}
+
+/* Cards: Reduce padding */
+.ui-card {
+  padding: 20rpx !important;
+  margin-bottom: 16rpx !important;
+}
+
+/* 2. Compact Form Groups */
+.form-group {
+  margin-bottom: 12rpx !important; /* Halved from 24rpx */
+}
+
+/* Add Compact Rule for Form Row (Split) */
+.form-row {
+  margin-bottom: 12rpx !important;
+  gap: 16rpx !important; /* Slightly tighter gap */
+}
+
+.form-label {
+  margin-bottom: 6rpx !important;
+  font-size: 24rpx !important; /* Slightly smaller labels */
+  font-weight: 500 !important; /* Visual Consistency */
+}
+
+/* 3. Compact Input Heights (The Core Change) */
+.input-container {
+  height: 64rpx !important; /* Reduced from 80rpx -> Dense Pro Look */
+  min-height: 64rpx !important;
+}
+
+.form-input {
+  font-size: 26rpx !important; /* Adjusted for smaller height */
+}
+
+.input-placeholder {
+  font-size: 24rpx !important;
+}
+
+.unit-suffix {
+  font-size: 22rpx !important;
+}
+
+/* Legacy compact styles removed to respect main 72rpx standard */
+
+/* 5. Tighter Layer List */
+.layer-item {
+  padding: 12rpx !important;
+  margin-bottom: 8rpx !important;
+  border-radius: 12rpx !important;
+}
+
+.layer-header {
+  margin-bottom: 8rpx !important;
+}
+
+.layer-idx {
+  font-size: 24rpx !important;
+}
+
+/* 6. Compact Section Titles */
+.section-title, .sec-title {
+  margin: 16rpx 0 8rpx 0 !important;
+  font-size: 26rpx !important;
+}
+
+.divider {
+  margin: 16rpx 0 !important;
+}
+
+/* 7. Compact Action Buttons */
+.btn-grid {
+  margin-top: 16rpx !important;
+  gap: 10rpx !important;
+}
+
+.btn {
+  padding: 0 !important;
+  height: 72rpx !important;
+  font-size: 26rpx !important;
+  border-radius: 999px !important;
+}
+
+.btn-secondary {
+  font-size: 24rpx !important;
+}
+
+.hint-text {
+  display: none;
+}
+
+/* 8. Compact Result Surface */
+.result-surface {
+  padding: 16rpx 24rpx !important;
+  margin-top: 0 !important;
+}
+
+.result-row {
+  margin-bottom: 8rpx !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-key {
+  font-size: 26rpx !important;
+}
+
+.result-val.highlight {
+  font-size: 36rpx !important;
+}
+
+/* Adjust Add Layer Button to be smaller */
+.add-layer-btn {
+  padding: 4rpx 12rpx !important;
+  /* background: rgba(255,255,255,0.1); REMOVED to fix Light Mode visibility */
+  border-radius: 8rpx;
+}
+
+/* ========================================= */
+/* Formula Modal Specifics (Coating Module)  */
+/* ========================================= */
+
+/* Section Title - Theme Color & Smaller Size */
+.ft {
+  color: #f59e0b !important; /* Force Orange matching UI */
+  font-weight: bold;
+  font-size: 26rpx; /* Reduced from 28/30rpx */
+  margin-bottom: 12rpx;
+}
+
+/* Modal Layout */
+.fm-card { width: 90%; max-height: 80vh; background: var(--card-bg); border-radius: 20rpx; padding: 24rpx; display: flex; flex-direction: column; }
+.fm-head { display: flex; justify-content: center; align-items: center; margin-bottom: 20rpx; position: relative; }
+.fm-head .close-icon { position: absolute; right: 0; font-size: 40rpx; color: var(--text-sub); padding: 10rpx; line-height: 1; }
+.fm-title { font-weight: bold; color: var(--text-main); font-size: 32rpx; }
+.fm-scroll { flex: 1; overflow-y: auto; }
+.f-box { background: var(--input-bg); padding: 20rpx; border-radius: 16rpx; margin-bottom: 20rpx; border: 1px solid var(--border); }
+
+/* Formula Row */
+.fm-row {
+  text-align: center;
+  font-family: "Times New Roman", serif;
+  font-size: 30rpx;
+  margin: 12rpx 0;
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Fraction */
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 6rpx; }
+.frac .n { border-bottom: 1px solid currentColor; padding: 0 4rpx; font-size: 0.9em; }
+.frac .d { padding: 0 4rpx; font-size: 0.9em; }
+
+/* Square Root */
+.sqrt-wrap { display: inline-flex; align-items: baseline; }
+.sqrt-sign { font-size: 1.2em; line-height: 1; margin-right: 2rpx; }
+.sqrt-content { border-top: 1px solid currentColor; padding-top: 2rpx; }
+
+/* Legend */
+.legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-top: 16rpx; border-top: 1px dashed var(--border); padding-top: 16rpx; }
+.legend-grid view { font-size: 24rpx; color: var(--text-sub); display: flex; align-items: center; }
+.legend-grid text { font-weight: bold; color: var(--highlight); margin-right: 12rpx; font-family: "Times New Roman", serif; font-style: normal; font-size: 28rpx; }

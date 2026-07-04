@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#6366f1" stroke-width="2">
+  <!-- Die Head Upper -->
+  <path d="M20 12 L28 40 L32 40 L40 12" stroke-linejoin="round"/>
+  <path d="M20 12 L12 12 L12 36 L24 48" stroke-linejoin="round"/>
+  <path d="M40 12 L48 12 L48 36 L36 48" stroke-linejoin="round"/>
+  <!-- Central Slit -->
+  <line x1="30" y1="20" x2="30" y2="40" stroke-width="1.5"/>
+  <!-- Coating Fluid -->
+  <path d="M30 48 L30 54 L56 54" stroke="#6366f1" stroke-width="2" fill="rgba(99, 102, 241, 0.2)"/>
+  <!-- Substrate -->
+  <line x1="8" y1="58" x2="56" y2="58" stroke="#333" stroke-width="2"/>
+  <line x1="4" y1="58" x2="8" y2="58" stroke="#333" stroke-width="2" stroke-dasharray="2 2"/>
+</svg>

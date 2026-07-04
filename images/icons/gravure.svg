@@ -1,0 +1,16 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#6366f1" stroke-width="2">
+  <!-- Gravure Roller -->
+  <circle cx="24" cy="24" r="16" stroke="#6366f1"/>
+  <!-- Mesh Pattern -->
+  <path d="M14 14 L34 34 M14 34 L34 14 " stroke-width="0.5" opacity="0.5"/>
+  <path d="M12 24 L36 24 M24 12 L24 36" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- Backing Roller (Lower) -->
+  <circle cx="44" cy="44" r="12" stroke="#333"/>
+
+  <!-- Substrate Path -->
+  <path d="M4 44 L30 44 Q 44 44 54 34" stroke="#333" stroke-width="1.5"/>
+
+  <!-- Fluid Pan -->
+  <path d="M14 40 Q 24 50 34 40" stroke="#6366f1" fill="rgba(99, 102, 241, 0.1)"/>
+</svg>

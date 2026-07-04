@@ -1,0 +1,67 @@
+<!-- 主入口：遍历 AST -->
+<view class="latex-container" style="color: {{color}}; justify-content: {{justify}}">
+  <block wx:for="{{ast}}" wx:key="index" wx:for-item="node">
+
+    <!-- 文本 -->
+    <block wx:if="{{node.type === 'text'}}">
+      <text class="latex-text {{node.style}}">{{node.content}}</text>
+    </block>
+
+    <!-- 符号 -->
+    <block wx:elif="{{node.type === 'symbol'}}">
+      <text class="latex-symbol">{{node.content}}</text>
+    </block>
+
+    <!-- 分式 (Component Recursion) -->
+    <block wx:elif="{{node.type === 'frac'}}">
+      <view class="latex-frac">
+        <view class="latex-frac-num">
+          <latex-formula nodes="{{node.numerator}}" />
+        </view>
+        <view class="latex-frac-line"></view>
+        <view class="latex-frac-den">
+          <latex-formula nodes="{{node.denominator}}" />
+        </view>
+      </view>
+    </block>
+
+    <!-- 上标 -->
+    <block wx:elif="{{node.type === 'sup'}}">
+      <view class="latex-sup">
+        <latex-formula nodes="{{node.content}}" />
+      </view>
+    </block>
+
+    <!-- 下标 -->
+    <block wx:elif="{{node.type === 'sub'}}">
+      <view class="latex-sub">
+        <latex-formula nodes="{{node.content}}" />
+      </view>
+    </block>
+
+    <!-- 组合 -->
+    <block wx:elif="{{node.type === 'group'}}">
+      <view class="latex-group {{node.className}}">
+        <latex-formula nodes="{{node.content}}" />
+      </view>
+    </block>
+
+    <!-- 根号 -->
+     <block wx:elif="{{node.type === 'sqrt'}}">
+       <view class="latex-sqrt">
+         <view class="latex-sqrt-symbol">√</view>
+         <view class="latex-sqrt-content">
+             <latex-formula nodes="{{node.content}}" />
+         </view>
+       </view>
+    </block>
+
+    <!-- 顶部符号 (如 \dot) -->
+    <block wx:elif="{{node.type === 'over'}}">
+      <view class="latex-over">
+        <text class="latex-over-symbol">{{node.symbol}}</text>
+        <latex-formula nodes="{{node.content}}" />
+      </view>
+    </block>
+  </block>
+</view>

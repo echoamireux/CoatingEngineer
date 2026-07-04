@@ -60,15 +60,20 @@ Component({
   lifetimes: {
     attached() {
       const rect = wx.getMenuButtonBoundingClientRect()
-      const platform = (wx.getDeviceInfo() || wx.getSystemInfoSync()).platform
+      const windowInfo = wx.getWindowInfo()
+      const deviceInfo = wx.getDeviceInfo()
+      const { windowWidth, statusBarHeight } = windowInfo
+      const { platform } = deviceInfo
       const isAndroid = platform === 'android'
-      const isDevtools = platform === 'devtools'
-      const { windowWidth, safeArea: { top = 0, bottom = 0 } = {} } = wx.getWindowInfo() || wx.getSystemInfoSync()
+
+      // 计算右侧胶囊按钮所占的宽度（用于给右侧留白）
+      const capsuleWidth = windowWidth - rect.left + 10 // 胶囊宽度 + 一点间距
+
       this.setData({
         ios: !isAndroid,
-        innerPaddingRight: `padding-right: ${windowWidth - rect.left}px`,
-        leftWidth: `width: ${windowWidth - rect.left}px`,
-        safeAreaTop: isDevtools || isAndroid ? `height: calc(var(--height) + ${top}px); padding-top: ${top}px` : ``
+        innerPaddingRight: `padding-right: ${capsuleWidth}px`,
+        leftWidth: `width: ${capsuleWidth}px`, // 左侧与右侧对称
+        safeAreaTop: `height: calc(var(--height) + ${statusBarHeight}px); padding-top: ${statusBarHeight}px`
       })
     },
   },

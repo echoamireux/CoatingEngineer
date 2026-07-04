@@ -1,9 +1,13 @@
-const { initTheme, formatNumberObj, formatTime } = require('../../utils/common')
+const { initTheme, formatNumberObj, formatTime, debounce } = require('../../utils/common')
 const { saveHistory, deleteHistory } = require('../../utils/history')
+const formBehavior = require('../../behaviors/form-behavior')
 
 Page({
+  behaviors: [formBehavior],
+
   data: {
     theme: 'dark',
+    statusBarHeight: 44,
     showFormula: false, showRPMModal: false, showKModal: false,
     showResetModal: false,
     showHistoryModal: false,
@@ -28,9 +32,16 @@ Page({
   onShow() {
     initTheme(this);
     this.loadLocalHistory();
-
-    // 检查并回填历史数据
     this.restoreFromHistory();
+    // 获取状态栏高度
+    const systemInfo = wx.getWindowInfo();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+    // 初始化防抖计算
+    this._initDebounce();
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
   },
 
   restoreFromHistory() {
@@ -70,8 +81,127 @@ Page({
   toggleFormula() { this.setData({ showFormula: !this.data.showFormula }); },
 
   onInput(e) {
+    // For ui-form-field component, value is in e.detail.value
     const field = e.currentTarget.dataset.field;
-    this.setData({ [field]: e.detail.value, [`errors.${field}`]: false, pipeMissingText: '', slotMissingText: '' });
+    const value = e.detail.value;
+
+    this.setData({ [field]: value, [`errors.${field}`]: false, pipeMissingText: '', slotMissingText: '' });
+    // ★ 触发防抖自动计算
+    if (this._debouncedCalc) this._debouncedCalc();
+  },
+
+  // ★★★ 初始化防抖计算函数 ★★★
+  _initDebounce() {
+    if (!this._debouncedCalc) {
+      this._debouncedCalc = debounce(() => {
+        // 分项独立计算：管道和模头各自尝试
+        this._tryCalcPipe();
+        this._tryCalcSlot();
+      }, 500);
+    }
+  },
+
+  // ★★★ 分项计算：管道压降 ★★★
+  _tryCalcPipe() {
+    const d = this.data;
+    // 检查通用必填字段
+    if (!d.rho_wet || !d.pipe_Q) return;
+    // 检查流变参数
+    if (d.isPowerLaw && (!d.K_val || !d.n_val)) return;
+    if (!d.isPowerLaw && !d.viscosity) return;
+    // 检查管道专属字段
+    if (!d.pipe_D || !d.pipe_L || d.pipe_dz === '' || d.pipe_K_loss === '') return;
+    // 静默计算管道压降
+    this._runMathSilent('pipe');
+  },
+
+  // ★★★ 分项计算：模头压降 ★★★
+  _tryCalcSlot() {
+    const d = this.data;
+    // 检查通用必填字段
+    if (!d.rho_wet || !d.pipe_Q) return;
+    // 检查流变参数
+    if (d.isPowerLaw && (!d.K_val || !d.n_val)) return;
+    if (!d.isPowerLaw && !d.viscosity) return;
+    // 检查模头专属字段
+    if (!d.slot_W || !d.slot_H || !d.slot_Ls) return;
+    // 静默计算模头压降
+    this._runMathSilent('slot');
+  },
+
+  // ★★★ 静默计算（不弹Toast） ★★★
+  _runMathSilent(mode) {
+    const d = this.data;
+    const rho = parseFloat(d.rho_wet) * 1000;
+    let K = 0, n = 1;
+    if (d.isPowerLaw) { K = parseFloat(d.K_val); n = parseFloat(d.n_val); }
+    else { K = parseFloat(d.viscosity) / 1000; n = 1; }
+    const Q = parseFloat(d.pipe_Q) / 60000;
+
+    if (n <= 0 || K <= 0 || !isFinite(rho) || !isFinite(Q)) return;
+
+    let p_dp = 0, p_re = 0, p_visc = 0, p_shear = 0, p_turb = false;
+    let s_dp = 0, s_re = 0, s_visc = 0, s_shear = 0, s_turb = false;
+
+    if (mode === 'pipe') {
+      const D = parseFloat(d.pipe_D) / 1000;
+      const L = parseFloat(d.pipe_L);
+      const dz = parseFloat(d.pipe_dz);
+      const Kl = parseFloat(d.pipe_K_loss);
+      if (D <= 0) return;
+      const factor = (3 * n + 1) / (4 * n);
+      const shear = factor * (32 * Q) / (Math.PI * Math.pow(D, 3));
+      const mu_eff = shear > 0 ? K * Math.pow(shear, n - 1) : K;
+      if (mu_eff <= 0 || !isFinite(mu_eff)) return;
+      const v = Q / (Math.PI * Math.pow(D / 2, 2));
+      const re = (rho * v * D) / mu_eff;
+      const dp = (128 * mu_eff * L * Q) / (Math.PI * Math.pow(D, 4)) + rho * 9.81 * dz + Kl * 0.5 * rho * v * v;
+      p_dp = dp / 1000; p_re = re; p_visc = mu_eff * 1000; p_shear = shear; p_turb = re > 2300;
+    }
+
+    if (mode === 'slot') {
+      const W = parseFloat(d.slot_W) / 1000;
+      const H = parseFloat(d.slot_H) / 1e6;
+      const Ls = parseFloat(d.slot_Ls) / 1000;
+      if (W <= 0 || H <= 0) return;
+      const factor = (2 * n + 1) / (3 * n);
+      const shear = factor * (6 * Q) / (W * H * H);
+      const mu_eff = shear > 0 ? K * Math.pow(shear, n - 1) : K;
+      if (mu_eff <= 0 || !isFinite(mu_eff)) return;
+      const v = Q / (W * H);
+      const re = (rho * v * (2 * H)) / mu_eff;
+      const dp = (12 * mu_eff * Ls * Q) / (W * Math.pow(H, 3));
+      s_dp = dp / 1000; s_re = re; s_visc = mu_eff * 1000; s_shear = shear; s_turb = re > 2300;
+    }
+
+    // 保留之前的另一个分项结果
+    const prevResult = this.data.result || {};
+    const newResult = {
+      hasResult: true,
+      layoutMode: 'dual',
+      total_dp: this.fmt((mode === 'pipe' ? p_dp : (prevResult.p_dp?.b !== '-' ? parseFloat(prevResult.p_dp.b) * Math.pow(10, prevResult.p_dp.p || 0) : 0)) + (mode === 'slot' ? s_dp : (prevResult.s_dp?.b !== '-' ? parseFloat(prevResult.s_dp.b) * Math.pow(10, prevResult.s_dp.p || 0) : 0))),
+      p_dp: mode === 'pipe' ? this.fmt(p_dp) : (prevResult.p_dp || { b: '-', p: 0, s: false }),
+      p_re: mode === 'pipe' ? this.fmt(p_re) : (prevResult.p_re || '-'),
+      p_visc: mode === 'pipe' ? this.fmt(p_visc) : (prevResult.p_visc || { b: '-', p: 0, s: false }),
+      p_shear: mode === 'pipe' ? this.fmt(p_shear) : (prevResult.p_shear || { b: '-', p: 0, s: false }),
+      p_turb: mode === 'pipe' ? p_turb : (prevResult.p_turb || false),
+      s_dp: mode === 'slot' ? this.fmt(s_dp) : (prevResult.s_dp || { b: '-', p: 0, s: false }),
+      s_re: mode === 'slot' ? this.fmt(s_re) : (prevResult.s_re || '-'),
+      s_visc: mode === 'slot' ? this.fmt(s_visc) : (prevResult.s_visc || { b: '-', p: 0, s: false }),
+      s_shear: mode === 'slot' ? this.fmt(s_shear) : (prevResult.s_shear || { b: '-', p: 0, s: false }),
+      s_turb: mode === 'slot' ? s_turb : (prevResult.s_turb || false)
+    };
+    this.setData({ result: newResult });
+  },
+
+  onInputFocus(e) {
+    const field = e.currentTarget.dataset.field;
+    this.setData({ [`focus.${field}`]: true });
+  },
+
+  onInputBlur(e) {
+    const field = e.currentTarget.dataset.field;
+    this.setData({ [`focus.${field}`]: false });
   },
 
   fmt(num) {
@@ -94,26 +224,70 @@ Page({
     });
   },
 
-  openRPMModal() { this.setData({ showRPMModal: true }); },
+  openRPMModal() {
+    this.setData({
+      showRPMModal: true,
+      temp_rpm: '',
+      temp_disp: '',
+      rpmResult: ''
+    });
+  },
   closeRPMModal() { this.setData({ showRPMModal: false }); },
-  onRPMInput(e) { this.setData({ temp_rpm: e.detail.value }); },
-  onDispInput(e) { this.setData({ temp_disp: e.detail.value }); },
-  calcRPMToQ() {
+
+  // RPM 弹窗输入处理 - 实时计算
+  onRPMInput(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = e.detail.value;
+    this.setData({ [field]: value });
+    // 实时计算
+    this.calcRPMResult();
+  },
+
+  // RPM 弹窗焦点管理
+  onRPMFocus(e) {
+    const field = e.currentTarget.dataset.field;
+    const key = field === 'temp_disp' ? 'rpm_dp' : 'rpm_n';
+    this.setData({ [`focus.${key}`]: true });
+  },
+
+  onRPMBlur(e) {
+    const field = e.currentTarget.dataset.field;
+    const key = field === 'temp_disp' ? 'rpm_dp' : 'rpm_n';
+    this.setData({ [`focus.${key}`]: false });
+  },
+
+  preventBubble() {
+    // 阻止冒泡专用
+  },
+
+  // 实时计算流量结果
+  calcRPMResult() {
     const n = parseFloat(this.data.temp_rpm);
     const dp = parseFloat(this.data.temp_disp);
-    if (n && dp) {
-      // 1. 计算原始值
-      let val = n * dp / 1000;
-
-      // 🌟 优化显示：保留6位有效数字
-      // parseFloat(...) 会自动去掉 .toPrecision 生成的字符串末尾多余的 "0"
-      // 效果：0.0042 -> 0.0042 (而不是0.00);  150.00 -> 150 (而不是150.00)
-      let showVal = parseFloat(val.toPrecision(6)).toString();
-
-      this.setData({ pipe_Q: showVal, 'errors.pipe_Q': false });
-      this.closeRPMModal();
+    if (!isNaN(n) && !isNaN(dp) && n > 0 && dp > 0) {
+      const val = dp * n / 1000;
+      const showVal = parseFloat(val.toPrecision(6)).toString();
+      this.setData({ rpmResult: showVal });
+    } else {
+      this.setData({ rpmResult: '' });
     }
   },
+
+  // 应用结果到表单
+  applyRPMResult() {
+    if (this.data.rpmResult) {
+      this.setData({
+        pipe_Q: this.data.rpmResult,
+        'errors.pipe_Q': false,
+        showRPMModal: false
+      });
+      wx.showToast({ title: '已应用', icon: 'success' });
+    }
+  },
+
+  // 保留旧方法兼容性
+  onDispInput(e) { this.setData({ temp_disp: e.detail.value }); this.calcRPMResult(); },
+  calcRPMToQ() { this.applyRPMResult(); },
 
   openKModal() { this.setData({ showKModal: true }); },
   closeKModal() { this.setData({ showKModal: false }); },
@@ -252,15 +426,35 @@ Page({
     else { K = parseFloat(d.viscosity) / 1000; n = 1; }
     const Q = parseFloat(d.pipe_Q) / 60000;
 
+    // 全局除零保护
+    if (n <= 0 || K <= 0) {
+      wx.showToast({ title: '流变参数需>0', icon: 'none' });
+      return;
+    }
+
     let p_dp = 0, p_re = 0, p_visc = 0, p_shear = 0, p_turb = false;
     if (mode === 'pipe' || mode === 'total') {
       const D = parseFloat(d.pipe_D) / 1000;
       const L = parseFloat(d.pipe_L);
       const dz = parseFloat(d.pipe_dz);
       const Kl = parseFloat(d.pipe_K_loss);
+
+      // 管径除零保护
+      if (D <= 0) {
+        wx.showToast({ title: '管径必须大于0', icon: 'none' });
+        return;
+      }
+
       const factor = (3 * n + 1) / (4 * n);
       const shear = factor * (32 * Q) / (Math.PI * Math.pow(D, 3));
-      const mu_eff = K * Math.pow(shear, n - 1);
+
+      // 剪切率保护（避免 mu_eff 计算异常）
+      const mu_eff = shear > 0 ? K * Math.pow(shear, n - 1) : K;
+      if (mu_eff <= 0 || !isFinite(mu_eff)) {
+        wx.showToast({ title: '有效粘度计算异常', icon: 'none' });
+        return;
+      }
+
       const v = Q / (Math.PI * Math.pow(D / 2, 2));
       const re = (rho * v * D) / mu_eff;
       const dp = (128 * mu_eff * L * Q) / (Math.PI * Math.pow(D, 4)) + rho * 9.81 * dz + Kl * 0.5 * rho * v * v;
@@ -272,9 +466,23 @@ Page({
       const W = parseFloat(d.slot_W) / 1000;
       const H = parseFloat(d.slot_H) / 1e6;
       const Ls = parseFloat(d.slot_Ls) / 1000;
+
+      // 模头尺寸除零保护
+      if (W <= 0 || H <= 0) {
+        wx.showToast({ title: '模头宽度/间隙须>0', icon: 'none' });
+        return;
+      }
+
       const factor = (2 * n + 1) / (3 * n);
       const shear = factor * (6 * Q) / (W * H * H);
-      const mu_eff = K * Math.pow(shear, n - 1);
+
+      // 剪切率保护
+      const mu_eff = shear > 0 ? K * Math.pow(shear, n - 1) : K;
+      if (mu_eff <= 0 || !isFinite(mu_eff)) {
+        wx.showToast({ title: '有效粘度计算异常', icon: 'none' });
+        return;
+      }
+
       const v = Q / (W * H);
       const re = (rho * v * (2 * H)) / mu_eff;
       const dp = (12 * mu_eff * Ls * Q) / (W * Math.pow(H, 3));
@@ -294,5 +502,12 @@ Page({
       },
       pipeMissingText: '', slotMissingText: ''
     });
+
+    let tip = '计算完成';
+    if (mode === 'pipe') tip = '已计算管道压降';
+    else if (mode === 'slot') tip = '已计算模头压降';
+    else if (mode === 'total') tip = '全部已更新';
+
+    wx.showToast({ title: tip, icon: 'success' });
   }
 })

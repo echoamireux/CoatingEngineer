@@ -1,7 +1,10 @@
 const app = getApp()
+const { callCloudFunction } = require('../../utils/common')
 
 Page({
   data: {
+    statusBarHeight: 44,
+    theme: 'dark', // Default theme
     isLoggedIn: false,
     inputPass: '',
     loading: false,
@@ -19,6 +22,18 @@ Page({
 
   onLoad() {
     this.setData({ isLoggedIn: false })
+    // 获取状态栏高度
+    const systemInfo = wx.getWindowInfo();
+    // 获取主题
+    const theme = wx.getStorageSync('theme') || 'dark';
+    this.setData({
+      statusBarHeight: systemInfo.statusBarHeight || 44,
+      theme: theme
+    });
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
   },
 
   // === 登录逻辑 ===
@@ -34,12 +49,9 @@ Page({
 
     try {
       // 调用云函数验证密码并获取数据
-      const res = await wx.cloud.callFunction({
-        name: 'updateSettings',
-        data: {
+      const res = await callCloudFunction('updateSettings', {
           password: password,
           type: 'get_all_settings' // 直接尝试获取数据作为验证
-        }
       })
 
       this.setData({ loading: false })
@@ -49,15 +61,21 @@ Page({
         // 填充数据
         const { settings, currentAccessCode } = res.result.data
         this.applySettings(settings, currentAccessCode)
-        wx.showToast({ title: '欢迎回来', icon: 'success' })
+        wx.showToast({ title: '欢迎回来', icon: 'success', duration: 2000 })
       } else {
         wx.vibrateShort()
-        wx.showToast({ title: '密码错误', icon: 'error' })
+        wx.showToast({ title: '密码错误', icon: 'error', duration: 2000 })
       }
     } catch (err) {
       this.setData({ loading: false })
       console.error(err)
-      wx.showToast({ title: '验证失败', icon: 'none' })
+      if (err.message.includes('网络')) {
+          wx.showToast({ title: '网络不可用', icon: 'none', duration: 2000 })
+      } else if (err.isTimeout) {
+          wx.showToast({ title: '请求超时', icon: 'none', duration: 2000 })
+      } else {
+          wx.showToast({ title: '验证失败', icon: 'none', duration: 2000 })
+      }
     }
   },
 
@@ -141,26 +159,29 @@ Page({
   async callUpdateFunction(type, payload) {
     wx.showLoading({ title: '保存中...' })
     try {
-      const res = await wx.cloud.callFunction({
-        name: 'updateSettings',
-        data: {
+      const res = await callCloudFunction('updateSettings', {
           password: this.data.inputPass, // 修复：使用用户输入的密码
           type,
           payload
-        }
       })
 
-      wx.hideLoading()
-
       if (res.result.success) {
-        wx.showToast({ title: '保存成功', icon: 'success' })
+        wx.hideLoading()
+        wx.showToast({ title: '保存成功', icon: 'success', duration: 2000 })
       } else {
-        wx.showToast({ title: '保存失败: ' + res.result.message, icon: 'none' })
+        wx.hideLoading()
+        wx.showToast({ title: '保存失败: ' + res.result.message, icon: 'none', duration: 2000 })
       }
     } catch (err) {
-      wx.hideLoading()
-      wx.showToast({ title: '网络异常', icon: 'none' })
       console.error(err)
+      wx.hideLoading()
+      if (err.message.includes('网络')) {
+          wx.showToast({ title: '网络不可用', icon: 'none', duration: 2000 })
+      } else if (err.isTimeout) {
+          wx.showToast({ title: '请求超时', icon: 'none', duration: 2000 })
+      } else {
+          wx.showToast({ title: '保存异常', icon: 'none', duration: 2000 })
+      }
     }
   }
 })

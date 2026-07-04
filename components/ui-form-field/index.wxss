@@ -1,0 +1,63 @@
+/* components/ui-form-field/index.wxss */
+.form-group {
+  margin-bottom: 24rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 24rpx;
+  color: var(--text-sub, #9ca3af);
+  margin-bottom: 12rpx;
+  font-weight: 500;
+  display: block;
+}
+
+.input-container {
+  position: relative;
+  background: var(--input-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border, #374151);
+  border-radius: 16rpx;
+  height: 72rpx; /* Standard touch target (Matches Token) */
+  box-sizing: border-box; /* CRITICAL: Include border in height calculation */
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-container.focused {
+  border-color: var(--primary, #10b981);
+  box-shadow: 0 0 0 4rpx var(--accent-dim, rgba(16, 185, 129, 0.15));
+  background: var(--card-bg, #1f2937); /* Slightly brighter on focus */
+}
+
+.input-container.error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.form-input {
+  flex: 1;
+  height: 100%;
+  font-size: 30rpx;
+  color: var(--text-main, #e5e7eb);
+  font-family: "DIN Alternate", "Roboto", Helvetica, sans-serif; /* Monospace-ish for numbers */
+  font-weight: 600;
+}
+
+.input-placeholder {
+  color: var(--text-sub, #9ca3af);
+  opacity: 0.5;
+  font-weight: normal;
+  font-size: 28rpx;
+}
+
+.unit-suffix {
+  font-size: 24rpx;
+  color: var(--text-sub, #9ca3af);
+  margin-left: 16rpx;
+  font-weight: 500;
+  opacity: 0.8;
+  white-space: nowrap;
+}

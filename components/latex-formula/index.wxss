@@ -1,0 +1,126 @@
+/* components/latex-formula/index.wxss */
+
+.latex-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* 公式默认垂直居中对齐 */
+  justify-content: center; /* 关键修复：公式水平居中 */
+  flex-wrap: wrap; /* 允许过长公式换行 */
+  font-family: 'Times New Roman', serif;
+  font-size: 34rpx; /* 基础字号 */
+  color: inherit; /* 关键修复：允许继承父级的高对比度颜色 */
+  line-height: 1.2;
+}
+
+/* 文本与符号 */
+.latex-text {
+  margin: 0; /* 移除额外间距，修复 min 等下标过宽问题 */
+  display: inline-block;
+  white-space: nowrap;
+  color: inherit; /* 继承父级颜色 */
+}
+
+.latex-text.italic {
+  font-style: italic;
+  padding-right: 2rpx; /* 防止斜体被截断 */
+}
+
+.latex-symbol {
+  margin: 0 8rpx; /* 运算符左右增加间距 */
+  font-weight: normal;
+}
+
+/* 分式结构 */
+.latex-frac {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10rpx; /* 分式左右间距 */
+  vertical-align: middle;
+}
+
+.latex-frac-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4rpx; /* 增加内边距防止内容紧贴 */
+  padding-bottom: 2rpx;
+  font-size: 90%;
+}
+
+.latex-frac-line {
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.9;
+  min-width: 20rpx; /* 关键修复：防止宽度坍塌 */
+}
+
+.latex-frac-den {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4rpx; /* 增加内边距 */
+  padding-top: 2rpx;
+  font-size: 90%;
+}
+
+/* 上标 */
+.latex-sup {
+  font-size: 70%;
+  margin-bottom: 1em; /* 向上偏移 */
+  margin-left: 2rpx;
+}
+
+/* 下标 */
+.latex-sub {
+  font-size: 70%;
+  margin-top: 0.8em; /* 向下偏移 */
+  margin-left: 2rpx;
+}
+
+/* 组合（用于min等） */
+.latex-group {
+    display: flex;
+    align-items: center;
+}
+
+/* 根号 */
+.latex-sqrt {
+    display: flex;
+    align-items: flex-start;
+}
+
+.latex-sqrt-symbol {
+    font-size: 1.2em;
+    line-height: 0.9;
+}
+
+.latex-sqrt-content {
+    border-top: 1px solid currentColor;
+    margin-top: 0.2em;
+    padding-left: 2rpx;
+}
+
+/* 顶部符号 (如 dot) */
+.latex-over {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 2rpx;
+}
+
+.latex-over-symbol {
+  font-size: 20rpx;
+  line-height: 1;
+  margin-bottom: -6rpx; /* 紧贴下方内容 */
+}
+
+/* 文本模式 (去除符号间距) */
+.latex-text-mode .latex-symbol {
+  margin: 0;
+}
+
+.latex-text-mode .latex-text.italic {
+  font-style: normal;
+}

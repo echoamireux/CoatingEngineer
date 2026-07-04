@@ -1,4 +1,4 @@
-/* ...保留 V22 基础样式... */
+/* Cost 页面样式 - 继承全局主题变量 */
 .page-container {
   min-height: 100vh;
   background: var(--bg);
@@ -7,13 +7,9 @@
   box-sizing: border-box;
 }
 
+/* 暗黑模式：只添加Cost专属变量，不覆盖基础变量 */
 .page-container.dark {
-  --bg: #000000;
-  --card: #1f2937;
-  --text: #e5e7eb;
-  --text-sub: #9ca3af;
-  --border: #374151;
-  --primary: #10b981;
+  /* --bg, --card, --text, --text-sub, --border 继承全局 */
   --warn: #f59e0b;
   --card-res: #2d3748;
   --input-bg: rgba(255, 255, 255, 0.08);
@@ -21,13 +17,8 @@
   --capsule-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.5);
 }
 
+/* 白天模式：只添加Cost专属变量 */
 .page-container.light {
-  --bg: #f3f4f6;
-  --card: #ffffff;
-  --text: #1f2937;
-  --text-sub: #6b7280;
-  --border: #e5e7eb;
-  --primary: #059669;
   --warn: #d97706;
   --card-res: #f9fafb;
   --input-bg: rgba(0, 0, 0, 0.05);
@@ -35,20 +26,111 @@
   --capsule-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
 }
 
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 30rpx 20rpx;
-  /*稍微调整padding使其更紧凑*/
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
+/* 导航栏样式 - 沉浸式设计 */
+/* 导航栏样式 - 沉浸式设计 */
+.page-header {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 100;
+  background: var(--bg); /* 沉浸式：与页面背景一致 */
+  box-sizing: border-box;
+}
 
-  /* ★★★ 核心修复：向上延伸 1px 的阴影，堵住缝隙 ★★★ */
-  box-shadow: 0 -1px 0 var(--card);
+/* Row 1: Title & Back */
+.nav-row {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  gap: 12rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.back-btn {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: var(--text-sub);
+  font-weight: 300;
+  margin-right: 4rpx;
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* Row 2: Compact Toolbar */
+.toolbar-row {
+  height: 32px; /* 紧凑高度 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 左对齐 */
+  padding: 0 24rpx;
+  gap: 40rpx; /* 图标间宽间距 */
+  background: transparent;
+  margin-bottom: 4rpx;
+  box-sizing: border-box;
+}
+
+/* Ghost Button Style */
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rpx;
+  background: transparent !important;
+  border: none !important;
+}
+
+.tool-hover {
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+.tool-btn .icon {
+  font-size: 30rpx; /* 精致小图标 */
+  opacity: 0.7;
+  color: var(--text-sub);
+  line-height: 1;
+}
+
+.tool-btn .icon:active {
+  opacity: 1;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 26rpx;
+  color: var(--text-sub);
+  padding: 8rpx 12rpx;
+  border-radius: 8rpx;
+  transition: all 0.2s;
+}
+
+.tool-btn:active {
+  background: var(--border);
+  transform: scale(0.95);
+}
+
+.tool-btn .icon {
+  font-size: 28rpx;
+}
+
+.tool-btn .label {
+  font-size: 22rpx;
 }
 
 .nav-title {
@@ -76,7 +158,8 @@
      而是用 var(--input-bg) 这种半透明色。
      效果：暗黑模式是微透的亮色，白天模式是微透的灰色。
   */
-  background: var(--input-bg);
+  /* 2. 颜色优化：适配绿色主题 (Green/Emerald) */
+  background: rgba(16, 185, 129, 0.1);
 
   border: 1px solid var(--border);
   border-radius: 16rpx;
@@ -91,6 +174,7 @@
 .icon-btn:active {
   transform: scale(0.9);
   opacity: 0.8;
+  background: rgba(16, 185, 129, 0.2);
 }
 
 .icon-btn:active {
@@ -100,7 +184,7 @@
 }
 
 .main-scroll {
-  padding: 20rpx;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -182,10 +266,11 @@
 }
 
 .label {
-  font-size: 22rpx;
+  font-size: 26rpx;
   color: var(--text-sub);
-  margin-bottom: 6rpx;
+  margin-bottom: 8rpx;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .label.warning {
@@ -209,27 +294,48 @@
 }
 
 .calc-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56rpx;
+  height: 56rpx;
+  margin-left: 12rpx;
+  margin-right: -12rpx;
+  opacity: 0.8;
+  position: relative;
+}
+
+/* 计算器按钮左侧竖线 */
+.calc-btn::before {
+  content: '';
   position: absolute;
-  right: 10rpx;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 28rpx;
-  padding: 10rpx;
-  z-index: 10;
-  opacity: 0.8;
+  height: 32rpx;
+  width: 1px;
+  background: var(--border);
 }
 
 .inp {
-  background: var(--bg);
+  background: var(--input-bg, rgba(255, 255, 255, 0.05));
   color: var(--text);
-  height: 64rpx;
-  border-radius: 12rpx;
-  padding: 0 15rpx;
-  font-size: 26rpx;
+  height: 72rpx;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  font-weight: 600;
   border: 1px solid var(--border);
   width: 100%;
   box-sizing: border-box;
   text-align: left;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inp:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx rgba(16, 185, 129, 0.15);
+  background: var(--card, #1f2937);
 }
 
 .inp.tiny {
@@ -244,6 +350,113 @@
 .inp.error {
   border-color: #ef4444 !important;
   background: rgba(239, 68, 68, 0.05);
+}
+
+/* 输入框容器 - 包裹 input 和单位后缀 */
+.input-wrap {
+  height: 72rpx;
+  background: var(--input-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+/* 聚焦状态 - 主题色边框 + 发光阴影 */
+.input-wrap.focused {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx rgba(16, 185, 129, 0.2);
+  background: var(--card, #1f2937);
+}
+
+.input-wrap.error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+/* 无边框内部 input */
+.inp-inner {
+  flex: 1;
+  height: 100%;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+/* 单位后缀 - 在输入框内右侧 */
+.unit-suffix {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-left: 12rpx;
+  font-weight: 500;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+/* 紧凑版输入框容器 - 用于良率和增值税 */
+.input-wrap.mini {
+  width: 120rpx;
+  height: 56rpx;
+  padding: 0 16rpx;
+}
+
+.input-wrap.mini .inp-inner {
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.input-wrap.mini .unit-suffix {
+  font-size: 22rpx;
+  margin-left: 6rpx;
+}
+
+/* 弹窗版输入框容器 - 用于机台费和人工费弹窗 */
+.input-wrap.modal {
+  width: 200rpx;
+  height: 64rpx;
+  padding: 0 20rpx;
+}
+
+.input-wrap.modal .inp-inner {
+  font-size: 28rpx;
+  font-weight: 500;
+  text-align: left;
+}
+
+.input-wrap.modal .unit-suffix {
+  font-size: 22rpx;
+  margin-left: 8rpx;
+}
+
+/* 配方弹窗输入框容器 */
+.input-wrap.mix {
+  height: 64rpx;
+  padding: 0 16rpx;
+  min-width: 0;
+}
+
+.input-wrap.mix .inp-inner {
+  font-size: 26rpx;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* 保存弹窗输入框容器 */
+.input-wrap.save {
+  height: 72rpx;
+  padding: 0 24rpx;
+  margin-bottom: 40rpx;
+}
+
+.input-wrap.save .inp-inner {
+  font-size: 30rpx;
 }
 
 .yield-inp.error {
@@ -321,8 +534,39 @@
   font-size: 30rpx;
   font-weight: bold;
   color: var(--text);
-  border-bottom: 1px dashed var(--text-sub);
+  border-bottom: none;
   width: 60%;
+}
+
+.input-suffix-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.input-suffix-wrapper .mat-name {
+  width: 100%;
+  padding-right: 60rpx; /* Space for icon */
+  box-sizing: border-box;
+}
+
+.suffix-btn {
+  position: absolute;
+  right: 6rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  padding: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+}
+
+.suffix-btn:active {
+  opacity: 1;
+  transform: translateY(-50%) scale(0.9);
 }
 
 .sh-right {
@@ -380,7 +624,7 @@
   opacity: 0.6;
   padding: 10rpx;
   margin-left: 5rpx;
-  border-left: 1px solid var(--border);
+  /* border-left: 1px solid var(--border); removed */
 }
 
 .fold-btn {
@@ -402,14 +646,15 @@
   background: rgba(0, 0, 0, 0.02);
   padding: 15rpx;
   border-radius: 10rpx;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
 }
 
+/* Sub-section Header - Fixed Layout */
 .ss-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15rpx;
+  margin-bottom: 20rpx;
 }
 
 .ss-head-left {
@@ -424,10 +669,9 @@
 }
 
 .ss-title {
-  font-size: 24rpx;
-  color: var(--text-sub);
-  display: block;
+  font-size: 28rpx;
   font-weight: bold;
+  color: var(--text);
 }
 
 .ss-mini-cost {
@@ -488,19 +732,42 @@
   color: var(--primary);
   padding: 4rpx 12rpx;
   border-radius: 6rpx;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.arrow-btn {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  margin-left: 4rpx;
+  opacity: 0.5;
+  transition: all 0.2s;
 }
 
-.arrow-btn {
-  padding: 0 5rpx;
-  font-size: 26rpx;
-  opacity: 0.6;
+.arrow-btn:active {
+  transform: scale(0.9);
+  opacity: 1;
+  background: var(--bg-hover);
+  border-radius: 8rpx;
 }
 
 .btn-del {
-  font-size: 32rpx;
-  opacity: 0.5;
-  padding: 0 5rpx;
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  margin-left: 4rpx;
+  opacity: 0.8;
+  transition: all 0.2s;
+}
+
+.btn-del:active {
+  transform: scale(0.9);
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8rpx;
 }
 
 .add-bar {
@@ -597,10 +864,20 @@
 }
 
 .rc-refresh {
-  font-size: 32rpx;
-  opacity: 0.8;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10rpx;
   margin-left: 15rpx;
-  color: var(--text);
+  transition: all 0.2s;
+}
+
+.rc-refresh:active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.95);
 }
 
 .stage-footer {
@@ -819,24 +1096,54 @@
   font-size: 24rpx;
   color: var(--text-sub);
   margin-bottom: 15rpx;
+  gap: 10rpx;
+  padding-right: 40rpx;
+}
+
+.mix-head-cell {
+  padding-left: 16rpx;
 }
 
 .mix-row {
   display: flex;
-  gap: 15rpx;
-  margin-bottom: 20rpx;
+  gap: 10rpx;
+  margin-bottom: 16rpx;
   align-items: center;
 }
 
 .mix-inp {
-  background: var(--input-bg);
+  background: var(--input-bg, rgba(255, 255, 255, 0.05));
   border: 1px solid var(--border);
   height: 64rpx;
-  font-size: 26rpx;
-  padding: 0 15rpx;
-  border-radius: 8rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  padding: 0 16rpx;
+  border-radius: 12rpx;
   color: var(--text);
   text-align: left;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mix-inp:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx rgba(16, 185, 129, 0.2);
+  background: var(--card, #1f2937);
+}
+
+/* 配方弹窗删除按钮 - 轻量级 */
+.mix-del {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.mix-del:active {
+  opacity: 1;
 }
 
 .btn-add-mix {
@@ -928,59 +1235,68 @@
 }
 
 .fc-head {
-  background: var(--card);
-  padding: 25rpx;
-  text-align: center;
-  font-weight: bold;
-  color: #60a5fa;
-  font-size: 30rpx;
+  padding: 24rpx;
   border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.fc-title-main {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: var(--text);
+  text-align: center;
+}
+
+/* Close icon styled in global or needs local override if missing */
+.fc-head .close-icon {
+  font-size: 44rpx;
+  color: var(--text-sub);
+  padding: 10rpx;
+  line-height: 1;
 }
 
 .fc-body {
-  /* 上 | 右(调小) | 下 | 左 */
-  padding: 30rpx 10rpx 30rpx 30rpx;
-
-  /* ★★★ 核心修改：弹性伸缩 ★★★ */
+  padding: 30rpx 25rpx;
   flex: 1;
-  min-height: 0;
-  /* 防止子元素撑开 Flex 容器 */
   overflow-y: auto;
-  /* ★★★ 把滚动条加回来，且只加在这里 ★★★ */
-
+  overflow-x: hidden;
+  width: 100%;
   box-sizing: border-box;
-  color: var(--text);
-}
-
-.fc-foot {
-  text-align: center;
-  padding: 25rpx;
-  color: var(--text-sub);
-  font-size: 28rpx;
-  border-top: 1px solid var(--border);
-  background: var(--card);
-
-  /* ★★★ 核心修改：防止被挤压 ★★★ */
-  flex-shrink: 0;
-  z-index: 10;
 }
 
 .fc-block {
-  margin-bottom: 20rpx;
+  margin-bottom: 40rpx;
 }
 
-.fc-title {
-  color: #60a5fa;
+/* Renamed to subtitle to match wxml update or map .fc-subtitle to .fc-title style */
+.fc-subtitle {
   font-size: 28rpx;
   font-weight: bold;
+  color: var(--primary);
+  /* Theme Color (Green) */
+  border-left: none;
+  /* Remove vertical bar */
+  padding-left: 0;
   margin-bottom: 20rpx;
+  line-height: 1.2;
+  text-align: left;
+  /* Explicit Left Align */
 }
 
 .formula-display {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20rpx 0 35rpx;
+  margin: 20rpx 0;
+  padding: 20rpx 0;
+  background: transparent;
+  /* Remove background */
+  border: none;
+  /* Remove border */
+  border-radius: 0;
 }
 
 .formula-inline {
@@ -988,19 +1304,20 @@
   font-family: "Times New Roman", serif;
   font-style: italic;
   font-size: 38rpx;
-  color: var(--primary);
+  color: var(--text);
+  /* Neutral Color */
   margin-bottom: 20rpx;
   letter-spacing: 2rpx;
 }
 
 .eqn-lhs {
+  font-family: "Times New Roman", serif;
+  font-size: 36rpx;
+  margin-right: 15rpx;
+  color: var(--text);
+  /* Neutral Color */
   display: flex;
   align-items: center;
-  font-family: "Times New Roman", serif;
-  font-style: italic;
-  font-size: 34rpx;
-  color: var(--primary);
-  margin-right: 15rpx;
 }
 
 .eqn-eq {
@@ -1009,55 +1326,45 @@
 }
 
 .fraction {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  vertical-align: middle;
-  margin: 0 10rpx;
+  font-family: "Times New Roman", serif;
+  color: var(--text);
+  /* Neutral Color */
 }
 
 .num {
   border-bottom: 1px solid var(--text);
-  padding: 0 10rpx 4rpx 10rpx;
-  font-family: "Times New Roman", serif;
-  font-style: italic;
-  font-size: 38rpx;
-  color: var(--primary);
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  width: 100%;
+  /* Neutral Line */
+  padding: 0 15rpx;
+  margin-bottom: 4rpx;
+  font-size: 32rpx;
+  min-width: 100%;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .den {
-  padding: 4rpx 10rpx 0 10rpx;
-  font-family: "Times New Roman", serif;
-  font-style: italic;
-  font-size: 38rpx;
-  color: var(--primary);
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  width: 100%;
+  font-size: 32rpx;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .line {
   display: none;
 }
 
-/* 修改变量容器，启用 Grid 网格布局 */
+/* 变量容器样式 - 彻底去背景 */
 .fc-vars {
-  background: rgba(128, 128, 128, 0.1);
-  padding: 20rpx;
-  border-radius: 12rpx;
+  background: transparent;
+  /* No Background */
+  padding: 0;
+  border-radius: 0;
   margin-bottom: 25rpx;
-
-  /* ★★★ 新增：双列布局 ★★★ */
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* 左右等分 */
   gap: 10rpx 20rpx;
-  /* 行间距10，列间距20 */
 }
 
 /* 修改单行样式 */
@@ -1066,22 +1373,24 @@
   align-items: center;
   font-size: 24rpx;
   margin-bottom: 0;
-  /*去掉底部边距，交给 grid gap 控制 */
 }
 
 .fv-k {
   font-weight: bold;
   color: var(--primary);
+  /* Theme Color (Green) */
   font-family: "Times New Roman", serif;
   font-style: italic;
   display: flex;
   align-items: center;
   font-size: 28rpx;
+  margin-right: 15rpx;
+  /* Add spacing since colon is gone */
 }
 
 .fv-colon {
-  margin: 0 10rpx;
-  color: var(--text-sub);
+  display: none;
+  /* Remove colon */
 }
 
 .fv-desc {
@@ -1105,38 +1414,50 @@
   margin-top: 20rpx;
   padding-top: 20rpx;
   border-top: 1px dashed var(--border);
+  display: block;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .logic-title {
   font-size: 26rpx;
-  color: var(--text);
+  color: var(--primary);
+  /* Theme Color (Green) */
   font-weight: bold;
   margin-bottom: 15rpx;
+  width: auto;
+  /* Reset width */
+  margin-left: 0;
+  /* Reset margin */
+  margin-right: 0;
+  /* Reset margin */
+  text-align: left;
 }
 
 .logic-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12rpx;
+  display: block;
+  width: 100%;
+  overflow: hidden;
 }
 
 .logic-item {
-  display: flex;
+  display: block;
   font-size: 24rpx;
   color: var(--text-sub);
-  line-height: 1.5;
+  line-height: 1.6;
+  margin-bottom: 12rpx;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .li-idx {
-  width: 30rpx;
   font-weight: bold;
   color: var(--text-sub);
-  flex-shrink: 0;
 }
 
 .li-txt {
-  flex: 1;
-  padding-bottom: 5rpx;
+  /* 无需特殊样式，跟随父元素布局 */
 }
 
 .clear-card {
@@ -1167,13 +1488,21 @@
 
 .save-inp {
   border: 1px solid var(--border);
-  background: var(--input-bg);
-  height: 80rpx;
-  border-radius: 12rpx;
-  padding: 0 20rpx;
+  background: var(--input-bg, rgba(255, 255, 255, 0.05));
+  height: 72rpx;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
   margin-bottom: 40rpx;
   color: var(--text);
   text-align: left;
+  font-size: 30rpx;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-inp:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx rgba(16, 185, 129, 0.2);
+  background: var(--card, #1f2937);
 }
 
 .load-list {
@@ -1226,7 +1555,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 16rpx;
+  min-height: 56rpx;
 }
 
 .field-col {
@@ -1236,7 +1566,7 @@
 
 .field-col.right {
   align-items: flex-end;
-  min-width: 40%;
+  flex-shrink: 0;
 }
 
 .f-label {

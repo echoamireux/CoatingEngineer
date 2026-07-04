@@ -1,0 +1,15 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#6366f1" stroke-width="2">
+  <!-- Comma Knife -->
+  <path d="M20 16 C 10 16, 12 36, 28 36 L 44 36 C 48 36, 50 32, 50 28 L 50 16 Z" stroke="#6366f1" fill="rgba(99, 102, 241, 0.1)"/>
+  <!-- Knife Edge -->
+  <circle cx="22" cy="26" r="2" fill="#6366f1"/>
+
+  <!-- Backing Roller -->
+  <circle cx="32" cy="54" r="14" stroke="#333"/>
+
+  <!-- Substrate -->
+  <path d="M4 42 L 60 42" stroke="#333" stroke-width="1.5"/>
+
+  <!-- Coating Fluid Reservoir -->
+  <path d="M16 42 Q 16 36 22 36 L 40 36" fill="rgba(99, 102, 241, 0.3)"/>
+</svg>

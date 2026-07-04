@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "涂布手册",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "ui-icon": "/components/ui-icon/index"
+  }
+}

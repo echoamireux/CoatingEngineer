@@ -1,3 +1,7 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "ui-card": "/components/ui-card/index",
+    "ui-form-field": "/components/ui-form-field/index",
+    "ui-icon": "/components/ui-icon/index"
+  }
 }

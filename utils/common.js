@@ -45,25 +45,42 @@ function formatNumber(num, options = {}) {
 }
 
 /**
+ * 将数字转换为 Unicode 上标字符
+ * @param {number} num - 要转换的数字
+ * @returns {string} Unicode 上标字符串
+ */
+function toSuperscript(num) {
+    const superscriptMap = {
+        '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+        '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
+        '-': '⁻', '+': ''
+    };
+    return num.toString().split('').map(c => superscriptMap[c] || c).join('');
+}
+
+/**
  * 格式化数值 (返回对象，用于流体力学页面)
  * @param {number} num
- * @returns {object} {b: 基数, p: 指数, s: 是否科学计数法}
+ * @returns {object} {b: 基数, p: 指数, pSup: Unicode上标指数, s: 是否科学计数法}
  */
 function formatNumberObj(num) {
-    if (!isFinite(num) || isNaN(num)) return { b: '-', p: 0, s: false };
+    if (!isFinite(num) || isNaN(num)) return { b: '-', p: 0, pSup: '', s: false };
     const abs = Math.abs(num);
-    if (abs === 0) return { b: '0.00', p: 0, s: false };
+    if (abs === 0) return { b: '0.00', p: 0, pSup: '', s: false };
 
     if (abs > 10000 || abs < 0.01) {
         const str = num.toExponential(2);
         const parts = str.split('e');
-        return { b: parts[0], p: parseInt(parts[1]), s: true };
+        const exponent = parseInt(parts[1]);
+        return { b: parts[0], p: exponent, pSup: toSuperscript(exponent), s: true };
     }
-    return { b: num.toFixed(2), p: 0, s: false };
+    return { b: num.toFixed(2), p: 0, pSup: '', s: false };
 }
 
 /**
  * 格式化数值 (单位换算专用，更高精度)
+ * @param {number} num - 要格式化的数值
+ * @returns {string} 格式化后的字符串，大/小数自动转科学计数法
  */
 function formatNumberConverter(num) {
     if (!isFinite(num) || isNaN(num)) return '';
@@ -80,6 +97,8 @@ function formatNumberConverter(num) {
 
 /**
  * 解析可能包含科学计数法的字符串
+ * @param {string} str - 要解析的字符串，如 '1.23×10^6'
+ * @returns {number} 解析后的数值，解析失败返回 NaN
  */
 function parseNumber(str) {
     if (!str) return NaN;
@@ -132,6 +151,71 @@ function round(num, scale = 6) {
     return Math.round(num * Math.pow(10, scale)) / Math.pow(10, scale);
 }
 
+/**
+ * 防抖函数 - 用于实时计算场景
+ * @param {Function} fn - 要防抖的函数
+ * @param {number} delay - 延迟毫秒数，默认 300ms
+ * @returns {Function} 防抖后的函数
+ */
+function debounce(fn, delay = 300) {
+    let timer = null
+    return function (...args) {
+        if (timer) clearTimeout(timer)
+        timer = setTimeout(() => {
+            fn.apply(this, args)
+            timer = null
+        }, delay)
+    }
+}
+
+/**
+ * 封装云函数调用 (支持超时控制和网络检查)
+ * @param {string} name - 云函数名称
+ * @param {object} data - 传递的参数
+ * @param {number} timeout - 超时时间(ms)，默认10000ms
+ */
+function callCloudFunction(name, data = {}, timeout = 10000) {
+    return new Promise(async (resolve, reject) => {
+        // 1. 检查网络状态
+        try {
+            const netRes = await wx.getNetworkType()
+            if (netRes.networkType === 'none') {
+                return reject(new Error('网络不可用，请检查连接'))
+            }
+        } catch (e) {
+            // 获取网络状态失败，暂时忽略，继续尝试
+            console.warn('检查网络状态失败:', e)
+        }
+
+        // 2. 构造超时 Promise
+        let timeoutId
+        const timeoutPromise = new Promise((_, reject) => {
+            timeoutId = setTimeout(() => {
+                const err = new Error('请求超时，请稍后重试')
+                err.isTimeout = true
+                reject(err)
+            }, timeout)
+        })
+
+        // 3. 构造请求 Promise
+        const requestPromise = wx.cloud.callFunction({
+            name,
+            data
+        })
+
+        // 4. 竞态调用
+        Promise.race([requestPromise, timeoutPromise])
+            .then(res => {
+                clearTimeout(timeoutId)
+                resolve(res)
+            })
+            .catch(err => {
+                clearTimeout(timeoutId)
+                reject(err)
+            })
+    })
+}
+
 module.exports = {
     formatTime,
     formatNumber,
@@ -142,5 +226,8 @@ module.exports = {
     toggleTheme,
     initTheme,
     vibrateSuccess,
-    round
+    round,
+    debounce,
+    toSuperscript,
+    callCloudFunction
 };

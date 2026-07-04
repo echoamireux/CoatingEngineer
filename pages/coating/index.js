@@ -1,20 +1,22 @@
-const { initTheme, formatNumber, formatTime } = require('../../utils/common')
-const { saveHistory, getHistory, deleteHistory } = require('../../utils/history')
+const { initTheme, formatNumber, formatTime, debounce } = require('../../utils/common')
+const { saveHistory } = require('../../utils/history')
+const formBehavior = require('../../behaviors/form-behavior')
 
 Page({
+  behaviors: [formBehavior],
+
   data: {
     theme: 'dark',
     currentTab: 'composite',
+    statusBarHeight: 44, // 状态栏高度
 
     // --- 悬浮公式条 ---
     showFormulaModal: false,
 
-    // --- 历史弹窗 ---
-    showHistoryModal: false,
-    historyList: [],
-    historyType: '',
     // --- 确认弹窗 ---
     showResetModal: false,
+    showDeleteModal: false,
+    pendingDeleteId: null,
 
     // --- 复合卷材 ---
     comp_i: '', comp_c: '', comp_L: '',
@@ -38,10 +40,31 @@ Page({
 
   },
 
-  onLoad() { initTheme(this); },
+  onLoad() {
+    initTheme(this);
+    // 获取状态栏高度
+    const systemInfo = wx.getWindowInfo();
+    this.setData({ statusBarHeight: systemInfo.statusBarHeight || 44 });
+    // 初始化防抖计算
+    this._initDebounce();
+  },
+
+  goBack() {
+    wx.navigateBack({ delta: 1 });
+  },
+
+  handleToggleFormula() {
+    this.setData({ showFormulaModal: !this.data.showFormulaModal });
+  },
 
   onShow() {
     this.restoreFromHistory();
+  },
+
+  openHistory() {
+    wx.navigateTo({
+      url: '/pages/history/index?type=coating'
+    });
   },
 
   restoreFromHistory() {
@@ -98,97 +121,82 @@ Page({
   },
 
   bindInput(e) {
-    const field = e.currentTarget.dataset.field;
-    this.setData({ [field]: e.detail.value, [`errors.${field}`]: false });
+    const field = e.detail.field || e.currentTarget.dataset.field;
+    const value = e.detail.value;
+    this.setData({ [field]: value, [`errors.${field}`]: false });
+    // 实时计算（防抖）
+    this._debouncedCalc();
   },
 
-  // === 公式条 ===
-  toggleFormula() {
-    this.setData({
-      showFormulaModal: !this.data.showFormulaModal
-    });
-  },
-
-  // === 历史记录 ===
-  // === 历史记录 ===
-  openHistory() {
-    const tab = this.data.currentTab;
-    const all = getHistory('coating') || [];
-    const list = all.filter(item => item.type === tab);
-
-    this.setData({
-      historyType: tab,
-      historyList: list,
-      showHistoryModal: true
-    });
-  },
-
-  closeHistory() { this.setData({ showHistoryModal: false }); },
-
-  loadHistoryItem(e) {
-    const item = e.currentTarget.dataset.item;
-    const p = item.rawData;
-
-    if (this.data.historyType === 'composite') {
-      this.setData({
-        comp_i: p.comp_i, comp_c: p.comp_c, comp_L: p.comp_L,
-        layers: p.layers,
-        result_diameter: '-', result_weight: '-', errors: {}
-      }, () => {
-        this.calcCompDiameter(true);
-        this.calcCompWeight(true);
-      });
-    } else {
-      this.setData({
-        glueCalcType: p.glueCalcType,
-        glue_t_dry: p.glue_t_dry, glue_rho_dry: p.glue_rho_dry, glue_m_dry: p.glue_m_dry,
-        glue_S: p.glue_S, glue_rho_wet: p.glue_rho_wet, glue_W: p.glue_W,
-        glue_v: p.glue_v, glue_Dp: p.glue_Dp, glue_L: p.glue_L,
-        result_pump_speed: '-', result_wet_weight: '-', errors: {}
-      }, () => {
-        this.updateFormulas(p.glueCalcType);
-        this.calcGluePump(true);
-        this.calcGlueWetWeight(true);
-      });
+  // 初始化防抖计算函数
+  _initDebounce() {
+    if (!this._debouncedCalc) {
+      this._debouncedCalc = debounce(() => {
+        if (this.data.currentTab === 'composite') {
+          // ★ 分项独立计算：卷径和重量各自尝试
+          this.calcCompDiameter(true);
+          this.calcCompWeight(true);
+        } else if (this.data.currentTab === 'glue') {
+          // ★ 分项独立计算：泵速和湿重各自尝试
+          this.calcGluePump(true);
+          this.calcGlueWetWeight(true);
+        }
+      }, 500);
     }
-    this.setData({ showHistoryModal: false });
-    // vibrateSuccess();
   },
 
-  deleteHistoryItem(e) {
-    const id = e.currentTarget.dataset.id;
-    deleteHistory(id);
-
-    // Refresh list
-    const tab = this.data.currentTab;
-    const all = getHistory('coating') || [];
-    const list = all.filter(item => item.type === tab);
-    this.setData({ historyList: list });
+  onInputFocus(e) {
+    const field = e.detail.field || e.currentTarget.dataset.field;
+    this.setData({ [`focus.${field}`]: true });
   },
 
-  // ================= 1. 复合卷材 =================
+  onInputBlur(e) {
+    const field = e.detail.field || e.currentTarget.dataset.field;
+    this.setData({ [`focus.${field}`]: false });
+  },
+
+  // ... (toggleFormula, etc)
+
+  // ... (bindLayerInput)
   setCoreSize(e) {
-    const size = String(e.currentTarget.dataset.size);
-    this.setData({ comp_i: size === '0' ? '' : size, 'errors.comp_i': false });
+    const size = e.currentTarget.dataset.size;
+    if (size == 0) {
+      this.setData({ comp_i: '', ['errors.comp_i']: false });
+    } else {
+      this.setData({ comp_i: size, ['errors.comp_i']: false });
+    }
   },
+
   addLayer() {
     const l = this.data.layers;
     l.push({ width: '', thickness: '', density: '', err_w: false, err_t: false, err_d: false });
     this.setData({ layers: l });
   },
+
   removeLayer(e) {
+    const index = e.currentTarget.dataset.index;
     const l = this.data.layers;
-    if (l.length > 1) { l.splice(e.currentTarget.dataset.index, 1); this.setData({ layers: l }); }
+    if (l.length > 1) {
+      l.splice(index, 1);
+      this.setData({ layers: l });
+    } else {
+      wx.showToast({ title: '至少需要一层', icon: 'none' });
+    }
   },
+
   bindLayerInput(e) {
     const idx = e.currentTarget.dataset.index;
-    const field = e.currentTarget.dataset.field;
+    const field = e.detail.field || e.currentTarget.dataset.field;
+    const value = e.detail.value;
+
     const l = this.data.layers;
-    l[idx][field] = e.detail.value;
+    l[idx][field] = value;
     if (field === 'width') l[idx].err_w = false;
     if (field === 'thickness') l[idx].err_t = false;
     if (field === 'density') l[idx].err_d = false;
     this.setData({ layers: l });
+    // 触发自动计算
+    this._debouncedCalc();
   },
 
   _isSilent(e) { return typeof e === 'boolean' ? e : false; },
@@ -227,6 +235,7 @@ Page({
 
     const showD = formatNumber(D);
     this.setData({ result_diameter: showD });
+    if (!isSilent) wx.showToast({ title: '已计算卷径', icon: 'success' });
   },
 
   calcCompWeight(e) {
@@ -239,6 +248,7 @@ Page({
 
     const showM = formatNumber(M);
     this.setData({ result_weight: showM });
+    if (!isSilent) wx.showToast({ title: '已计算重量', icon: 'success' });
   },
 
   calculateComposite(e) {
@@ -246,6 +256,7 @@ Page({
     if (!this._checkComp(['comp_i', 'comp_c', 'comp_L', 'layer_w', 'layer_t', 'layer_d'], isSilent)) return;
     this.calcCompDiameter(true);
     this.calcCompWeight(true);
+    if (!isSilent) wx.showToast({ title: '全部已更新', icon: 'success' });
   },
 
   resetComposite() {
@@ -286,13 +297,14 @@ Page({
     if (!hasR && hasM) tag = '[仅重量]';
 
     const d = this.data;
+    const core = d.comp_i == '76.2' ? '3"' : (d.comp_i == '152.4' ? '6"' : `${d.comp_i}mm`);
+
     const displayData = [
-      { k: '计算类型', v: tag },
-      { k: '卷材长度', v: `${d.comp_L}m` },
-      { k: '层数', v: `${d.layers.length}层` }
+      { k: '卷径', v: hasR ? `${this.data.result_diameter}mm` : '-' },
+      { k: '重量', v: hasM ? `${this.data.result_weight}kg` : '-' },
+      { k: '规格', v: `L:${d.comp_L}m | 芯:${core}` },
+      { k: '结构', v: `${d.layers.length}层复合` }
     ];
-    if (hasR) displayData.push({ k: '卷径', v: `${this.data.result_diameter}mm` });
-    if (hasM) displayData.push({ k: '重量', v: `${this.data.result_weight}kg` });
 
     const rawData = {
       comp_i: d.comp_i,
@@ -303,7 +315,7 @@ Page({
       result_weight: this.data.result_weight
     };
 
-    saveHistory('coating', 'composite', displayData, rawData);
+    saveHistory('coating', 'composite', displayData, rawData, '卷材规格');
     wx.showToast({ title: '已保存', icon: 'success' });
   },
 
@@ -353,10 +365,20 @@ Page({
     if (!this._validateGlue(['glue_v', 'glue_W', 'glue_S', 'glue_rho_wet', 'glue_Dp'], isSilent)) return;
     const m_dry = this._getMDry();
     const d = this.data;
-    const Q = (parseFloat(d.glue_v) * parseFloat(d.glue_W) * m_dry) / (10 * parseFloat(d.glue_S) * parseFloat(d.glue_rho_wet));
 
-    const showVal = formatNumber(Q / parseFloat(d.glue_Dp));
+    // 除零保护
+    const S = parseFloat(d.glue_S);
+    const rhoWet = parseFloat(d.glue_rho_wet);
+    const Dp = parseFloat(d.glue_Dp);
+    if (S <= 0 || rhoWet <= 0 || Dp <= 0) {
+      if (!isSilent) wx.showToast({ title: '固含量/密度/排量需>0', icon: 'none' });
+      return;
+    }
+
+    const Q = (parseFloat(d.glue_v) * parseFloat(d.glue_W) * m_dry) / (10 * S * rhoWet);
+    const showVal = formatNumber(Q / Dp);
     this.setData({ result_pump_speed: showVal });
+    if (!isSilent) wx.showToast({ title: '已计算泵速', icon: 'success' });
   },
 
   calcGlueWetWeight(e) {
@@ -364,10 +386,18 @@ Page({
     if (!this._validateGlue(['glue_L', 'glue_W', 'glue_S'], isSilent)) return;
     const m_dry = this._getMDry();
     const d = this.data;
-    const M = (m_dry * parseFloat(d.glue_L) * parseFloat(d.glue_W)) / (10000 * parseFloat(d.glue_S));
 
+    // 除零保护
+    const S = parseFloat(d.glue_S);
+    if (S <= 0) {
+      if (!isSilent) wx.showToast({ title: '固含量必须大于0', icon: 'none' });
+      return;
+    }
+
+    const M = (m_dry * parseFloat(d.glue_L) * parseFloat(d.glue_W)) / (10000 * S);
     const showM = formatNumber(M);
     this.setData({ result_wet_weight: showM });
+    if (!isSilent) wx.showToast({ title: '已计算湿重', icon: 'success' });
   },
 
   calculateGlue(e) {
@@ -375,6 +405,7 @@ Page({
     if (!this._validateGlue(['glue_v', 'glue_W', 'glue_S', 'glue_rho_wet', 'glue_Dp', 'glue_L'], isSilent)) return;
     this.calcGluePump(true);
     this.calcGlueWetWeight(true);
+    if (!isSilent) wx.showToast({ title: '全部已更新', icon: 'success' });
   },
 
   saveGlueHistory() {
@@ -389,17 +420,14 @@ Page({
     if (!hasN && hasM) tag = '[仅湿重]';
 
     const d = this.data;
+    const target = d.glueCalcType === 'thickness' ? `${d.glue_t_dry}μm(干厚)` : `${d.glue_m_dry}g/m²(干涂)`;
+
     const displayData = [
-      { k: '计算类型', v: tag },
-      { k: '计算基准', v: d.glueCalcType === 'thickness' ? '干厚' : '干涂量' }
+      { k: '泵速', v: hasN ? `${this.data.result_pump_speed}rpm` : '-' },
+      { k: '湿重', v: hasM ? `${this.data.result_wet_weight}kg` : '-' },
+      { k: '工艺', v: `Speed:${d.glue_v} | Width:${d.glue_W}` },
+      { k: '目标', v: target }
     ];
-    if (d.glueCalcType === 'thickness') {
-      displayData.push({ k: '干厚', v: `${d.glue_t_dry}μm` });
-    } else {
-      displayData.push({ k: '干涂量', v: `${d.glue_m_dry}g/m²` });
-    }
-    if (hasN) displayData.push({ k: '泵速', v: `${this.data.result_pump_speed}rpm` });
-    if (hasM) displayData.push({ k: '湿重', v: `${this.data.result_wet_weight}kg` });
 
     const rawData = {
       glueCalcType: d.glueCalcType,
@@ -416,7 +444,7 @@ Page({
       result_wet_weight: this.data.result_wet_weight
     };
 
-    saveHistory('coating', 'glue', displayData, rawData);
+    saveHistory('coating', 'glue', displayData, rawData, '涂布参数');
     wx.showToast({ title: '已保存', icon: 'success' });
   },
 
@@ -440,6 +468,23 @@ Page({
     this.setData({ [field]: value });
     // 实时计算
     this.calcConversion();
+  },
+
+  // 换算弹窗输入框焦点管理
+  onConvInputFocus(e) {
+    const field = e.currentTarget.dataset.field;
+    const key = field === 'convert_m_dry' ? 'conv_m_dry' : 'conv_rho_dry';
+    this.setData({ [`focus.${key}`]: true });
+  },
+
+  onConvInputBlur(e) {
+    const field = e.currentTarget.dataset.field;
+    const key = field === 'convert_m_dry' ? 'conv_m_dry' : 'conv_rho_dry';
+    this.setData({ [`focus.${key}`]: false });
+  },
+
+  preventBubble() {
+    // 阻止冒泡专用
   },
 
   calcConversion() {
