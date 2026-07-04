@@ -313,6 +313,109 @@ test('debounce 返回函数', () => {
 })
 
 // ============================================================
+// 7. 成本页输入绑定测试
+// ============================================================
+console.log('\n📁 Testing 成本页输入绑定')
+
+function loadCostPageConfig() {
+  const pagePath = require.resolve('../pages/cost/index.js')
+  delete require.cache[pagePath]
+
+  const originalPage = global.Page
+  const originalBehavior = global.Behavior
+  const originalGetApp = global.getApp
+
+  let pageConfig = null
+  global.Page = (config) => { pageConfig = config }
+  global.Behavior = (config) => config
+  global.getApp = () => ({ globalData: {} })
+
+  require('../pages/cost/index.js')
+
+  global.Page = originalPage
+  global.Behavior = originalBehavior
+  global.getApp = originalGetApp
+
+  return pageConfig
+}
+
+test('成本页输入工序名称应写入 name 而不是良率', () => {
+  const pageConfig = loadCostPageConfig()
+  const page = {
+    data: { stages: [{ name: '', yield: '' }] },
+    clearError() {},
+    setData(patch) {
+      if (patch.stages) this.data.stages = patch.stages
+    }
+  }
+
+  pageConfig.onInput.call(page, {
+    currentTarget: { dataset: { type: 'stage_name', stage: 0 } },
+    detail: { value: '涂布' }
+  })
+
+  expect(page.data.stages[0].name).toBe('涂布')
+  expect(page.data.stages[0].yield).toBe('')
+})
+
+test('成本页良率超出范围时应保留上一个合法值', () => {
+  const pageConfig = loadCostPageConfig()
+  const toastTitles = []
+  const originalWx = global.wx
+  global.wx = { showToast(options) { toastTitles.push(options.title) } }
+
+  const page = {
+    data: { stages: [{ name: '涂布', yield: '95' }], errors: {} },
+    clearError() {},
+    setData(patch) {
+      if (patch.stages) this.data.stages = patch.stages
+    }
+  }
+
+  const result = pageConfig.onInput.call(page, {
+    currentTarget: { dataset: { type: 'stage_yield', stage: 0, field: 'yield' } },
+    detail: { value: '102' }
+  })
+
+  global.wx = originalWx
+  expect(page.data.stages[0].yield).toBe('95')
+  expect(result).toBe('95')
+  expect(toastTitles[0]).toBe('良率需在0-100%之间')
+})
+
+test('成本页胶层利用率超出范围时应保留上一个合法值', () => {
+  const pageConfig = loadCostPageConfig()
+  const toastTitles = []
+  const originalWx = global.wx
+  global.wx = { showToast(options) { toastTitles.push(options.title) } }
+
+  const page = {
+    data: {
+      stages: [{
+        name: '涂布',
+        yield: '95',
+        materials: [{ type: 'glue', name: '胶层-1', solid: '50', eff: '90' }]
+      }],
+      errors: {}
+    },
+    clearError() {},
+    setData(patch) {
+      if (patch.stages) this.data.stages = patch.stages
+    }
+  }
+
+  const result = pageConfig.onInput.call(page, {
+    currentTarget: { dataset: { type: 'material', stage: 0, index: 0, field: 'eff' } },
+    detail: { value: '123' }
+  })
+
+  global.wx = originalWx
+  expect(page.data.stages[0].materials[0].eff).toBe('90')
+  expect(result).toBe('90')
+  expect(toastTitles[0]).toBe('利用率需在0-100%之间')
+})
+
+// ============================================================
 // 测试报告
 // ============================================================
 console.log('\n' + '='.repeat(50))
@@ -321,4 +424,3 @@ console.log(`📈 覆盖率: ${Math.round(passCount / (passCount + failCount) * 
 console.log('='.repeat(50))
 
 module.exports = { passCount, failCount }
-

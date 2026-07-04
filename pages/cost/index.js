@@ -870,13 +870,27 @@ Page({
 
   onInput(e) {
     const { field, stage, index, type } = e.currentTarget.dataset; const val = e.detail.value;
+    const percentageLabels = { solid: '固含', eff: '利用率', vatRate: '增值税' };
+    const percentageLabel = type === 'stage_yield' ? '良率' : percentageLabels[field];
+    const isPercentageField = type === 'stage_yield' || (type === 'material' && (field === 'solid' || field === 'eff')) || (type === 'global' && field === 'vatRate');
+    const list = this.data.stages;
+
+    if (isPercentageField && val !== '') {
+      const num = parseFloat(val);
+      if (isNaN(num) || num < 0 || num > 100) {
+        wx.showToast({ title: `${percentageLabel}需在0-100%之间`, icon: 'none' });
+        if (type === 'stage_yield') return list[stage].yield || '';
+        if (type === 'material') return list[stage].materials[index][field] || '';
+        if (type === 'global') return this.data[field] || '';
+      }
+    }
+
     let k = '';
     if (type === 'material') k = `s${stage}_m${index}_${field}`; else if (type === 'process') k = `s${stage}_proc_${field}`; else if (type === 'stage_yield') k = `s${stage}_yield`;
 
     if (k) this.clearError(k);
 
-    const list = this.data.stages;
-    if (type === 'global') this.setData({ [field]: val }); else if (type === 'stage_name' || type === 'stage_yield') list[stage][field === 'stage_name' ? 'name' : 'yield'] = val; else if (type === 'process') list[stage].process[field] = val; else if (type === 'material') list[stage].materials[index][field] = val;
+    if (type === 'global') this.setData({ [field]: val }); else if (type === 'stage_name') list[stage].name = val; else if (type === 'stage_yield') list[stage].yield = val; else if (type === 'process') list[stage].process[field] = val; else if (type === 'material') list[stage].materials[index][field] = val;
     else if (type === 'save_name') this.setData({ tempRecipeName: val });
     if (type !== 'global' && type !== 'save_name') this.setData({ stages: list });
 
