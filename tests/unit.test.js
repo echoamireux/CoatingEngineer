@@ -11,6 +11,8 @@
  */
 
 // 导入被测试模块
+const fs = require('fs')
+const path = require('path')
 const { formatNumber, formatNumberObj, debounce, parseNumber } = require('../utils/common')
 const { calcGlueCost, calcFilmCost, calcProcessCost, applyYield, getTaxFactor } = require('../utils/cost-calc')
 const { isEmpty, validateRequired, validatePercentage, validatePositive } = require('../utils/validator')
@@ -413,6 +415,17 @@ test('成本页胶层利用率超出范围时应保留上一个合法值', () =>
   expect(page.data.stages[0].materials[0].eff).toBe('90')
   expect(result).toBe('90')
   expect(toastTitles[0]).toBe('利用率需在0-100%之间')
+})
+
+// ============================================================
+// 8. 手册公式参数排版测试
+// ============================================================
+console.log('\n📁 Testing 手册公式参数排版')
+
+test('手册公式参数符号列应禁止公式内部换行', () => {
+  const wxss = fs.readFileSync(path.join(__dirname, '../pages/handbook/detail/index.wxss'), 'utf8')
+  const hasNoWrapRule = wxss.includes('.param-symbol .latex-container') && wxss.includes('flex-wrap: nowrap')
+  expect(hasNoWrapRule).toBeTruthy()
 })
 
 // ============================================================
